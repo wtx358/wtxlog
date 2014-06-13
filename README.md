@@ -1,24 +1,15 @@
-# 使用说明
+## wtxlog简介
 
-## SAE平台
+wtxlog是一个基于Python Flask的博客/CMS系统，力求简单。使用SQLAlchemy管理数据库，支持SQLITE和MYSQL数据库，可轻松部署在各种云主机以及应用引擎（BAE/JAE/SAE等）上。
 
-主要是下面两个文件：
+主要特性：
 
-- config.yaml
-- index.wsgi
-
-需要配置Mysql连接参数
-
-## BAE3.0平台
-
-主要是下面两个文件：
-
-- app.conf
-- index.py
-
-需要手动配置Mysql参数
-
-虚拟环境的处理：
-
-BAE通过应用根目录下的requirements.txt文件来创建虚拟环境。可参照requirements目录下的bae3.txt文件。
+* 兼容性好，各种环境轻松部署
+* 支持SQLITE和Mysql两种数据库
+* 支持Memcached缓存
+* 内置CKEditor富文本编辑器
+* 使用Flask-Admin做为管理后台
+* 后期会增加会员功能
+* 可自定义模板主题
+* 内置专题、栏目、标签、文章等常见模型
 
