@@ -1,0 +1,22 @@
+{% extends theme('account/base.html') %}
+
+{% block body %}
+        <form method="POST" action="">
+            {{ form.hidden_tag() if form.hidden_tag }}
+            {% for f in form if f.type != 'CSRFTokenField' %}
+            <div>
+            {{ f.label }}
+            {{ f }}
+            {% if f.errors %}
+            <ul>
+                {% for e in f.errors %}
+                <li>{{ e }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            </div>
+            {% endfor %}
+        </form>
+        <a href="{{ url_for('account.register') }}">Register</a> &nbsp;&nbsp; <a
+          href="{{ url_for('account.password_reset_request') }}">Forgot password</a>
+{% endblock %}

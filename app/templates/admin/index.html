@@ -1,0 +1,18 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+{{ super() }}
+<div class="row-fluid">
+
+    <div>
+        {% if current_user.is_authenticated() %}
+        <p class="lead">
+        {{ current_user.username }}, 欢迎你
+        </p>
+        {% else %}
+        {% endif %}
+    </div>
+
+    <a class="btn" href="/"><i class="icon-arrow-left icon-gray"></i> Back</a>
+</div>
+{% endblock body %}

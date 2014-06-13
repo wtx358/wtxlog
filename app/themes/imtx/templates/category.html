@@ -1,0 +1,14 @@
+{% extends theme('layout.html') %}
+
+{% block title %}{{ category.seotitle or category.name }}{% if pagination.page>1 %}_第{{ pagination.page }}页{% endif %}{% endblock %}
+{% block keywords %}{{ category.seokey }}{% endblock %}
+{% block description %}{{ category.seodesc }}{% endblock %}
+
+{% block head_extend %}
+    <link rel="canonical" href="{{ category.link }}" >
+{% endblock %}
+
+      {% block main %}
+        {% include theme('article_lists.html') %}
+      {% endblock %}
+

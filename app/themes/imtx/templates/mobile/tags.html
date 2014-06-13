@@ -1,0 +1,21 @@
+{% extends theme('mobile/layout.html') %}
+
+{% block title %}标签{% endblock %}
+
+{% block head_extend %}
+    <link rel="canonical" href="{{ url_for('main.tags') }}" >
+{% endblock %}
+
+        {% block main %}
+        <div class="post">
+          <h2 class="pagetitle">标签</h2>
+          <div class="entry">
+            <ul class="taglist clearfix">
+            {% for tag in tag_lists() %}
+            <li><a href="{{ tag.link }}">{{ tag.name }}</a>({{ tag.count }}){% if not loop.last %}&nbsp;&nbsp;{% endif %}</li>
+            {% endfor %}
+            </ul>
+          </div>
+        </div>
+        {% endblock %}
+

@@ -1,0 +1,15 @@
+{% extends theme('mobile/layout.html') %}
+
+{% block title %}搜索: {{ keyword }}{% if pagination and pagination.page>1 %}_第{{ pagination.page }}页{% endif %}{% endblock %}
+
+
+      {% block nav %}
+      <div id="homes"><p><span>本站网址：</span>当前位置：<a href="{{ url_for('main.index') }}">{{ config['SITE_NAME'] }}</a> &gt; 【{{ keyword }}】搜索结果</p></div>
+      {% endblock %}
+
+      {% block main %}
+        <h2>Search Results for {{ keyword }}</h2>
+        {% include theme('article_lists.html') %}
+      {% endblock %}
+
+

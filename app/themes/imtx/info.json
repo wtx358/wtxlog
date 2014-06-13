@@ -1,0 +1,10 @@
+{
+    "application": "app", 
+    "identifier": "imtx", 
+    "name": "imtx theme", 
+    "author": "digwtx",
+    "description": "imtx.me theme",
+    "license": "MIT/X11",
+    "doctype": "html5"
+}
+

@@ -1,0 +1,4 @@
+-r common.txt
+MySQL-python
+gunicorn==18.0
+

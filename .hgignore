@@ -1,0 +1,6 @@
+\.pyc$
+\.swp$
+\~$
+mydeps/bae_.*
+\.db$
+\.sqlite$

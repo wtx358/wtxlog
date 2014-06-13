@@ -1,0 +1,12 @@
+{% extends theme('layout.html') %}
+
+{% block title %}Monthly Archives: {{ year }}-{{ month }}{% if pagination.page>1 %}_第{{ pagination.page }}页{% endif %}{% endblock %}
+
+{% block head_extend %}
+    <link rel="canonical" href="{{ url_for('main.archives', year=year, month=month, _external=True) }}" >
+{% endblock %}
+
+      {% block main %}
+        {% include theme('article_lists.html') %}
+      {% endblock %}
+

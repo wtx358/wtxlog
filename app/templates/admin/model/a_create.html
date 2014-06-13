@@ -1,0 +1,24 @@
+{% extends 'admin/model/create.html' %}
+
+{% block tail %}
+  {{ super() }}
+
+  {% if config['BODY_FORMAT'] == 'html' %}
+  <script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
+  {% else %}
+	<link rel="stylesheet" type="text/css" href="/static/markitup/skins/markdown/style.css">
+	<!--  markItUp! toolbar skin -->
+	<link rel="stylesheet" type="text/css" href="/static/markitup/sets/markdown/style.css" />
+	<!-- markItUp! -->
+	<script type="text/javascript" src="/static/markitup/jquery.markitup.js"></script>
+	<!-- markItUp! toolbar settings -->
+  <script type="text/javascript" src="/static/markitup/sets/markdown/ajaxfileupload.js"></script>
+	<script type="text/javascript" src="/static/markitup/sets/markdown/set.js"></script>
+
+  <script language="javascript">
+  $(document).ready(function()	{
+      $('.markitup').markItUp(myMarkdownSettings);
+  });
+  </script>
+  {% endif %}
+{% endblock %}

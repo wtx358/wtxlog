@@ -1,0 +1,16 @@
+{% extends theme('layout.html') %}
+
+{% block fulltitle %}I'm digwtx(巫拉圭){% if pagination.page>1 %}_第{{ pagination.page }}页{% endif %}{% endblock %}
+{% block keyword %}digwtx, 巫拉圭{% endblock %}
+{% block description %}这是digwtx(巫拉圭)的个人博客，记录技术资料(Linux,Slackware,Python)和生活琐事。{% endblock %}
+{% block author %}{{ config['SITE_NAME'] }}{% endblock %}
+
+{% block head_extend %}
+    <link rel="canonical" href="{{ url_for('main.index', _external=True) }}" >
+{% endblock %}
+
+        {% block main %}
+          {% include theme('article_lists.html') %}
+        {% endblock %}
+
+

@@ -1,0 +1,8 @@
+-r common.txt
+MySQL-python
+bae_utils
+bae_memcache
+bae_image
+bae_log
+pybcs
+
