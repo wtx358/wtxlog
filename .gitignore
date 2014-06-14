@@ -2,6 +2,13 @@
 __pycache__/
 *.py[cod]
 
+# vim swap file
+*.swp
+
+# sqlite database files
+*.db
+*.sqlite
+
 # C extensions
 *.so
 
