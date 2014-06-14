@@ -151,13 +151,19 @@ def utility_processor():
                                      .order_by(Article.hits.desc()) \
                                      .limit(int(limit)).all()
 
-    def get_recommend_articles(limit=10):
+    def get_recommend_articles(category=None, limit=10):
         """
         返回推荐文章列表
 
+        :param category:
+            当前栏目，`None`或者`Category`实例
         :param limit:
-            返回的个数，正整数
+            返回的个数，正整数，默认为10
         """
+        if isinstance(category, Category):
+            cate_ids = get_category_ids(category.longslug)
+            return Article.query.public().filter(Article.category_id.in_(cate_ids)) \
+                                .filter_by(recommend=True).limit(int(limit)).all()
         return Article.query.public().filter_by(recommend=True).limit(int(limit)).all()
 
     def friendlinks():

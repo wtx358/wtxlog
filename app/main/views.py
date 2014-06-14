@@ -126,8 +126,10 @@ def tags(template):
 @cache.cached(86400)
 def tag(template, name):
     '''
-    :参数 template: 模板文件，此参数自动传入
-    :参数 name: Tag名称，若为非ASCII字符，一般是经过URL编码的
+    :param template:
+        模板文件，此参数自动传入
+    :param name:
+        Tag名称，若为非ASCII字符，一般是经过URL编码的
     '''
     # 若name为非ASCII字符，传入时一般是经过URL编码的
     # 若name为URL编码，则需要解码为Unicode

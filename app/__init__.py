@@ -27,6 +27,8 @@ def get_appconfig():
             env = 'bae'
         elif _env.startswith('direwolf'):
             env = 'sae'
+        elif _env.startswith('gunicorn') and os.getenv('USER') == 'vcap':
+            env = 'jae'
         else:
             env = 'production'
     else:
