@@ -161,6 +161,36 @@ class SAEConfig(Config):
         app.logger.addHandler(_handler)
 
 
+class JAEConfig(Config):
+
+    # mysql config
+    MYSQL_USER = ''
+    MYSQL_PASS = ''
+    MYSQL_HOST = ''
+    MYSQL_PORT = ''
+    MYSQL_DB = ''
+
+    SQLALCHEMY_DATABASE_URI = 'mysql://%s:%s@%s:%s/%s' % (
+        MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_PORT, MYSQL_DB
+    )
+
+    def init_app(cls, app):
+        Config.init_app(app)
+
+        mail_handler = Config.get_mailhandler()
+        app.logger.addHandler(mail_handler)
+
+        # http://jae.jd.com/help/create_app.html?targ=94#a32
+        # logfile path: /home/vcap/app/logs/jae.log
+        # this logfile would be clean when app rebuild or restart
+        _log_file = os.path.join(os.getenv('HOME'), 'logs/jae.log')
+        file_handler = logging.FileHandler(_log_file)
+        formatter = logging.Formatter('%(asctime)s %(levelname)-8s %(message)s',
+                                      '%Y-%m-%d %H:%M:%S')
+        file_handler.setFormatter(formatter)
+        app.logger.addHandler(file_handler)
+
+
 class ProductionConfig(Config):
 
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
@@ -190,6 +220,7 @@ config = {
     'bae': BAEConfig,
     'default': DevelopmentConfig,
     'development': DevelopmentConfig,
+    'jae': JAEConfig,
     'local': DevelopmentConfig,
     'production': ProductionConfig,
     'sae': SAEConfig,
