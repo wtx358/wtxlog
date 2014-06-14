@@ -20,9 +20,16 @@ BODY_FORMAT = Config.BODY_FORMAT
 
 
 class Permission:
-    WRITE_ARTICLES = 0x04 #写的文章是草稿，不公开
-    PUBLISH_ARTICLES = 0x08 #可以公开文章
-    ADMINISTER = 0x80 #管理后台的权限
+    '''定义角色拥有的权限'''
+
+    #写的文章是草稿，不公开
+    WRITE_ARTICLES = 0x04
+
+    #可以公开文章
+    PUBLISH_ARTICLES = 0x08
+
+    #管理后台的权限
+    ADMINISTER = 0x80
 
 
 class Role(db.Model):
@@ -94,8 +101,9 @@ class User(UserMixin, db.Model):
     def authenticate(username, password):
         """
         验证用户：如果成功，返回User模型，否则返回None
-        :参数 username: 用户名或者电子邮件地址
-        :参数 password: 用户密码
+
+        :param username: 用户名或者电子邮件地址
+        :param password: 用户密码
         """
         user = User.query.filter(db.or_(User.username==username,
             User.email==username)).first()
