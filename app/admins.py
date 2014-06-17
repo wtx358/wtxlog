@@ -2,14 +2,16 @@
 
 from urllib import unquote
 from datetime import datetime
-from flask import redirect, url_for, Markup
+from flask import redirect, url_for, Markup, flash
 from flask.ext.login import current_user, login_required
 from flask.ext.admin import Admin, AdminIndexView, BaseView, expose, helpers
 from flask.ext.admin.contrib import sqla
+from flask.ext.admin.actions import action
 from webhelpers.html import HTML
 from webhelpers.html.tags import link_to
 
 from wtforms.fields import SelectField, TextAreaField
+from .utils.helpers import baidu_ping
 from .utils.widgets import MarkitupTextAreaField, CKTextAreaField
 from .ext import cache
 from .models import *
@@ -128,7 +130,7 @@ class ArticleAdmin(sqla.ModelView):
 
     # Model handlers
     def on_model_change(self, form, model, is_created):
-        if not model.id:
+        if is_created:
             model.author_id = current_user.id
             model.created = datetime.now()
             model.last_modified = model.created
@@ -136,10 +138,22 @@ class ArticleAdmin(sqla.ModelView):
             model.last_modified = datetime.now()
 
     def after_model_change(self, form, model, is_created):
+        # 如果发布新文章，则PING通知百度
+        if is_created and model.published:
+            baidu_ping(model.link)
+
+        # 清除缓存，以便可以看到最新内容
         cache_delete(model.shortlink)
 
     def is_accessible(self):
         return current_user.is_administrator()
+
+    @action('pingbaidu', 'Ping to Baidu')
+    def action_ping_baidu(self, ids):
+        for id in ids:
+            obj = Article.query.get(id)
+            baidu_ping(obj.link)
+        flash(u'PING请求已发送，请等待百度处理')
         
 
 class CategoryAdmin(sqla.ModelView):
