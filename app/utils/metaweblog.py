@@ -10,7 +10,7 @@ from hashlib import sha1
 from functools import wraps
 from SimpleXMLRPCServer import SimpleXMLRPCDispatcher
 
-from flask import url_for, current_app
+from flask import url_for, current_app, g
 from filters import markdown_filter
 from .upload import SaveUploadFile
 from ..models import db, User, Article as Post, Category
@@ -31,6 +31,7 @@ def checkauth(pos=1):
             user = User.authenticate(username, password)
             if user is None:
                 raise ValueError('Authentication Failure')
+            g.auth_user = user
 
             args = args[0:pos] + args[pos+2:]
             return f(*args, **kwargs)
@@ -105,6 +106,9 @@ def metaWeblog_newPost(blogid, struct, publish):
     post.body = content
     #post.content_html = markdown_filter(innerlink_filter(content))
     post.category_id = category_id
+    post.author = g.auth_user
+    if g.auth_user.is_administrator():
+        post.published = True
     #post.source = u'metaWeblog'
     post.created = datetime.now()
     post.last_modified = post.created
@@ -168,9 +172,6 @@ def metaWeblog_newMediaObject(blogid, struct):
     # 这部分根据情况自定义
     obj = SaveUploadFile(fext, data)
     url = obj.save()
-    print "========================"
-    print url
-
     return {'url': url}
 
 
