@@ -372,7 +372,10 @@ def xmlrpc():
     * <http://blog.csdn.net/priderock/article/details/1754503>
     """
 
-    return blog_dispatcher._marshaled_dispatch(request.data)
+    #return blog_dispatcher._marshaled_dispatch(request.data)
+    response_data = blog_dispatcher._marshaled_dispatch(request.data)
+    return current_app.response_class(response_data,
+                                      content_type='text/xml')
 
 
 @main.route('/ckupload/', methods=['POST', 'OPTIONS'])
