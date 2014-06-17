@@ -7,7 +7,7 @@ from ..models import Category, Tag
 
 
 def get_current_theme():
-    return get_theme(current_app.config.get('THEME') or 'default')
+    return get_theme(current_app.config.get('THEME', 'default'))
 
 
 def render_template(template, **context):
