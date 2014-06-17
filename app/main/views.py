@@ -372,7 +372,10 @@ def xmlrpc():
     * <http://blog.csdn.net/priderock/article/details/1754503>
     """
 
-    return blog_dispatcher._marshaled_dispatch(request.data)
+    #return blog_dispatcher._marshaled_dispatch(request.data)
+    response_data = blog_dispatcher._marshaled_dispatch(request.data)
+    return current_app.response_class(response_data,
+                                      content_type='text/xml')
 
 
 @main.route('/ckupload/', methods=['POST', 'OPTIONS'])
@@ -387,9 +390,13 @@ def ckupload():
         # 传统上传模式，IE浏览器使用这种模式
         fileobj = request.files['upload']
         data = fileobj.read()
-
+        fname, fext = os.path.splitext(fileobj.filename)
+        if fext.lower() in ('.gif', '.jpg', '.jpeg', '.png'):
+            _fext = fext
+        else:
+            _fext = fileobj.filename
         try:
-            obj = SaveUploadFile(fileobj.filename, data)
+            obj = SaveUploadFile(_fext, data)
             url = obj.save()
         except:
             error = 'upload error'

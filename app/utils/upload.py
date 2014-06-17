@@ -9,10 +9,14 @@ from flask import current_app
 class SaveUploadFile:
     """文件上传到去云存储，包括BCS和七牛"""
 
-    def __init__(self, filename, data):
-        #self.filename = str('%s/%s%s' % (self.gen_dirname(), 
-        #                                 self.gen_filename(), fext))
-        self.filename = filename
+    def __init__(self, fext, data):
+        # 图片文件自动生成文件名
+        # 非图片文件使用原文件名
+        if fext.startswith('.'):
+            self.filename = u'%s/%s%s' % (self.gen_dirname(),
+                                          self.gen_filename(), fext)
+        else:
+            self.filename = u'%s/%s' % (self.gen_dirname(), fext)
         self.data = data
 
     def gen_dirname(self):
