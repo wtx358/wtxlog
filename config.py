@@ -61,13 +61,14 @@ class Config:
                 secure = ()
             use_ssl = getattr(Config, 'MAIL_USE_SSL', False)
         mail_handler = MySMTPHandler(
-            mailhost=(Config.MAIL_SERVER, Config.MAIL_PORT),
-            fromaddr=Config.APP_MAIL_SENDER.encode('utf-8'),
-            toaddrs=[Config.APP_ADMIN],
-            subject=Config.APP_MAIL_SUBJECT_PREFIX.encode('utf-8') + ' Application Error',
-            credentials=credentials,
-            secure=secure,
-            use_ssl=use_ssl)
+                mailhost=(Config.MAIL_SERVER, Config.MAIL_PORT),
+                fromaddr=Config.APP_MAIL_SENDER,
+                toaddrs=[Config.APP_ADMIN],
+                subject=Config.APP_MAIL_SUBJECT_PREFIX + ' Application Error',
+                credentials=credentials,
+                secure=secure,
+                use_ssl=use_ssl
+        )
         mail_handler.setLevel(logging.ERROR)
         return mail_handler
 
