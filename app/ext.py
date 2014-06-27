@@ -5,7 +5,7 @@ import datetime
 from urllib2 import quote, unquote
 from flask import current_app, request
 from functools import wraps
-from flask.ext.mail import Mail
+from flask.ext.mail import Mail, Message
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from werkzeug.contrib.cache import NullCache, SimpleCache
@@ -76,19 +76,19 @@ class MySMTPHandler(logging.Handler):
                 smtp = smtplib.SMTP_SSL(self.mailhost, port, timeout=self._timeout)
             else:
                 smtp = smtplib.SMTP(self.mailhost, port, timeout=self._timeout)
-            msg = self.format(record)
-            msg = "From: %s\r\nTo: %s\r\nSubject: %s\r\nDate: %s\r\n\r\n%s" % (
-                            self.fromaddr,
-                            ",".join(self.toaddrs),
-                            self.getSubject(record),
-                            formatdate(), msg)
+
+            _msg = self.format(record)
+            msg = Message(self.getSubject(record),
+                          sender=self.fromaddr, recipients=self.toaddrs)
+            msg.body = _msg
+
             if self.username:
                 if self.secure is not None:
                     smtp.ehlo()
                     smtp.starttls(*self.secure)
                     smtp.ehlo()
                 smtp.login(self.username, self.password)
-            smtp.sendmail(self.fromaddr, self.toaddrs, msg)
+            smtp.sendmail(self.fromaddr, self.toaddrs, msg.as_string())
             smtp.quit()
         except (KeyboardInterrupt, SystemExit):
             raise
