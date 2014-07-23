@@ -36,11 +36,9 @@ SAE
 
     pip install -r requirements.txt
 
-(4) 使用 ``bundle_local.py`` 导出依赖包
+(4) 使用 ``bundle_local.py`` 导出依赖包::
 
-```
-python bundle_local.py -r requirements.txt
-```
+    python bundle_local.py -r requirements.txt
 
 PS: ``bundle_local.py`` 可在 https://github.com/sinacloud/sae-python-dev-guide 找到。
 
