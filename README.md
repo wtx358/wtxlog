@@ -13,3 +13,5 @@ wtxlog是一个基于Python Flask的博客/CMS系统，力求简单。使用SQLA
 * 可自定义模板主题
 * 内置专题、栏目、标签、文章等常见模型
 
+Documentation: <http://wtxlog.readthedocs.org/>
+
