@@ -30,15 +30,13 @@ SAE
 
 (2) 把 ``requirements/common.txt`` 复制到当前目录，并命名为 ``requirements.txt``
 
-(3) 使用 ``requirements.txt`` 安装依赖包
+(3) 使用 ``requirements.txt`` 安装依赖包::
 
-::
-
-    pip install -r requirements.txt
+        pip install -r requirements.txt
 
 (4) 使用 ``bundle_local.py`` 导出依赖包::
 
-    python bundle_local.py -r requirements.txt
+        python bundle_local.py -r requirements.txt
 
 PS: ``bundle_local.py`` 可在 https://github.com/sinacloud/sae-python-dev-guide 找到。
 
