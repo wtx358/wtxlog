@@ -175,6 +175,7 @@ class JAEConfig(Config):
         MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_PORT, MYSQL_DB
     )
 
+    @classmethod
     def init_app(cls, app):
         Config.init_app(app)
 
@@ -210,6 +211,7 @@ class ProductionConfig(Config):
             MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_PORT, MYSQL_DB
         )
 
+    @classmethod
     def init_app(cls, app):
         Config.init_app(app)
 
