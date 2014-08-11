@@ -15,3 +15,15 @@
   {% include theme('article_lists.html') %}
 {% endblock %}
 
+
+{% block friendlinks %}
+  {% if friendlinks() %}
+    <!-- Friend Links -->
+    <h2>Links</h2>
+    <ul>
+      {% for flink in friendlinks() %}
+      <li><a href="{{ flink.url }}" title="{{ flink.title }}" target="_blank">{{ flink.anchor }}</a></li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock %}

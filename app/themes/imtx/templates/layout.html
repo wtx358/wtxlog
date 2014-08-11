@@ -13,6 +13,12 @@
     {% block head_extend %}{% endblock %}
   </head>
 
+{% macro nav_by_category(category) -%}
+<a href="{{ url_for('main.index') }}">Home</a> <b>&#187;</b> {% for cate in category.parents %}
+  <a href="{{ cate.link }}">{{ cate.name }}</a> <b>&#187;</b>
+  {% endfor %}
+{% endmacro %}
+
   <body>
     <div id="bgcontain"> 
       <div id="header">
@@ -97,17 +103,8 @@
             {% endfor %}
           </ul>
 
-          {% block friendlinks %}
-          {% if friendlinks() %}
-          <!-- Friend Links -->
-          <h2>Links</h2>
-          <ul>
-            {% for flink in friendlinks() %}
-            <li><a href="{{ flink.url }}" title="{{ flink.title }}" target="_blank">{{ flink.anchor }}</a></li>
-            {% endfor %}
-          </ul>
-          {% endif %}
-          {% endblock %}
+          <!--友情链接-->
+          {% block friendlinks %}{% endblock %}
 
           {% block sidebar_other %}
           <h2>Other</h2>
