@@ -4,11 +4,10 @@
 {% block keywords %}{{ topic.seokey }}{% endblock %}
 {% block description %}{{ topic.seodesc }}{% endblock %}
 
-{% block head_extend %}
-    <link rel="canonical" href="{{ topic.link }}" >
+{% block head_extend -%}
+  <link rel="canonical" href="{{ topic.link }}" />
+{%- endblock %}
+
+{% block main %}
+  {% include theme('mobile/article_lists.html') %}
 {% endblock %}
-
-      {% block main %}
-        {% include theme('article_lists.html') %}
-      {% endblock %}
-

@@ -2,14 +2,9 @@
 
 {% block title %}搜索: {{ keyword }}{% if pagination and pagination.page>1 %}_第{{ pagination.page }}页{% endif %}{% endblock %}
 
+{% block main %}
+  <h2 class="t1">搜索 <b>{{ keyword }}</b> 的结果</h2>
+  <form action="{{ url_for('main.search') }}" method="get">    <div class="srh">	<input type="hidden" name="act" value="Search">    <input type="search" class="i" name="keyword" value="" id="keyword">   <input type="submit" name="submit" value="搜">    </div></form>
 
-      {% block nav %}
-      <div id="homes"><p><span>本站网址：</span>当前位置：<a href="{{ url_for('main.index') }}">{{ config['SITE_NAME'] }}</a> &gt; 【{{ keyword }}】搜索结果</p></div>
-      {% endblock %}
-
-      {% block main %}
-        <h2>Search Results for {{ keyword }}</h2>
-        {% include theme('article_lists.html') %}
-      {% endblock %}
-
-
+  {% include theme('mobile/article_lists.html') %}
+{% endblock %}
