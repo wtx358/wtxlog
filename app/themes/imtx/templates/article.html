@@ -18,6 +18,12 @@
 {% block main %}
 
 <div class="post" id="article-{{ article.id }}">
+  <!--location begin -->
+  <div style="margin-bottom:10px">
+    {{ nav_by_category(article.category) }} 正文
+  </div>
+  <!--location end -->
+
   <ul class="date">
     <li class="day">{{ article.created|date('%d') }}</li>
     <li class="month">{{ article.created|date('%b') }}</li>
@@ -31,12 +37,6 @@
 
   <div class="clear"></div>
   <div class="entry">
-    <!--location begin -->
-    <div>Location: <a href="{{ url_for('main.index') }}">Index</a> &#187;
-    {% for cate in article.category.parents -%}
-    <a href="{{ cate.link }}">{{ cate.name }}</a> {% if not loop.last%}&#187;{% endif %}
-    {% endfor %}</div>
-    <!--location end -->
     {{ article.body_html|safe }}
     {% if article.topic %}
     <p>专题: &nbsp; <a href="{{ article.topic.link }}">{{ article.topic.name }}</a></p>
