@@ -2,87 +2,92 @@
 
 {% block title %}{{ article.title }}{% endblock %}
 
-{% block head_extend %}
-    <meta name="author" content="{% block author %}{{ article.author }}{% endblock %}" />
-    <link rel="canonical" href="{{ article.link }}" >
-    {% if article.get_prev %}<link rel="prev" title="{{ article.get_prev.title }}" href="{{ article.get_prev.link }}" >{% endif %}
-    {% if article.get_next %}<link rel="next" title="{{ article.get_next.title}}" href="{{ article.get_next.link }}" >{% endif %}
+{% block head_extend -%}
+  <meta name="author" content="{% block author %}{{ article.author }}{% endblock %}" />
+  <link rel="canonical" href="{{ article.link }}" />
+  <meta name="mobile-agent" content="format=html5;url={{ article.link }}"/>
+  <meta name="mobile-agent" content="format=xhtml;url={{ article.link }}"/>
+  {% if article.get_prev %}<link rel="prev" title="{{ article.get_prev.title }}" href="{{ article.get_prev.link }}" />{% endif %}
+  {% if article.get_next %}<link rel="next" title="{{ article.get_next.title}}" href="{{ article.get_next.link }}" />{% endif %}
+{%- endblock %}
+
+{% block logo %}
+  <div class="logo"><a class="logo-img" title="{{ config['SITE_NAME'] }}" href="{{ url_for('main.index') }}"><span class="none">{{ config['SITE_NAME'] }}</span></a></div>
 {% endblock %}
 
-        {% block logo %}
-        <div class="logo"><a class="logo-img" title="{{ config['SITE_NAME'] }}"
-            href="{{ url_for('main.index') }}"><span class="none">{{ config['SITE_NAME'] }}</span></a></div>
-        {% endblock %}
+{% block main %}
 
-        {% block main %}
+<div class="post" id="article-{{ article.id }}">
+  <ul class="date">
+    <li class="day">{{ article.created|date('%d') }}</li>
+    <li class="month">{{ article.created|date('%b') }}</li>
+  </ul>
 
-        <div class="post" id="article-{{ article.id }}">
-          <ul class="date">
-            <li class="day">{{ article.created|date('%d') }}</li>
-            <li class="month">{{ article.created|date('%b') }}</li>
-          </ul>
+  <div class="title">
+    <h1 class="topic"><a href="{{ article.link }}" rel="bookmark" title="{{ article.title }}">{{ article.title }}</a></h1>
+    <p class="postmeta">Post by {{ article.author }} at {{ article.created|date('%Y') }}. 
+    Category: <a href="{{ article.category.link }}">{{ article.category.name }}</a>.
+    <span id="articlehits"><img src="{{ theme_static('images/loading.gif') }}" /></span> Views.</p></div>
 
-          <div class="title">
-            <h1 class="topic"><a href="{{ article.link }}" rel="bookmark" title="{{ article.title }}">{{ article.title }}</a></h1>
-            <p class="postmeta">Post by {{ article.author }} at {{ article.created|date('%Y') }}. 
-            Category: <a href="{{ article.category.link }}">{{ article.category.name }}</a>. 
-            <span id="articlehits"><img src="{{ theme_static('images/loading.gif') }}" /></span> Views.</p></div>
+  <div class="clear"></div>
+  <div class="entry">
+    <!--location begin -->
+    <div>Location: <a href="{{ url_for('main.index') }}">Index</a> &#187;
+    {% for cate in article.category.parents -%}
+    <a href="{{ cate.link }}">{{ cate.name }}</a> {% if not loop.last%}&#187;{% endif %}
+    {% endfor %}</div>
+    <!--location end -->
+    {{ article.body_html|safe }}
+    {% if article.topic %}
+    <p>专题: &nbsp; <a href="{{ article.topic.link }}">{{ article.topic.name }}</a></p>
+    {% endif %}
 
-          <div class="clear"></div>
-          <div class="entry">
-            <!--location begin -->
-            <p>Location: <a href="{{ url_for('main.index') }}">Index</a> &#187;
-            {% for cate in article.category.parents %}
-            <a href="{{ cate.link }}">{{ cate.name }}</a> {% if not loop.last%}&#187;{% endif %}
-            {% endfor %}</p>
-            <!--location end -->
-            {{ article.body_html|safe }}
-            <p>本文链接: <a href="{{ article.link }}" title="{{ article.title }}">{{ article.link }}</a> <br/>
-            版权所有。转载时必须以链接形式注明作者和原始出处及本声明。</p>
+    <p>本文链接: <a href="{{ article.link }}" title="{{ article.title }}">{{ article.link }}</a> <br/>
+    版权所有。转载时必须以链接形式注明作者和原始出处及本声明。</p>
 
-            {% if article.tags %}
-            <div id="tags">Tags: &nbsp; {% for tag in article.tags %}<a href="{{ tag.link }}">{{ tag.name }}</a>{%if not loop.last %},&nbsp;{% endif %}{% endfor %}. </div>
-            {% endif %}
+    {% if article.tags %}
+    <div id="tags">Tags: &nbsp; {% for tag in article.tags %}<a href="{{ tag.link }}">{{ tag.name }}</a>{%if not loop.last %},&nbsp;{% endif %}{% endfor %}. </div>
+    {% endif %}
 
-            <!-- UJian Button BEGIN -->
-            <div class="ujian-hook"></div>
-            <a rel="nofollow" href="http://www.ujian.cc" style="border:0;"><img src="http://img.ujian.cc/pixel.png" alt="友荐云推荐" style="border:0;padding:0;margin:0;" /></a>
-            <!-- UJian Button END -->
+    <!-- UJian Button BEGIN -->
+    <div class="ujian-hook"></div>
+    <a rel="nofollow" href="http://www.ujian.cc" style="border:0;"><img src="http://img.ujian.cc/pixel.png" alt="友荐云推荐" style="border:0;padding:0;margin:0;" /></a>
+    <!-- UJian Button END -->
 
-          </div>
-        </div>
+  </div>
+</div>
 
-        <div class="b-pingback"> 
-          {% if article.get_prev %}<li class="b-meta">Prev: <a href="{{ article.get_prev.link }}">{{ article.get_prev.title }}</a></li>{% endif %}
-          {% if article.get_next %}<li class="b-meta">Next: <a href="{{ article.get_next.link }}">{{ article.get_next.title }}</a></li>{% endif %}
-        </div>
+  <div class="b-pingback">
+    {% if article.get_prev %}<li class="b-meta">Prev: <a href="{{ article.get_prev.link }}">{{ article.get_prev.title }}</a></li>{% endif %}
+    {% if article.get_next %}<li class="b-meta">Next: <a href="{{ article.get_next.link }}">{{ article.get_next.title }}</a></li>{% endif %}
+  </div>
 
-        <!-- UY BEGIN -->
-        <div id="uyan_frame"></div>
-        <!-- UY END -->
+<!-- UY BEGIN -->
+<div id="uyan_frame"></div>
+<!-- UY END -->
 
-        {% endblock %}
+{% endblock %}
 
-        {% block sidebar_other %}
-        <div id="box">
-          <div id="float" class="div1">
-            {% with related = get_related_articles(article.id, 15) %}
-              {% if related %}
-              <h2>Related Posts</h2>
-              <ul>
-                {% for article in related %}<li><a href="{{ article.link }}" title="{{ article.title }}">{{ article.title }}</a></li>{% endfor %}
-              </ul>
-              {% endif %}
-            {% endwith %}
-          </div>
-        </div>
-        {% endblock %}
+{% block sidebar_other -%}
+<div id="box">
+  <div id="float" class="div1">
+    {% with related = get_related_articles(article.id, 15) %}
+      {% if related %}
+      <h2>Related Posts</h2>
+      <ul>
+        {% for article in related -%}<li><a href="{{ article.link }}" title="{{ article.title }}">{{ article.title }}</a></li>{%- endfor %}
+      </ul>
+      {% endif %}
+    {% endwith %}
+  </div>
+</div>
+{%- endblock %}
 
-        {% block tail %}
-    <!-- UY BEGIN -->
-    <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=1685977"></script>
-    <script type="text/javascript" src="http://v1.ujian.cc/code/ujian.js?uid=1685977"></script>
-    <!-- UY END -->
-    <script>gethits({{ article.id }}, 'articlehits');</script>
-        {% endblock %}
+{% block tail -%}
+  <!-- UY BEGIN -->
+  <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=1685977"></script>
+  <script type="text/javascript" src="http://v1.ujian.cc/code/ujian.js?uid=1685977"></script>
+  <!-- UY END -->
+  <script>gethits({{ article.id }}, 'articlehits');</script>
+{%- endblock %}
 
