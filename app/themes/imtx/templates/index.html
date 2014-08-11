@@ -1,6 +1,6 @@
 {% extends theme('layout.html') %}
 
-{% block fulltitle %}{{ config['SITE_NAME'] }}{% if pagination.page>1 %}_第{{ pagination.page }}页{% endif %}{% endblock %}
+{% block fulltitle %}{{ label('index_title') or config['SITE_NAME'] }}{% if pagination.page>1 %}_第{{ pagination.page }}页{% endif %}{% endblock %}
 {% block keywords %}{{ label('index_keywords') }}{% endblock %}
 {% block description %}{{ label('index_description') }}{% endblock %}
 {% block author %}{{ config['SITE_NAME'] }}{% endblock %}
