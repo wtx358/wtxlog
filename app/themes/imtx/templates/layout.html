@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>{% block fulltitle%}{% block title %}{% endblock %} - Delog{% endblock %}</title>
+    <title>{% block fulltitle%}{% block title %}{% endblock %} - {{ config['SITE_NAME'] }}{% endblock %}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
     <meta name="keywords" content="{% block keywords %}{% endblock %}" />
@@ -122,12 +122,11 @@
       <hr />
       {% block footer %}
       <div id="footer">
-        <p>
-        &copy; 2013 digwtx 
+        <p>&copy; 2014 {{ config['SITE_NAME'] }}
         - <a href="{{ url_for('main.feed') }}">Entries(RSS)</a> 
         - <a href="{{ url_for('main.sitemap') }}">Sitemap</a>
         <br/>
-		Powered by <a href="/tag/flask/" rel="external">Flask</a> | 
+        Powered by <a href="http://flask.pocoo.org" target="_blank" rel="external nofollow">Flask</a> | 
     Theme designed By <a href="http://imtx.me/" target="_blank" rel="nofollow">IMTX</a> & <a href="http://www.hoofei.com/" rel="nofollow" target="_blank">Hoofei</a>
         </p>
       </div>

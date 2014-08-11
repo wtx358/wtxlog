@@ -2,16 +2,18 @@
 
 {% block title %}{{ flatpage.seotitle or flatpage.title }}{% endblock %}
 
-{% block logo %}
-        <h1 class="logo"><a class="logo-img" href="{{ url_for('main.index') }}"><span class="none">{{ config['SITE_NAME'] }}</span></a></h1>
-{% endblock %}
+{% block head_extend -%}
+  <link rel="canonical" href="{{ flatpage.link }}" />
+  <meta name="mobile-agent" content="format=html5;url={{ flatpage.link }}"/>
+  <meta name="mobile-agent" content="format=xhtml;url={{ flatpage.link }}"/>
+{%- endblock %}
 
-        {% block main %}
-        <div class="post">
-          <h2 class="pagetitle">{{ flatpage.title }}</h2>
-          <div class="entry">
-            {{ flatpage.body_html|safe }}
-          </div>
-        </div>
-        {% endblock %}
+{% block main %}
+  <div class="post">
+    <h2 class="pagetitle">{{ flatpage.title }}</h2>
+    <div class="entry">
+      {{ flatpage.body_html|safe }}
+    </div>
+  </div>
+{% endblock %}
 
