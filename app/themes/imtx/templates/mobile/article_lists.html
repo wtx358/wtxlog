@@ -1,33 +1,24 @@
-        {% if articles %}
-        {% if category %}<h2 class="pagetitle">Category Archives: {{ category.name }}</h2>{% endif %}
-        {% if tag %}<h2 class="pagetitle">Tag Archives: {{ tag.name }}</h2>{% endif %}
-        {% if year or month %}<h2 class="pagetitle">Monthly Archives: {{ year }}-{{ month }}</h2>{% endif %}
-        {% for article in articles %}
-        <div class="post" id="article-{{ article.id }}">
-          <ul class="date">
-            <li class="day">{{ article.created|date('%d') }}</li>
-            <li class="month">{{ article.created|date('%b') }}</li>
-          </ul>
+{% if articles %}
+  {% if category %}<h2 class="t1">Category Archives: <b>{{ category.name }}</b></h2>{% endif %}
+  {% if topic %}<h2 class="t1">Topic Archives: <b>{{ topic.name }}</b></h2>{% endif %}
+  {% if tag %}<h2 class="t1">Tag Archives: <b>{{ tag.name }}</b></h2>{% endif %}
+  {% if year or month %}<h2 class="t1">Monthly Archives: <b>{{ year }}-{{ month }}</b></h2>{% endif %}
+  <ul>
+  {% for article in articles %}
+  <li>
+  <h3><a href="{{ article.link }}">{{ article.title }}</a></h3>
+  <div class="s">{{ article.summary|safe }}</div>
+  <span class="a"> {{ article.created|date('%Y-%m-%d') }} | 
+  <a href="{{ article.category.link }}">{{ article.category.name }}</a>
+  </span>
+  </li>
+  {% endfor %}
+  </ul>
+{% else %}
+  <p>没有内容</p>
+{% endif %}
 
-          <div class="title">
-            <h2 class="topic">{% if article.ontop %}[置顶]{% endif %}<a href="{{ article.link }}" rel="bookmark" title="{{ article.title }}">{{ article.title }}</a></h2>
-            <p class="postmeta">Post by {{ article.author }} at {{
-            article.created|date('%Y') }}. Category: <a href="{{ article.category.link }}">{{ article.category.name }}</a>. 
-            {{ article.hits }} Views.</p></div>
-
-          <div class="clear"></div>
-          <div class="entry">
-            {{ article.summary|safe }}
-            {% if article.has_more %}<p><a href="{{ article.link }}" rel="nofollow">Read More...</a>{% endif %}
-          </div>
-        </div>
-
-        {% endfor %}
-        {% else %}
-          <p>没有内容</p>
-        {% endif %}
-
-        <div class="pagenavi">
-        {{ pagination.pager('$link_previous ~3~ $link_next (Page $page of $page_count)') }}
-        </div>
+{% if pagination and pagination.page_count > 1 %}
+<div class="page">{{ pagination.pager('$link_first $link_previous ~1~ $link_next $link_last') }}</div>
+{% endif %}
 

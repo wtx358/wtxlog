@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>{% block fulltitle%}{% block title %}{% endblock %} - (mobile)Delog{% endblock %}</title>
+    <title>{% block fulltitle%}{% block title %}{% endblock %}-{{ config['SITE_NAME'] }}{% endblock %}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
     <meta name="keywords" content="{% block keywords %}{% endblock %}" />
@@ -12,132 +12,37 @@
     <link href="{{ theme_static('mobile/css/style.css') }}" rel="stylesheet" type="text/css" media="all" />
     {% block head_extend %}{% endblock %}
   </head>
+<body>
 
-  <body>
-    <div id="bgcontain"> 
-      <div id="header">
-        {% block logo %}
-        <h1 class="logo"><a href="{{ url_for('main.index') }}" title="{{ config['SITE_NAME'] }}"><span class="none">{{ config['SITE_NAME'] }}</span></a></h1>
-        {% endblock %}
-        <form action="{{ url_for('main.search') }}" method="GET">
-          <div>
-            <input type="text" value="Search..." onfocus="if (value =='Search...'){value =''}" onblur="if (value ==''){value='Search...'}" name="keyword" id="keyword" />
-            <input type="submit" id="searchsubmit" value="" />
-          </div>
-        </form>
-      </div> 
+{% macro nav_by_category(category) -%}
+<b>&#187;</b>{% for cate in category.parents -%}
+  <a href="{{ cate.link }}">{{ cate.name }}</a><b>&#187;</b>
+  {% endfor -%}
+{%- endmacro %}
 
-      <div id="menu">
-        <ul>
-          <li class="{% if request.path not in ('/tag/', '/links/', '/about/') %}current_page_item{% else %}page_item{% endif %}"><a href="{{ url_for('main.index') }}" title="Home">Home</a></li>
-          <li class="{% if request.path == '/tag/' %}current_page_item{% else %}page_item{% endif %}"><a href="{{ url_for('main.tags') }}" title="Tags">Tags</a></li>
-          <li class="{% if request.path == '/links/' %}current_page_item{% else %}page_item{% endif %}"><a href="{{ url_for('main.flatpage', slug='links') }}" title="Links">Links</a></li>
-          <li class="{% if request.path == '/about/' %}current_page_item{% else %}page_item{% endif %}"><a href="{{ url_for('main.flatpage', slug='about') }}" title="About">About</a></li>
-          <li id="pattern"></li>
-        </ul>
-      </div>
-      <div class="contain clear">
-        <div id="content" class="narrowcolumn">
-          {% block main %}
+<a id="top" name="top"></a>
+{% block head %}
+<h1>{{ config['SITE_NAME'] }}</h1><div class="h"><a href="{{ url_for('main.index', _external=True) }}" title="{{ config['SITE_NAME'] }}首页">首页</a><b>|</b>{% for category in category_lists() %}<a href="{{ category.link }}">{{ category.name }}</a><b>|</b>{% endfor %}<a href="{{ url_for('main.tags') }}">标签</a></div>
+{% endblock %}
 
-          <div class="article" id="article-1859">
-            <ul class="date">
-              <li class="day">13</li>
-              <li class="month">Oct</li>
-            </ul>
+{% block main %}
+<form action="http://lusongsong.com/wap.asp" method="get">    <div class="srh">	<input type="hidden" name="act" value="Search">    <input type="search" class="i" name="q" value="" id="q">   <input type="submit" name="submit" value="搜">    </div></form>
 
-            <div class="title">
-              <h2 class="topic"><a href="/archives/1859.html" rel="bookmark" title="Permanent Link to Ubuntu Tweak 0.8.6 正式发布：支持Ubuntu 13.10">Ubuntu Tweak 0.8.6 正式发布：支持Ubuntu 13.10</a></h2>
-              <span class="postmeta">Post by TualatriX at 2013 . Category: <a href="/archives/category/applications/">Applications</a>.  359 Views. <a href="/archives/1859.html#comments">2 Comments </a> </span></div>
+<ul> <li>
+<h3><a href="http://lusongsong.com/wap.asp?act=View&amp;id=1128">玩转论坛营销巧获永久自然流量</a></h3>
+<div class="s"><p>做论坛推广大家都会普遍的反映说，发帖很容易被删，所以会觉得论坛营销已经不行了，其实我到不这么看</p></div>
+<span class="a">2014-8-11 | 
+<a href="http://lusongsong.com/wap.asp?act=Main&amp;cate=3">SEO推广</a> | 
+<a href="http://lusongsong.com/wap.asp?act=Com&amp;id=1128">评论:46</a>
+</span>
+</li>
+</ul>
+{% endblock %}
 
-            <div class="clear"></div>
-            <div class="entry">
-
-              <p> <a href="/archives/1859.html#more-1859">Read More...</a>
-
-            </div>
-          </div>
-          {% endblock %}
-
-        </div>
-
-        <div id="sidebar">
-          {% block sidebar %}
-          <h2>Wechat</h2>
-          <p align="center"><img width="180px" height="180px" src="{{ theme_static('images/digwtx-qrcode.png') }}" alt="digwtx-wechat-qrcode"/></p>
-
-          <h2>Recent Posts</h2>
-          <ul>
-            {% set cate = None %}
-            {% if article %}{% set cate = article.category %}{% endif %}
-            {% if category %}{% set cate = category %}{% endif %}
-            {% for article in get_latest_articles(cate, 15) %}
-            <li><a href="{{ article.link }}" title="{{ article.title }}">{{ article.title }}</a></li>
-            {% endfor %}
-          </ul>
-
-          <h2>Top 15 Posts of latest month</h2>
-          <ul>
-            {% for article in get_top_articles(days=30, limit=15) %}
-            <li><a href="{{ article.link }}" title="{{ article.title }}">{{ article.title }}</a></li>
-            {% endfor %}
-          </ul>
-
-          <h2>Categories</h2>
-          <ul>
-            {% for tree in category_tree() %}
-            <li>{{ tree[0] * '----' }}<a href="{{ tree[1].link }}">{{ tree[1].name }}</a>({{ tree[1].count }})</li>
-            {% endfor %}
-          </ul>
-
-          <h2>Archives</h2>
-          <ul>
-            {% for item in archives() %}
-            <li><a href="{{ url_for('main.archives', year=item.year, month=item.month) }}">{{ item|date('%B') }} {{ item|date('%Y') }}</a></li>
-            {% endfor %}
-          </ul>
-
-          {% block friendlinks %}
-          {% if friendlinks() %}
-          <!-- Friend Links -->
-          <h2>Links</h2>
-          <ul>
-            {% for flink in friendlinks() %}
-            <li><a href="{{ flink.url }}" title="{{ flink.title }}" target="_blank">{{ flink.anchor }}</a></li>
-            {% endfor %}
-          </ul>
-          {% endif %}
-          {% endblock %}
-
-          {% block sidebar_other %}
-          <h2>Other</h2>
-          <ul>
-            <li><a rel="nofollow" href="{{ url_for('admin.index') }}">Admin</a></li>
-          </ul>
-          {% endblock %}
-          {% endblock %}
-        </div>
-
-      </div>
-      <hr />
-      {% block footer %}
-      <div id="footer">
-        <p>
-        &copy; 2013 digwtx 
-        - <a href="{{ url_for('main.feed') }}">Entries(RSS)</a> 
-        - <a href="{{ url_for('main.sitemap') }}">Sitemap</a>
-        <br/>
-		Powered by <a href="/tag/flask/" rel="external">Flask</a> | 
-    Theme designed By <a href="http://imtx.me/" target="_blank" rel="nofollow">IMTX</a> & <a href="http://www.hoofei.com/" rel="nofollow" target="_blank">Hoofei</a>
-        </p>
-      </div>
-      {% endblock %}
-      <!-- go top -->
-      <div class="top-btn none on" id="top_btn"></div>
-      <!-- go top end -->
-    </div>
-    <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='vendor/jquery-1.8.3.min.js') }}"></script>
-    <script language="javascript" type="text/javascript" src="{{ theme_static('mobile/js/util.js') }}"></script>
-    {% block tail %}{% endblock %}
-  </body>
+{% block footer %}
+<div class="t2"></div>
+<div class="nav"><a href="#top">顶部</a><b>|</b><a href="{{ url_for('main.index') }}">首页</a>{% block nav %}{% endblock %}</div>
+<div id="ft">&copy; 2014 <a href="#">{{ config['SITE_NAME'] }}</a></div>
+{% endblock %}
+</body>
 </html>

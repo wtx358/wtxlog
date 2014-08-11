@@ -4,11 +4,13 @@
 {% block keywords %}{{ category.seokey }}{% endblock %}
 {% block description %}{{ category.seodesc }}{% endblock %}
 
-{% block head_extend %}
-    <link rel="canonical" href="{{ category.link }}" >
+{% block head_extend -%}
+  <link rel="canonical" href="{{ category.link }}" />
+{%- endblock %}
+
+{% block main %}
+  {% include theme('mobile/article_lists.html') %}
 {% endblock %}
 
-      {% block main %}
-        {% include theme('article_lists.html') %}
-      {% endblock %}
+{% block nav %}{{ nav_by_category(category) }}列表{% endblock %}
 
