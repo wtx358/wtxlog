@@ -155,6 +155,19 @@ def tag(template, name):
                            articles=articles)
 
 
+@main.route('/topic/')
+def topics_():
+    return redirect(url_for('.topics'), code=301)
+
+
+@main.route('/topics/')
+@mobile_template('{mobile/}%s')
+@cache.cached(86400)
+def topics(template):
+    _template = template % 'topics.html'
+    return render_template(_template)
+
+
 @main.route('/topic/<slug>/')
 @mobile_template('{mobile/}%s')
 @cache.cached(86400)

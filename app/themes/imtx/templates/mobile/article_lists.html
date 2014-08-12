@@ -1,8 +1,9 @@
+{% if category %}<h2 class="t1">Category Archives: <b>{{ category.name }}</b></h2>{% endif %}
+{% if topic %}<h2 class="t1">Topic Archives: <b>{{ topic.name }}</b></h2>{% endif %}
+{% if tag %}<h2 class="t1">Tag Archives: <b>{{ tag.name }}</b></h2>{% endif %}
+{% if year or month %}<h2 class="t1">Monthly Archives: <b>{{ year }}-{{ month }}</b></h2>{% endif %}
+
 {% if articles %}
-  {% if category %}<h2 class="t1">Category Archives: <b>{{ category.name }}</b></h2>{% endif %}
-  {% if topic %}<h2 class="t1">Topic Archives: <b>{{ topic.name }}</b></h2>{% endif %}
-  {% if tag %}<h2 class="t1">Tag Archives: <b>{{ tag.name }}</b></h2>{% endif %}
-  {% if year or month %}<h2 class="t1">Monthly Archives: <b>{{ year }}-{{ month }}</b></h2>{% endif %}
   <ul>
   {% for article in articles %}
   <li>

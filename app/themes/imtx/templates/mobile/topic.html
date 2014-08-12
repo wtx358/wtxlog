@@ -11,3 +11,5 @@
 {% block main %}
   {% include theme('mobile/article_lists.html') %}
 {% endblock %}
+
+{% block nav %} <b>&#187;</b> <a href="{{ url_for('main.topics') }}">专题</a> <b>&#187;</b> <a href="{{ topic.link }}">{{ topic.name }}</a>{% endblock %}

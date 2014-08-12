@@ -7,7 +7,7 @@
 {%- endblock %}
 
 {% block main %}
-  <h2 class="t1">标签</h2>
+  <h2 class="t1"><b>标签</b></h2>
   <div class="entry">
     <ul class="taglist clearfix">
       {% for tag in tag_lists() -%}
@@ -17,3 +17,4 @@
   </div>
 {% endblock %}
 
+{% block nav %} <b>&#187;</b> <a href="{{ url_for('main.tags') }}">标签</a>{% endblock %}
