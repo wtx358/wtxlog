@@ -5,7 +5,7 @@ import random
 import datetime
 
 from flask import request, Markup, render_template_string
-from ..models import db, Article, Category, Tag, FriendLink, Link, Label
+from ..models import db, Article, Category, Tag, FriendLink, Link, Label, Topic
 from helpers import get_category_ids
 
 
@@ -89,6 +89,18 @@ def utility_processor():
             return Tag.query.limit(int(limit)).all()
         else:
             return Tag.query.all()
+
+    def topic_lists(limit=None):
+        """
+        返回专题列表
+
+        :param limit:
+            返回的个数，`None`或者正整数
+        """
+        if limit:
+            return Topic.query.limit(int(limit)).all()
+        else:
+            return Topic.query.all()
 
     def get_related_articles(article_id, limit=10):
         """
@@ -228,6 +240,7 @@ def utility_processor():
         category_lists=category_lists,
         category_tree=category_tree,
         tag_lists=tag_lists,
+        topic_lists=topic_lists,
         get_related_articles=get_related_articles,
         get_latest_articles=get_latest_articles,
         get_top_articles=get_top_articles,

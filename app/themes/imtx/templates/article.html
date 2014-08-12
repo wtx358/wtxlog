@@ -38,15 +38,16 @@
   <div class="clear"></div>
   <div class="entry">
     {{ article.body_html|safe }}
-    {% if article.topic %}
-    <p>专题: &nbsp; <a href="{{ article.topic.link }}">{{ article.topic.name }}</a></p>
-    {% endif %}
 
     <p>本文链接: <a href="{{ article.link }}" title="{{ article.title }}">{{ article.link }}</a> <br/>
     版权所有。转载时必须以链接形式注明作者和原始出处及本声明。</p>
 
     {% if article.tags %}
     <div id="tags">Tags: &nbsp; {% for tag in article.tags %}<a href="{{ tag.link }}">{{ tag.name }}</a>{%if not loop.last %},&nbsp;{% endif %}{% endfor %}. </div>
+    {% endif %}
+
+    {% if article.topic %}
+    <p>专题: &nbsp; <a href="{{ article.topic.link }}">{{ article.topic.name }}</a></p>
     {% endif %}
 
     <!-- UJian Button BEGIN -->

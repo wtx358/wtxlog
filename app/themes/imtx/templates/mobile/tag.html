@@ -11,3 +11,5 @@
 {% block main %}
   {% include theme('mobile/article_lists.html') %}
 {% endblock %}
+
+{% block nav %} <b>&#187;</b> <a href="{{ url_for('main.tags') }}">标签</a> <b>&#187;</b> <a href="{{ tag.link }}">{{ tag.name }}</a>{% endblock %}

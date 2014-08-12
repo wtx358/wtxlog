@@ -10,6 +10,8 @@
 
 {% block main %}
   <form action="{{ url_for('main.search') }}" method="get">    <div class="srh">	<input type="hidden" name="act" value="Search">    <input type="search" class="i" name="keyword" value="" id="keyword">   <input type="submit" name="submit" value="搜">    </div></form>
+  <hr style="color:#ccc;"/>
   {% include theme('mobile/article_lists.html') %}
 {% endblock %}
+
 

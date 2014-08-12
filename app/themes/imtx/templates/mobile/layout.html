@@ -16,13 +16,13 @@
 
 {% macro nav_by_category(category) -%}
 <b>&#187;</b>{% for cate in category.parents -%}
-  <a href="{{ cate.link }}">{{ cate.name }}</a><b>&#187;</b>
+<a href="{{ cate.link }}">{{ cate.name }}</a>{% if not loop.last %}<b>&#187;</b>{% endif %}
   {% endfor -%}
 {%- endmacro %}
 
 <a id="top" name="top"></a>
 {% block head %}
-<h1>{{ config['SITE_NAME'] }}</h1><div class="h"><a href="{{ url_for('main.index', _external=True) }}" title="{{ config['SITE_NAME'] }}首页">首页</a><b>|</b>{% for category in category_lists() %}<a href="{{ category.link }}">{{ category.name }}</a><b>|</b>{% endfor %}<a href="{{ url_for('main.tags') }}">标签</a></div>
+<h1>{{ config['SITE_NAME'] }}</h1><div class="h"><a href="{{ url_for('main.index', _external=True) }}" title="{{ config['SITE_NAME'] }}首页">首页</a><b>|</b>{% for category in category_lists() %}<a href="{{ category.link }}">{{ category.name }}</a><b>|</b>{% endfor %}<a href="{{ url_for('main.topics') }}">专题</a><b>|</b><a href="{{ url_for('main.tags') }}">标签</a><b>|</b><a href="{{ url_for('main.flatpage', slug='about') }}">关于</a></div>
 {% endblock %}
 
 {% block main %}
@@ -40,9 +40,8 @@
 {% endblock %}
 
 {% block footer %}
-<div class="t2"></div>
-<div class="nav"><a href="#top">顶部</a><b>|</b><a href="{{ url_for('main.index') }}">首页</a>{% block nav %}{% endblock %}</div>
-<div id="ft">&copy; 2014 <a href="#">{{ config['SITE_NAME'] }}</a></div>
+<div class="t2"><a href="{{ url_for('main.index') }}">首页</a>{% block nav %}{% endblock %}</div>
+<div id="ft">&copy;2014 - {{ config['SITE_NAME'] }} - <a href="#top">顶部</a></div>
 {% endblock %}
 </body>
 </html>

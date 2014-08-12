@@ -36,8 +36,8 @@
       <div id="menu">
         <ul>
           <li class="{% if request.path not in ('/tag/', '/links/', '/about/') %}current_page_item{% else %}page_item{% endif %}"><a href="{{ url_for('main.index') }}" title="Home">Home</a></li>
+          <li class="{% if request.path == '/topics/' %}current_page_item{% else %}page_item{% endif %}"><a href="{{ url_for('main.topics') }}" title="Topics">Topics</a></li>
           <li class="{% if request.path == '/tag/' %}current_page_item{% else %}page_item{% endif %}"><a href="{{ url_for('main.tags') }}" title="Tags">Tags</a></li>
-          <li class="{% if request.path == '/links/' %}current_page_item{% else %}page_item{% endif %}"><a href="{{ url_for('main.flatpage', slug='links') }}" title="Links">Links</a></li>
           <li class="{% if request.path == '/about/' %}current_page_item{% else %}page_item{% endif %}"><a href="{{ url_for('main.flatpage', slug='about') }}" title="About">About</a></li>
           <li id="pattern"></li>
         </ul>
