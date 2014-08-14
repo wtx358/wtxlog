@@ -195,6 +195,8 @@ class JAEConfig(Config):
 
 class ProductionConfig(Config):
 
+    MEMCACHED_SERVERS = ['127.0.0.1:11211']
+
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data_sqlite.db')
 
