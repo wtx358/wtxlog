@@ -295,7 +295,9 @@ def feed():
             published=article.created
         )
 
-    return feed.get_response()
+    res = make_response(feed.get_response())
+    res.headers["Content-Type"] = "application/xml"
+    return res
 
 
 @main.route('/upload/', methods=['POST', 'OPTIONS'])
