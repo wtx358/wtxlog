@@ -132,6 +132,13 @@ class Cache(object):
                     _cache = NullCache()
             elif appenv == 'production':
                 _cache = SimpleCache()
+                try:
+                    import memcache
+                    _mc = memcache.Client(app.config.get('MEMCACHED_SERVERS', []))
+                    if _mc.set(_k, _v):
+                        _cache = _mc
+                except:
+                    pass
             else:
                 _cache = NullCache()
 
