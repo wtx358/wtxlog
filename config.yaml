@@ -6,6 +6,8 @@ handlers:
   static_path: app/static/favicon.ico
 - url: /static/
   static_path: app/static
+- url: /admin/static/
+  static_path: app/static/admin
 - url: /_theme/imtx/
   static_path: app/themes/imtx/static
 ...
