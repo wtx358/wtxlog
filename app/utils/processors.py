@@ -126,7 +126,8 @@ def utility_processor():
             random_ids = random.sample(article_ids, 
                                        min(limit, len(article_ids)))
 
-            return Article.query.public().filter(Article.id.in_(random_ids)).all()
+            if article_ids:
+                return Article.query.public().filter(Article.id.in_(random_ids)).all()
         return None
 
     def get_latest_articles(category=None, limit=10):
