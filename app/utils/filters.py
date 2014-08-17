@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import re
 import time
 import random
 import markdown
 import datetime
 
 from flask import Markup, request
+from ..ext import keywords_split
 
 __all__ = ['register_filters', 'markdown_filter']
 
@@ -39,7 +41,15 @@ def timestamp_filter(stamp, fmt='%Y-%m-%d %H:%M'):
     return datetime.datetime.fromtimestamp(int(stamp)).strftime(fmt)
 
 
+def emphasis(text, keyword=None):
+    if keyword is not None:
+        for _keyword in keywords_split(keyword):
+            text = re.sub(_keyword, '<em>%s</em>' % _keyword, text, flags=re.I)
+    return text
+
+
 def register_filters(app):
     app.jinja_env.filters['markdown'] = markdown_filter
     app.jinja_env.filters['date'] = date_filter
     app.jinja_env.filters['timestamp'] = timestamp_filter
+    app.jinja_env.filters['emphasis'] = emphasis

@@ -310,6 +310,7 @@ li.month {
 	color:#87c71f;
 	text-decoration:none
 }
+.keyword em {font-style:normal; color:#ff0000;}
 .postmeta {
 	color:#609509;
 	list-style-type:none;
