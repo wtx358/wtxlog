@@ -2,13 +2,14 @@
 {% if topic %}<h2 class="t1">Topic Archives: <b>{{ topic.name }}</b></h2>{% endif %}
 {% if tag %}<h2 class="t1">Tag Archives: <b>{{ tag.name }}</b></h2>{% endif %}
 {% if year or month %}<h2 class="t1">Monthly Archives: <b>{{ year }}-{{ month }}</b></h2>{% endif %}
+{% if not keyword %}{% set keyword=None %}{% endif %}
 
 {% if articles %}
   <ul>
   {% for article in articles %}
   <li>
-  <h3><a href="{{ article.link }}">{{ article.title }}</a></h3>
-  <div class="s">{{ article.summary|safe }}</div>
+  <h3><a class="keyword" href="{{ article.link }}">{{ article.title|emphasis(keyword)|safe }}</a></h3>
+  <div class="s keyword">{{ article.summary|emphasis(keyword)|safe }}</div>
   <span class="a"> {{ article.created|date('%Y-%m-%d') }} | 
   <a href="{{ article.category.link }}">{{ article.category.name }}</a>
   </span>

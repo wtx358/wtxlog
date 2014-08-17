@@ -11,6 +11,16 @@ from flask.ext.login import LoginManager
 from werkzeug.contrib.cache import NullCache, SimpleCache
 
 
+def keywords_split(keywords):
+    return keywords.replace(u',', ' ') \
+                   .replace(u';', ' ') \
+                   .replace(u'+', ' ') \
+                   .replace(u'；', ' ') \
+                   .replace(u'，', ' ') \
+                   .replace(u'　', ' ') \
+                   .split(' ')
+
+
 class MySMTPHandler(logging.Handler):
     """
     A handler class which sends an SMTP email for each logging event.

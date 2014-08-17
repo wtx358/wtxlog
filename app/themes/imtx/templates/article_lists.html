@@ -2,6 +2,7 @@
 {% if tag %}<h2 class="">Tag Archives: {{ tag.name }}</h2>{% endif %}
 {% if topic %}<h2 class="">Topic Archives: {{ topic.name }}</h2>{% endif %}
 {% if year or month %}<h2 class="">Monthly Archives: {{ year }}-{{ month }}</h2>{% endif %}
+{% if not keyword %}{% set keyword=None %}{% endif %}
 
 {% if articles %}
 {% for article in articles %}
@@ -12,14 +13,14 @@
   </ul>
 
   <div class="title">
-    <h2 class="topic">{% if article.ontop %}[置顶]{% endif %}<a href="{{ article.link }}" rel="bookmark" title="{{ article.title }}">{{ article.title }}</a></h2>
+    <h2 class="topic">{% if article.ontop %}[置顶]{% endif %}<a class="keyword" href="{{ article.link }}" rel="bookmark" title="{{ article.title }}">{{ article.title|emphasis(keyword)|safe }}</a></h2>
     <p class="postmeta">Post by {{ article.author }} at {{
     article.created|date('%Y') }}. Category: <a href="{{ article.category.link }}">{{ article.category.name }}</a>. 
     {{ article.hits }} Views.</p></div>
 
   <div class="clear"></div>
   <div class="entry">
-    {{ article.summary|safe }}
+    <p class="keyword">{{ article.summary|emphasis(keyword)|safe }}</p>
     {% if article.has_more %}<p><a href="{{ article.link }}" rel="nofollow">Read More...</a>{% endif %}
   </div>
 </div>
