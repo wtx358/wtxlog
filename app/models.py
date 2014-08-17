@@ -552,8 +552,7 @@ class Article(db.Model):
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):
         def _format(_html):
-            return markdown_filter(truncate(remove_formatting(_html), length=200,
-                    whole_word=True))
+            return truncate(remove_formatting(_html), length=200, whole_word=True)
 
         if BODY_FORMAT == 'html':
             target.body_html = value
@@ -562,7 +561,7 @@ class Article(db.Model):
             target.body_html = markdown_filter(value)
             more_start = value.find('<!--more-->')
             if more_start > 0:
-                target.summary = markdown_filter(value[:more_start])
+                target.summary = _format(markdown_filter(value[:more_start]))
             else:
                 target.summary = _format(target.body_html)
 
