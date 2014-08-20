@@ -265,6 +265,7 @@ def utility_processor():
         Topic=Topic,
         FriendLink=FriendLink,
         model_query=model_query,
+        get_category_ids=get_category_ids,
         pager=pager,
         archives=archives,
         category_lists=category_lists,
