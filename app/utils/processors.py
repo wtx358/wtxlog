@@ -5,6 +5,7 @@ import random
 import datetime
 
 from flask import request, Markup, render_template_string
+from flask.ext.restless.search import search as _search
 from ..models import db, Article, Category, Tag, FriendLink, Link, Label, Topic
 from helpers import get_category_ids
 
@@ -57,6 +58,22 @@ def utility_processor():
             archives.reverse()
             # cache.set("archives", archives)
         return archives
+
+    def model_search(model, params):
+        '''
+        模型复杂查询
+
+        :param model:
+            实例模型，比如Article, Category, Tag, etc.
+        :param params:
+            参数字典，为dict类型，参照flask-restless文档
+
+        特别注意：使用这个方法进行查询，模型`__mapper_args__`的
+        `order_by`定义将会失效，在模板中使用时需要特别注意。
+
+        详细内容请参照Flask-Restless的文档
+        '''
+        return _search(db.session, model, params)
 
     def category_lists(parent=None, limit=None):
         """
@@ -236,6 +253,12 @@ def utility_processor():
         return []
 
     return dict(
+        Article=Article,
+        Category=Category,
+        Tag=Tag,
+        Topic=Topic,
+        FriendLink=FriendLink,
+        model_search=model_search,
         pager=pager,
         archives=archives,
         category_lists=category_lists,
