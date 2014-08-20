@@ -9,11 +9,19 @@
 {% block main %}
   <h2 class="t1"><b>标签</b></h2>
   <div class="entry">
+    {% set filters_2 = [] %}
+    {% set order_by_2 = [{'field': 'id', 'direction': 'desc'}] -%}
+
+    {% with tags = model_query(
+        Tag,
+        dict(filters=filters_2, order_by=order_by_2)
+    ) -%}
     <ul class="taglist clearfix">
-      {% for tag in tag_lists() -%}
+      {% for tag in tags -%}
       <li><a href="{{ tag.link }}">{{ tag.name }}</a>({{ tag.count }}){% if not loop.last %}&nbsp;&nbsp;{% endif %}</li>
       {%- endfor %}
     </ul>
+    {% endwith %}
   </div>
 {% endblock %}
 

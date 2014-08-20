@@ -74,36 +74,52 @@
 
           <h2>Recent Posts</h2>
           <ul>
-            {% set cate = None %}
-            {% if article %}{% set cate = article.category %}{% endif %}
-            {% if category %}{% set cate = category %}{% endif %}
-            {% for article in get_latest_articles(cate, 15) %}
+            {% set longslug = '' %}
+            {% if article %}{% set longslug = article.category.longslug %}{% endif %}
+            {% if category %}{% set longslug = category.longslug %}{% endif %}
+            {% with recent_articles = model_query(Article,
+            {'order_by': [{'field': 'id', 'direction': 'desc'}],
+             'limit': 15,
+             'filters': [
+              {'name': 'category_id', 'op': 'in', 'val': get_category_ids(longslug)},
+              {'name': 'published', 'op': 'eq', 'val': True}],
+            }) %}
+            {% for article in recent_articles -%}
             <li><a href="{{ article.link }}" title="{{ article.title }}">{{ article.title }}</a></li>
             {% endfor %}
+            {% endwith %}
           </ul>
 
-          <h2>Top 15 Posts of latest month</h2>
+          <h2>Top 15 Posts</h2>
           <ul>
-            {% for article in get_top_articles(days=30, limit=15) %}
+            {% with top_articles = model_query(Article,
+            {'order_by': [{'field': 'hits', 'direction': 'desc'}],
+             'limit': 15,
+             'filters': [
+              {'name': 'category_id', 'op': 'in', 'val': get_category_ids(longslug)},
+              {'name': 'published', 'op': 'eq', 'val': True}],
+            }) %}
+            {% for article in top_articles -%}
             <li><a href="{{ article.link }}" title="{{ article.title }}">{{ article.title }}</a></li>
             {% endfor %}
+            {% endwith %}
           </ul>
 
           <h2>Categories</h2>
           <ul>
-            {% for tree in category_tree() %}
+            {% for tree in category_tree() -%}
             <li>{{ tree[0] * '----' }}<a href="{{ tree[1].link }}">{{ tree[1].name }}</a>({{ tree[1].count }})</li>
             {% endfor %}
           </ul>
 
           <h2>Archives</h2>
           <ul>
-            {% for item in archives() %}
+            {% for item in archives() -%}
             <li><a href="{{ url_for('main.archives', year=item.year, month=item.month) }}">{{ item|date('%B') }} {{ item|date('%Y') }}</a></li>
             {% endfor %}
           </ul>
 
-          <!--友情链接-->
+          {# 友情链接 #}
           {% block friendlinks %}{% endblock %}
 
           {% block sidebar_other %}

@@ -12,11 +12,19 @@
 <div class="post">
   <h2 class="">专题</h2>
   <div class="entry">
+    {% set filters = [] %}
+    {% set order_by = [{'field': 'id', 'direction': 'desc'}] -%}
+
+    {% with topics = model_query(
+        Topic,
+        dict(filters=filters, order_by=order_by)
+    ) -%}
     <ul class="clearfix">
-    {% for topic in topic_lists() -%}
+    {% for topic in topics -%}
     <li><a href="{{ topic.link }}">{{ topic.name }}</a></li>
     {%- endfor %}
     </ul>
+    {% endwith %}
   </div>
 </div>
 {% endblock %}

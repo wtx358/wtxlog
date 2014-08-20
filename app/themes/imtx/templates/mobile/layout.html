@@ -14,15 +14,23 @@
   </head>
 <body>
 
+{# 面包屑导航 #}
 {% macro nav_by_category(category) -%}
 <b>&#187;</b>{% for cate in category.parents -%}
 <a href="{{ cate.link }}">{{ cate.name }}</a>{% if not loop.last %}<b>&#187;</b>{% endif %}
   {% endfor -%}
 {%- endmacro %}
+{# 面包屑导航结束 #}
 
 <a id="top" name="top"></a>
 {% block head %}
-<h1>{{ config['SITE_NAME'] }}</h1><div class="h"><a href="{{ url_for('main.index', _external=True) }}" title="{{ config['SITE_NAME'] }}首页">首页</a><b>|</b>{% for category in category_lists() %}<a href="{{ category.link }}">{{ category.name }}</a><b>|</b>{% endfor %}<a href="{{ url_for('main.topics') }}">专题</a><b>|</b><a href="{{ url_for('main.tags') }}">标签</a><b>|</b><a href="{{ url_for('main.flatpage', slug='about') }}">关于</a></div>
+{% set filters_1 = [{'name': 'parent', 'op': 'is_null'}] %}
+{% set order_by_1 = [{'field': 'longslug', 'direction': 'asc'}] -%}
+{% set category_lists = model_query(
+    Category,
+    dict(filters=filters_1, order_by=order_by_1)
+) -%}
+<h1>{{ config['SITE_NAME'] }}</h1><div class="h"><a href="{{ url_for('main.index', _external=True) }}" title="{{ config['SITE_NAME'] }}首页">首页</a><b>|</b>{% for category in category_lists %}<a href="{{ category.link }}">{{ category.name }}</a><b>|</b>{% endfor %}<a href="{{ url_for('main.topics') }}">专题</a><b>|</b><a href="{{ url_for('main.tags') }}">标签</a><b>|</b><a href="{{ url_for('main.flatpage', slug='about') }}">关于</a></div>
 {% endblock %}
 
 {% block main %}
