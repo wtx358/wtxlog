@@ -133,15 +133,21 @@ def utility_processor():
         # 获取与本文章标签相同的所有文章ID
         article = Article.query.get(article_id)
         if article:
-            article_ids = []
-            for tag in article.tags:
-                for a in tag.articles:
-                    article_ids.append(a.id)
+            ids = db.session.query('article_id') \
+                            .from_statement( \
+                                'SELECT article_id FROM ' \
+                                'article_tags WHERE tag_id IN ' \
+                                '(SELECT tag_id FROM article_tags ' \
+                                'WHERE article_id=:article_id)') \
+                            .params(article_id=article_id).all()
+
+            article_ids = [_id[0] for _id in ids]
             article_ids = list(set(article_ids))
+
             if article_id in article_ids:
                 article_ids.remove(article_id)
-            random_ids = random.sample(article_ids, 
-                                       min(limit, len(article_ids)))
+
+            random_ids = random.sample(article_ids, min(limit, len(article_ids)))
 
             if article_ids:
                 return Article.query.public().filter(Article.id.in_(random_ids)).all()
