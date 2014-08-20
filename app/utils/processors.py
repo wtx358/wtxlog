@@ -59,7 +59,7 @@ def utility_processor():
             # cache.set("archives", archives)
         return archives
 
-    def model_search(model, params):
+    def model_query(model, params):
         '''
         模型复杂查询
 
@@ -264,7 +264,7 @@ def utility_processor():
         Tag=Tag,
         Topic=Topic,
         FriendLink=FriendLink,
-        model_search=model_search,
+        model_query=model_query,
         pager=pager,
         archives=archives,
         category_lists=category_lists,
