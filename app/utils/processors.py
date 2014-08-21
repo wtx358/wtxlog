@@ -5,7 +5,7 @@ import random
 import datetime
 
 from flask import request, Markup, render_template_string
-from flask.ext.restless.search import search as _search
+from flask.ext.restless.search import create_query
 from ..models import db, Article, Category, Tag, FriendLink, Link, Label, Topic
 from helpers import get_category_ids
 
@@ -44,13 +44,13 @@ def utility_processor():
             # cache.set("archives", archives)
         return archives
 
-    def model_query(model, params):
+    def model_query(model, search_params):
         '''
         模型复杂查询
 
         :param model:
             实例模型，比如Article, Category, Tag, etc.
-        :param params:
+        :param search_params:
             参数字典，为dict类型，参照flask-restless文档
 
         特别注意：使用这个方法进行查询，模型`__mapper_args__`的
@@ -58,7 +58,53 @@ def utility_processor():
 
         详细内容请参照Flask-Restless的文档
         '''
-        return _search(db.session, model, params)
+        # `is_single` is True when 'single' is a key in ``search_params`` and its
+        # corresponding value is anything except those values which evaluate to
+        # False (False, 0, the empty string, the empty list, etc.).
+        is_single = search_params.get('single')
+        query = create_query(db.session, model, search_params)
+        if is_single:
+            # may raise NoResultFound or MultipleResultsFound
+            return query.one()
+        return query.all()
+
+    def category_lists(parent=None, limit=None):
+        """
+        返回栏目列表
+
+        :param parent:
+            父级栏目，`None`或者`Category`实例
+        :param limit:
+            返回的个数，`None`或者正整数
+        """
+        _query = Category.query.filter_by(parent=parent)
+        if isinstance(limit, int):
+            _query = _query.limit(limit)
+        return _query.all()
+
+    def tag_lists(limit=None):
+        """
+        返回标签列表
+
+        :param limit:
+            返回的个数，`None`或者正整数
+        """
+        _query = Tag.query
+        if isinstance(limit, int):
+            _query = _query.limit(limit)
+        return _query.all()
+
+    def topic_lists(limit=None):
+        """
+        返回专题列表
+
+        :param limit:
+            返回的个数，`None`或者正整数
+        """
+        _query = Topic.query
+        if isinstance(limit, int):
+            _query = _query.limit(limit)
+        return _query.all()
 
     def category_tree():
         """
@@ -100,6 +146,21 @@ def utility_processor():
                 return Article.query.public().filter(Article.id.in_(random_ids)).all()
         return None
 
+    def get_latest_articles(category=None, limit=10):
+        """
+        返回最新文章列表
+
+        :param category:
+            当前栏目，`None`或者`Category`实例
+        :param limit:
+            返回的个数，正整数，默认为10
+        """
+        _query = Article.query.public()
+        if isinstance(category, Category):
+            cate_ids = get_category_ids(category.longslug)
+            _query = _query.filter(Article.category_id.in_(cate_ids))
+        return _query.limit(int(limit)).all()
+
     def get_top_articles(days=365, limit=10):
         """
         返回热门文章列表
@@ -119,6 +180,48 @@ def utility_processor():
                                      .order_by(Article.hits.desc()) \
                                      .limit(int(limit)).all()
 
+    def get_recommend_articles(category=None, limit=10):
+        """
+        返回推荐文章列表
+
+        :param category:
+            当前栏目，`None`或者`Category`实例
+        :param limit:
+            返回的个数，正整数，默认为10
+        """
+        _query = Article.query.public()
+        if isinstance(category, Category):
+            cate_ids = get_category_ids(category.longslug)
+            _query = _query.filter(Article.category_id.in_(cate_ids))
+        return _query.filter_by(recommend=True).limit(int(limit)).all()
+
+    def get_articles_by_category(longslug='', limit=10, expand=True):
+        """
+        根据栏目路径返回文章列表
+
+        :param longslug:
+            栏目路径，字符串，不要以`/`结尾
+        :param limit:
+            返回的个数，整数
+        :param expand:
+            是否返回子栏目文章，`False`则只返回当前栏目的文章
+        """
+        _query = Article.query.public()
+        category = Category.query.filter_by(longslug=longslug).first()
+        if category:
+            if expand:
+                cate_ids = get_category_ids(longslug)
+                _query = _query.filter(Article.category_id.in_(cate_ids))
+            else:
+                _query = _query.filter_by(category_id=category.id)
+        return _query.limit(int(limit)).all()
+
+    def friendlinks():
+        """
+        返回所有有效的友情链接列表
+        """
+        return FriendLink.query.filter_by(actived=True).all()
+
     def label(slug):
         """
         返回静态标签
@@ -136,10 +239,17 @@ def utility_processor():
         Topic=Topic,
         FriendLink=FriendLink,
         model_query=model_query,
-        get_category_ids=get_category_ids,
         archives=archives,
+        get_category_ids=get_category_ids,
+        get_latest_articles=get_latest_articles,
         get_top_articles=get_top_articles,
-        category_tree=category_tree,
+        get_recommend_articles=get_recommend_articles,
         get_related_articles=get_related_articles,
+        get_articles_by_category=get_articles_by_category,
+        category_tree=category_tree,
+        category_lists=category_lists,
+        tag_lists=tag_lists,
+        topic_lists=topic_lists,
+        friendlinks=friendlinks,
         label=label,
     )

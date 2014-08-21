@@ -1,4 +1,7 @@
 {% extends theme('layout.html') %}
+{% if flatpage.slug == 'about' %}
+  {% set active_page = "about" %}
+{% endif %}
 
 {% block title %}{{ flatpage.seotitle or flatpage.title }}{% endblock %}
 
