@@ -19,6 +19,15 @@
   {% endfor %}
 {% endmacro %}
 
+{# 定义导航菜单 #}
+{% set navigation_bar = [
+    (url_for('main.index'), 'index', 'Home'),
+    (url_for('main.topics'), 'topics', 'Topics'),
+    (url_for('main.tags'), 'tags', 'Tags'),
+    (url_for('main.flatpage', slug='about'), 'about', 'About'),
+] -%}
+{% set active_page = active_page|default('index') -%}
+
   <body>
     <div id="bgcontain"> 
       <div id="header">
@@ -35,10 +44,9 @@
 
       <div id="menu">
         <ul>
-          <li class="{% if request.path not in ('/tag/', '/links/', '/about/') %}current_page_item{% else %}page_item{% endif %}"><a href="{{ url_for('main.index') }}" title="Home">Home</a></li>
-          <li class="{% if request.path == '/topics/' %}current_page_item{% else %}page_item{% endif %}"><a href="{{ url_for('main.topics') }}" title="Topics">Topics</a></li>
-          <li class="{% if request.path == '/tag/' %}current_page_item{% else %}page_item{% endif %}"><a href="{{ url_for('main.tags') }}" title="Tags">Tags</a></li>
-          <li class="{% if request.path == '/about/' %}current_page_item{% else %}page_item{% endif %}"><a href="{{ url_for('main.flatpage', slug='about') }}" title="About">About</a></li>
+          {% for href, id, caption in navigation_bar %}
+          <li class="page_item{% if id == active_page %} current_page_item{% endif %}"><a href="{{ href|e }}">{{ caption|e }}</a></li>
+          {% endfor %}
           <li id="pattern"></li>
         </ul>
       </div>
@@ -72,51 +80,59 @@
           <h2>Wechat</h2>
           <p align="center"><img width="180px" height="180px" src="{{ theme_static('images/digwtx-qrcode.png') }}" alt="digwtx-wechat-qrcode"/></p>
 
+          {% set cate = None %}
+          {% if article %}{% set cate = article.category %}{% endif %}
+          {% if category %}{% set cate = category %}{% endif %}
+
+          {% with articles = get_latest_articles(cate, 15) %}
+          {% if articles %}
           <h2>Recent Posts</h2>
           <ul>
-            {% set longslug = '' %}
-            {% if article %}{% set longslug = article.category.longslug %}{% endif %}
-            {% if category %}{% set longslug = category.longslug %}{% endif %}
-            {% with recent_articles = model_query(Article,
-            {'order_by': [{'field': 'id', 'direction': 'desc'}],
-             'limit': 15,
-             'filters': [
-              {'name': 'category_id', 'op': 'in', 'val': get_category_ids(longslug)},
-              {'name': 'published', 'op': 'eq', 'val': True}],
-            }) %}
-            {% for article in recent_articles -%}
-            <li><a href="{{ article.link }}" title="{{ article.title }}">{{ article.title }}</a></li>
-            {% endfor %}
-            {% endwith %}
+            {%- for article in articles %}
+            <li><a href="{{ article.link|e }}" title="{{ article.title }}">{{ article.title|e }}</a></li>
+            {%- endfor %}
           </ul>
+          {% endif %}
+          {% endwith %}
 
+          {% with articles = get_top_articles(limit=15) %}
+          {% if articles %}
           <h2>Top 15 Posts</h2>
           <ul>
-            {% with top_articles = model_query(Article,
-            {'order_by': [{'field': 'hits', 'direction': 'desc'}],
-             'limit': 15,
-             'filters': [
-              {'name': 'category_id', 'op': 'in', 'val': get_category_ids(longslug)},
-              {'name': 'published', 'op': 'eq', 'val': True}],
-            }) %}
-            {% for article in top_articles -%}
-            <li><a href="{{ article.link }}" title="{{ article.title }}">{{ article.title }}</a></li>
-            {% endfor %}
-            {% endwith %}
+            {%- for article in articles %}
+            <li><a href="{{ article.link|e }}" title="{{ article.title }}">{{ article.title|e }}</a></li>
+            {%- endfor %}
           </ul>
+          {% endif %}
+          {% endwith %}
 
+          {% with articles = get_recommend_articles(cate, limit=15) %}
+          {% if articles %}
+          <h2>Recommended Posts</h2>
+          <ul>
+            {%- for article in articles %}
+            <li><a href="{{ article.link|e }}" title="{{ article.title }}">{{ article.title|e }}</a></li>
+            {%- endfor %}
+          </ul>
+          {% endif %}
+          {% endwith %}
+
+          {% with trees = category_tree() %}
+          {% if trees %}
           <h2>Categories</h2>
           <ul>
-            {% for tree in category_tree() -%}
-            <li>{{ tree[0] * '----' }}<a href="{{ tree[1].link }}">{{ tree[1].name }}</a>({{ tree[1].count }})</li>
-            {% endfor %}
+            {%- for tree in trees %}
+            <li>{{ tree[0] * '----' }}<a href="{{ tree[1].link|e }}">{{ tree[1].name|e }}</a>({{ tree[1].count }})</li>
+            {%- endfor %}
           </ul>
+          {% endif %}
+          {% endwith %}
 
           <h2>Archives</h2>
           <ul>
-            {% for item in archives() -%}
-            <li><a href="{{ url_for('main.archives', year=item.year, month=item.month) }}">{{ item|date('%B') }} {{ item|date('%Y') }}</a></li>
-            {% endfor %}
+            {%- for item in archives() %}
+            <li><a href="{{ url_for('main.archives', year=item.year, month=item.month)|e }}">{{ item|date('%B') }} {{ item|date('%Y') }}</a></li>
+            {%- endfor %}
           </ul>
 
           {# 友情链接 #}

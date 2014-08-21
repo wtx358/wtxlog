@@ -18,20 +18,14 @@
 
 {% block friendlinks %}
 
-{% set filters = [{'name': 'actived', 'op': 'eq', 'val': True}] -%}
-{% set order_by = [{'field': 'id', 'direction': 'desc'}] -%}
-
-{% set friendlinks = model_query(
-    FriendLink,
-    dict(filters=filters, order_by=order_by, limit=15)
-) -%}
-
-{% if friendlinks %}
+{% with flinks = friendlinks() %}
+{% if flinks %}
 <h2>Links</h2>
 <ul>
-  {% for flink in friendlinks -%}
+  {% for flink in flinks -%}
   <li><a href="{{ flink.url }}" title="{{ flink.title }}" target="_blank">{{ flink.anchor }}</a></li>
   {% endfor %}
 </ul>
 {% endif %}
+{% endwith %}
 {% endblock %}

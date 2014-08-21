@@ -1,4 +1,5 @@
 {% extends theme('layout.html') %}
+{% set active_page = "tags" %}
 
 {% block title %}{{ tag.seotitle or tag.name }}{% if pagination.page>1 %}_第{{ pagination.page }}页{% endif %}{% endblock %}
 {% block keywords %}{{ tag.seokey }}{% endblock %}

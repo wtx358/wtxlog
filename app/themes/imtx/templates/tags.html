@@ -1,4 +1,5 @@
 {% extends theme('layout.html') %}
+{% set active_page = "tags" %}
 
 {% block title %}标签{% endblock %}
 
@@ -13,13 +14,7 @@
 
   <h2 class="">栏目</h2>
   <div class="entry">
-    {% set filters_1 = [{'name': 'parent', 'op': 'is_null'}] %}
-    {% set order_by_1 = [{'field': 'longslug', 'direction': 'asc'}] -%}
-
-    {% with categories = model_query(
-        Category,
-        dict(filters=filters_1, order_by=order_by_1)
-    ) -%}
+    {% with categories = category_lists() %}
     <ul class="taglist clearfix">
     {% for category in categories -%}
     <li><a href="{{ category.link }}">{{ category.name }}</a>{% if not loop.last %}&nbsp;&nbsp;{% endif %}</li>
@@ -30,13 +25,7 @@
 
   <h2 class="">标签</h2>
   <div class="entry">
-    {% set filters_2 = [] %}
-    {% set order_by_2 = [{'field': 'id', 'direction': 'desc'}] -%}
-
-    {% with tags = model_query(
-        Tag,
-        dict(filters=filters_2, order_by=order_by_2)
-    ) -%}
+    {% with tags = tag_lists() %}
     <ul class="taglist clearfix">
     {% for tag in tags -%}
     <li><a href="{{ tag.link }}">{{ tag.name }}</a>({{ tag.count }}){% if not loop.last %}&nbsp;&nbsp;{% endif %}</li>

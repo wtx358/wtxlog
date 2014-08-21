@@ -24,13 +24,11 @@
 
 <a id="top" name="top"></a>
 {% block head %}
-{% set filters_1 = [{'name': 'parent', 'op': 'is_null'}] %}
-{% set order_by_1 = [{'field': 'longslug', 'direction': 'asc'}] -%}
-{% set category_lists = model_query(
-    Category,
-    dict(filters=filters_1, order_by=order_by_1)
-) -%}
-<h1>{{ config['SITE_NAME'] }}</h1><div class="h"><a href="{{ url_for('main.index', _external=True) }}" title="{{ config['SITE_NAME'] }}首页">首页</a><b>|</b>{% for category in category_lists %}<a href="{{ category.link }}">{{ category.name }}</a><b>|</b>{% endfor %}<a href="{{ url_for('main.topics') }}">专题</a><b>|</b><a href="{{ url_for('main.tags') }}">标签</a><b>|</b><a href="{{ url_for('main.flatpage', slug='about') }}">关于</a></div>
+<h1>{{ config['SITE_NAME'] }}</h1><div class="h"><a href="{{
+    url_for('main.index', _external=True) }}" title="{{
+config['SITE_NAME'] }}首页">首页</a><b>|</b><a href="{{
+url_for('main.topics') }}">专题</a><b>|</b><a href="{{
+url_for('main.tags') }}">栏目/标签</a><b>|</b><a href="{{ url_for('main.flatpage', slug='about') }}">关于</a></div>
 {% endblock %}
 
 {% block main %}

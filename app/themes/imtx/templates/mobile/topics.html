@@ -9,18 +9,14 @@
 {% block main %}
   <h2 class="t1"><b>专题</b></h2>
   <div class="entry">
-    {% set filters = [] %}
-    {% set order_by = [{'field': 'id', 'direction': 'desc'}] -%}
-
-    {% with topics = model_query(
-        Topic,
-        dict(filters=filters, order_by=order_by)
-    ) -%}
+    {% with topics = topic_lists() %}
+    {% if topics %}
     <ul class="taglist clearfix">
-      {% for topic in topics -%}
-      <li><a href="{{ topic.link }}">{{ topic.name }}</a>{% if not loop.last %}&nbsp;&nbsp;{% endif %}</li>
+      {%- for topic in topics %}
+      <li><a href="{{ topic.link }}">{{ topic.name }}</a></li>
       {%- endfor %}
     </ul>
+    {% endif %}
     {% endwith %}
   </div>
 {% endblock %}
