@@ -5,7 +5,7 @@ import random
 import datetime
 
 from flask import request, Markup, render_template_string
-from flask.ext.restless.search import search as _search
+from flask.ext.restless.search import create_query
 from ..models import db, Article, Category, Tag, FriendLink, Link, Label, Topic
 from helpers import get_category_ids
 
@@ -44,13 +44,13 @@ def utility_processor():
             # cache.set("archives", archives)
         return archives
 
-    def model_query(model, params):
+    def model_query(model, search_params):
         '''
         模型复杂查询
 
         :param model:
             实例模型，比如Article, Category, Tag, etc.
-        :param params:
+        :param search_params:
             参数字典，为dict类型，参照flask-restless文档
 
         特别注意：使用这个方法进行查询，模型`__mapper_args__`的
@@ -58,7 +58,15 @@ def utility_processor():
 
         详细内容请参照Flask-Restless的文档
         '''
-        return _search(db.session, model, params)
+        # `is_single` is True when 'single' is a key in ``search_params`` and its
+        # corresponding value is anything except those values which evaluate to
+        # False (False, 0, the empty string, the empty list, etc.).
+        is_single = search_params.get('single')
+        query = create_query(db.session, model, search_params)
+        if is_single:
+            # may raise NoResultFound or MultipleResultsFound
+            return query.one()
+        return query.all()
 
     def category_tree():
         """
