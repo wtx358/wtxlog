@@ -4,7 +4,7 @@ import hashlib
 from datetime import datetime
 from werkzeug import cached_property
 from werkzeug.security import generate_password_hash, check_password_hash
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from itsdangerous import URLSafeTimedSerializer as Serializer
 from webhelpers.text import remove_formatting, truncate
 
 from flask.ext.sqlalchemy import BaseQuery
@@ -89,7 +89,7 @@ class User(UserMixin, db.Model):
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:
-            if self.email == current_app.config.get('APP_ADMIN'):
+            if self.email == Config.APP_ADMIN:
                 self.role = Role.query.filter_by(permissions=0xff).first()
             if self.role is None:
                 self.role = Role.query.filter_by(default=True).first()
@@ -122,14 +122,14 @@ class User(UserMixin, db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    def generate_confirmation_token(self, expiration=3600):
-        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+    def generate_confirmation_token(self):
+        s = Serializer(current_app.config['SECRET_KEY'])
         return s.dumps({'confirm': self.id})
 
-    def confirm(self, token):
+    def confirm(self, token, expiration=3600):
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
-            data = s.loads(token)
+            data = s.loads(token, max_age=expiration)
         except:
             return False
         if data.get('confirm') != self.id:
@@ -138,14 +138,14 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         return True
 
-    def generate_reset_token(self, expiration=3600):
-        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+    def generate_reset_token(self):
+        s = Serializer(current_app.config['SECRET_KEY'])
         return s.dumps({'reset': self.id})
 
-    def reset_password(self, token, new_password):
+    def reset_password(self, token, new_password, expiration=3600):
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
-            data = s.loads(token)
+            data = s.loads(token, max_age=expiration)
         except:
             return False
         if data.get('reset') != self.id:
@@ -154,14 +154,14 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         return True
 
-    def generate_email_change_token(self, new_email, expiration=3600):
-        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+    def generate_email_change_token(self, new_email):
+        s = Serializer(current_app.config['SECRET_KEY'])
         return s.dumps({'change_email': self.id, 'new_email': new_email})
 
-    def change_email(self, token):
+    def change_email(self, token, expiration=3600):
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
-            data = s.loads(token)
+            data = s.loads(token, max_age=expiration)
         except:
             return False
         if data.get('change_email') != self.id:
