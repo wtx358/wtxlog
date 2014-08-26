@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask.ext.themes import setup_themes
 from flask.ext.mobility import Mobility
 from config import config
@@ -67,6 +67,15 @@ def create_app(config_name):
 
     from .admins import admin
     admin.init_app(app)
+
+    @app.route('/favicon.ico')
+    def favicon():
+        return send_from_directory(app.static_folder, 'favicon.ico',
+                                   mimetype='image/vnd.microsoft.icon')
+
+    @app.route('/robots.txt')
+    def robotstxt():
+        return send_from_directory(app.static_folder, 'robots.txt')
 
     # 暂时解决因Gunicorn中引发ERROR 11而无法正常提交的问题
     @app.teardown_request

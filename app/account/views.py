@@ -53,7 +53,7 @@ def register():
     return render_template('account/register.html', form=form)
 
 
-@account.route('/confirm/<token>')
+@account.route('/confirm/<token>/')
 @login_required
 def confirm(token):
     if current_user.confirmed:
@@ -109,7 +109,7 @@ def password_reset_request():
     return render_template('account/reset_password.html', form=form)
 
 
-@account.route('/reset/<token>', methods=['GET', 'POST'])
+@account.route('/reset/<token>/', methods=['GET', 'POST'])
 def password_reset(token):
     if not current_user.is_anonymous():
         return redirect(url_for('.index'))
@@ -145,7 +145,7 @@ def change_email_request():
     return render_template("account/change_email.html", form=form)
 
 
-@account.route('/change-email/<token>')
+@account.route('/change-email/<token>/')
 @login_required
 def change_email(token):
     if current_user.change_email(token):
