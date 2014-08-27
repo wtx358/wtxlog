@@ -1,6 +1,7 @@
 //侧栏跟随
 (function(){
 	var oDiv=document.getElementById("float");
+	if (oDiv==null) return false;
 	var H=0,iE6;
 	var Y=oDiv;
 	if ($(window).width() <= 650) { return; }

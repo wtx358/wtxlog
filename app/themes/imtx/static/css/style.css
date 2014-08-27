@@ -45,7 +45,7 @@
 	clear:both
 }
 .clearfix {
-	zoom:1
+	_zoom:1
 }
 .none {
 	display:none
