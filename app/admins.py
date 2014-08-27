@@ -63,8 +63,8 @@ class ArticleAdmin(sqla.ModelView):
     column_list = ('title', 'category', 'tags', 'published', 'ontop', 
             'recommend', 'created', 'view_on_site')
 
-    form_excluded_columns = ('author', 'summary', 'body_html', 
-                             'hits', 'created', 'last_modified',)
+    form_excluded_columns = ('author', 'body_html', 'hits', 'created',
+                             'last_modified',)
 
     # List of columns that can be sorted. For 'user' column, use User.username as
     # a column.
@@ -90,12 +90,13 @@ class ArticleAdmin(sqla.ModelView):
 
     form_create_rules = (
             'title', 'seotitle', 'category', 'topic', 'tags', 'body',
-            'published', 'ontop', 'recommend', 'seokey', 'seodesc',
-            'thumbnail', 'thumbnail_big', 'template'
+            'summary', 'published', 'ontop', 'recommend', 'seokey',
+            'seodesc', 'thumbnail', 'thumbnail_big', 'template',
     )
     form_edit_rules = form_create_rules
 
-    form_overrides = dict(seodesc=TextAreaField, body=EDITOR_WIDGET)
+    form_overrides = dict(seodesc=TextAreaField, body=EDITOR_WIDGET,
+                          summary=TextAreaField)
     
     form_widget_args = {
         'title': {'style': 'width:480px;'}, 
@@ -106,7 +107,7 @@ class ArticleAdmin(sqla.ModelView):
         'thumbnail': {'style': 'width:480px;'}, 
         'thumbnail_big': {'style': 'width:480px;'}, 
         'template': {'style': 'width:480px;'}, 
-        'summary': {'style': 'width:635px; height:80px;font-family:monospace;'},
+        'summary': {'style': 'width:680px; height:80px;'},
     }
 
     # Pass arguments to WTForms. In this case, change label for text field to
@@ -120,7 +121,7 @@ class ArticleAdmin(sqla.ModelView):
         thumbnail=dict(description=u'图片规格建议100*100像素'),
         thumbnail_big=dict(description=u'大缩略图，根据实际情况确定尺寸'),
         template=dict(description=u'模板文件，使用默认请留空'),
-        summary=dict(description=u'文章摘要，建议认真填写(不超过3行半)'),
+        summary=dict(description=u'文章摘要，建议认真填写。新增时若为空，则自动生成'),
         body=dict(description=u'文章内容，格式为Markdown格式'),
         body_html=dict(description=u'此项为程序根据body自动生成'),
         published=dict(description=u'是否发布，打勾表示发布'),

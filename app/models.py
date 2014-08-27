@@ -550,22 +550,31 @@ class Article(db.Model):
                          .first()
 
     @staticmethod
-    def on_changed_body(target, value, oldvalue, initiator):
+    def before_insert(mapper, connection, target):
         def _format(_html):
             return truncate(remove_formatting(_html), length=200, whole_word=True)
 
+        value = target.body
+        if not target.summary.strip():
+            # 新增文章时，如果 summary 为空，则自动生成
+            if BODY_FORMAT == 'html':
+                target.summary = _format(value)
+            else:
+                more_start = value.find('<!--more-->')
+                if more_start > 0:
+                    target.summary = _format(markdown_filter(value[:more_start]))
+                else:
+                    target.summary = _format(target.body_html)
+
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
         if BODY_FORMAT == 'html':
             target.body_html = value
-            target.summary = _format(value)
         else:
             target.body_html = markdown_filter(value)
-            more_start = value.find('<!--more-->')
-            if more_start > 0:
-                target.summary = _format(markdown_filter(value[:more_start]))
-            else:
-                target.summary = _format(target.body_html)
 
 db.event.listen(Article.body, 'set', Article.on_changed_body)
+db.event.listen(Article, 'before_insert', Article.before_insert)
 
 
 class Link(db.Model):
