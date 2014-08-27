@@ -195,6 +195,21 @@ def utility_processor():
             _query = _query.filter(Article.category_id.in_(cate_ids))
         return _query.filter_by(recommend=True).limit(int(limit)).all()
 
+    def get_thumbnail_articles(category=None, limit=10):
+        """
+        返回有缩略图的文章列表
+
+        :param category:
+            当前栏目，`None`或者`Category`实例
+        :param limit:
+            返回的个数，正整数，默认为10
+        """
+        _query = Article.query.public()
+        if isinstance(category, Category):
+            cate_ids = get_category_ids(category.longslug)
+            _query = _query.filter(Article.category_id.in_(cate_ids))
+        return _query.filter(Article.thumbnail != None).limit(int(limit)).all()
+
     def get_articles_by_category(longslug='', limit=10, expand=True):
         """
         根据栏目路径返回文章列表
@@ -244,6 +259,7 @@ def utility_processor():
         get_latest_articles=get_latest_articles,
         get_top_articles=get_top_articles,
         get_recommend_articles=get_recommend_articles,
+        get_thumbnail_articles=get_thumbnail_articles,
         get_related_articles=get_related_articles,
         get_articles_by_category=get_articles_by_category,
         category_tree=category_tree,
