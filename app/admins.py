@@ -197,11 +197,15 @@ class CategoryAdmin(sqla.ModelView):
     )
 
     # Model handlers
+    def on_model_delete(self, model):
+        if model.count > 0:
+            raise Exception('Category <%s> is not empty.' % model.name)
+
     def on_model_change(self, form, model, is_created):
         if not model.id:
             c = Category.query.filter_by(name=model.name).first()
             if c:
-                raise Exception('Category "%s" already exist' % c.name)
+                raise Exception('Category <%s> is already exist' % c.name)
 
             if not model.seotitle:
                 model.seotitle = model.name
