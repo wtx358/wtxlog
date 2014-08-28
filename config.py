@@ -20,7 +20,6 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
 
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
-    SQLALCHEMY_RECORD_QUERIES = True
     SQLALCHEMY_POOL_RECYCLE = 10
 
     SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')

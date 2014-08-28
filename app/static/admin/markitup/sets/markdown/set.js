@@ -206,7 +206,7 @@ var InlineUpload = {
          * cleared out.
          */
 
-        this.dialog = $(['<div class="', this.options.container_class, '"><div id="', this.options.holder, '"><img id="loading" src="/static/markitup/loading.gif" style="width:16px;height:16px; display:none;">拖放文件到这里 或者 <a id="selectfile" href="#" >选择文件上传</a><input type="file" name="filedata" id="filedata" style="opacity: 0; cursor: pointer; position: absolute; width: 78px; height: 15px; left: 112.5px; top: 36.75px;" /></div><div id="inline_upload_close"></div></div>'].join('')).appendTo(document.body).hide().css('top', this.offset.top).css('left', this.offset.left);
+        this.dialog = $(['<div class="', this.options.container_class, '"><div id="', this.options.holder, '"><img id="loading" src="/static/admin/markitup/loading.gif" style="width:16px;height:16px; display:none;">拖放文件到这里 或者 <a id="selectfile" href="#" >选择文件上传</a><input type="file" name="filedata" id="filedata" style="opacity: 0; cursor: pointer; position: absolute; width: 78px; height: 15px; left: 112.5px; top: 36.75px;" /></div><div id="inline_upload_close"></div></div>'].join('')).appendTo(document.body).hide().css('top', this.offset.top).css('left', this.offset.left);
         
 		$('#selectfile').click(function() {
 			$('#filedata').click();
