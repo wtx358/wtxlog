@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import os
+import re
 import json
+import urllib
 import datetime
-from urllib import quote, unquote
 
 from flask import request, url_for, redirect, current_app, make_response, abort
 from werkzeug.contrib.atom import AtomFeed
@@ -135,8 +136,8 @@ def tag(template, name):
     # 若name为URL编码，则需要解码为Unicode
     # URL编码判断方法：若已为URL编码, 再次编码会在每个码之前出现`%25`
     _name = name.encode('utf-8')
-    if quote(_name).count('%25') > 0:
-        name = unquote(_name)
+    if urllib.quote(_name).count('%25') > 0:
+        name = urllib.unquote(_name)
 
     tag = Tag.query.filter_by(name=name).first_or_404()
     
@@ -318,7 +319,10 @@ def upload():
     elif request.headers.has_key('CONTENT_DISPOSITION'):
         # HTML5上传模式，FIREFOX等默认使用此模式
         pattern = re.compile(r"""\s.*?\s?filename\s*=\s*['|"]?([^\s'"]+).*?""", re.I)
-        filenames = pattern.findall(request.headers.get('CONTENT_DISPOSITION'))
+        _d = request.headers.get('CONTENT_DISPOSITION').encode('utf-8')
+        if urllib.quote(_d).count('%25') > 0:
+            _d = urllib.unquote(_d)
+        filenames = pattern.findall(_d)
         if len(filenames) == 1:
             result["msg"]["localfile"] = urllib.unquote(filenames[0])
             fname, fext = os.path.splitext(filenames[0])
