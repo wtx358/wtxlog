@@ -137,6 +137,7 @@ CREATE TABLE IF NOT EXISTS `friendlinks` (
   `title` varchar(128) DEFAULT NULL,
   `url` varchar(255) NOT NULL,
   `actived` tinyint(1) DEFAULT NULL,
+  `order` int(11) DEFAULT NULL,
   `note` varchar(400) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
