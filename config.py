@@ -50,7 +50,7 @@ class Config:
     @staticmethod
     def get_mailhandler():
         # email errors to the administrators
-        from app.ext import MySMTPHandler
+        from wtxlog.ext import MySMTPHandler
         credentials = None
         secure = None
         use_ssl = False

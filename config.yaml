@@ -3,11 +3,11 @@ name: appname
 version: 1 
 handlers:
 - url: /favicon.ico
-  static_path: app/static/favicon.ico
+  static_path: wtxlog/static/favicon.ico
 - url: /static/
-  static_path: app/static
+  static_path: wtxlog/static
 - url: /admin/static/
-  static_path: app/static/admin
+  static_path: wtxlog/static/admin
 - url: /_theme/imtx/
-  static_path: app/themes/imtx/static
+  static_path: wtxlog/themes/imtx/static
 ...

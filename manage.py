@@ -13,7 +13,7 @@ for deps_path in deps_paths:
     if deps_path not in sys.path:
         sys.path.insert(0, deps_path)
 
-from app import create_app, db, get_appconfig
+from wtxlog import create_app, db, get_appconfig
 from flask.ext.script import Manager
 from flask.ext.migrate import Migrate, MigrateCommand
 
