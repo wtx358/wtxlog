@@ -24,12 +24,13 @@ if BODY_FORMAT == 'html':
 else:
     EDITOR_WIDGET = MarkitupTextAreaField
 
-cache_key = Config.MEMCACHE_KEY
+cache_key = Config.CACHE_KEY
 
 
 def cache_delete(key):
-    cache.cache.delete(cache_key % key)
-    cache.cache.delete(cache_key % ('mobile%s' % key))
+    keys = [cache_key % key, 'mobile_%s' % (cache_key % key)]
+    for _key in keys:
+        cache.delete(_key)
 
 
 def format_datetime(self, request, obj, fieldname, *args, **kwargs):
