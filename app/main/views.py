@@ -8,6 +8,7 @@ import datetime
 
 from flask import request, url_for, redirect, current_app, make_response, abort
 from werkzeug.contrib.atom import AtomFeed
+from werkzeug._compat import text_type
 from webhelpers.paginate import Page, PageURL
 from flask.ext.mobility.decorators import mobile_template
 
@@ -135,7 +136,9 @@ def tag(template, name):
     # 若name为非ASCII字符，传入时一般是经过URL编码的
     # 若name为URL编码，则需要解码为Unicode
     # URL编码判断方法：若已为URL编码, 再次编码会在每个码之前出现`%25`
-    _name = name.encode('utf-8')
+    _name = name
+    if isinstance(name, text_type):
+        _name = name.encode('utf-8')
     if urllib.quote(_name).count('%25') > 0:
         name = urllib.unquote(_name)
 

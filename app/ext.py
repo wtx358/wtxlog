@@ -9,6 +9,7 @@ from flask.ext.mail import Mail, Message
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from werkzeug.contrib.cache import NullCache, SimpleCache
+from werkzeug._compat import text_type
 
 
 def keywords_split(keywords):
@@ -170,7 +171,9 @@ class Cache(object):
                 page = int(request.args.get('page', 1))
 
                 # 这里要转换成str类型, 否则会报类型错误
-                _path = request.path.encode("utf-8")
+                _path = request.path
+                if isinstance(_path, text_type):
+                    _path = _path.encode('utf-8')
 
                 # 对于非ASCII的URL，需要进行URL编码
                 if quote(_path).count('%25') <= 0:
