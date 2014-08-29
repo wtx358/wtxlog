@@ -5,10 +5,10 @@ import datetime
 from urllib2 import quote, unquote
 from flask import current_app, request
 from functools import wraps
+from flask.ext.cache import Cache as FlaskCache
 from flask.ext.mail import Mail, Message
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
-from werkzeug.contrib.cache import NullCache, SimpleCache
 from werkzeug._compat import text_type
 
 
@@ -107,101 +107,145 @@ class MySMTPHandler(logging.Handler):
             self.handleError(record)
 
 
-class Cache(object):
-    '''cache object'''
-    def __init__(self, app=None):
+class WtxlogCache(FlaskCache):
+
+    def init_app(self, app, config=None):
+        super(WtxlogCache, self).init_app(app)
         self.app = app
-        if app is not None:
-            self.init_app(app)
 
-    def init_app(self, app):
-        self.app = app
-        config = app.config.copy()
-        appenv = config.get('APPENV')
-        (_k, _v) = ('key31415926', '3.1415926')
+    def cached(self, timeout=None, key_prefix=None, unless=None):
+        """
+        Decorator. Use this to cache a function. By default the cache key
+        is `view/request.path`. You are able to use this decorator with any
+        function by changing the `key_prefix`. If the token `%s` is located
+        within the `key_prefix` then it will replace that with `request.path`
 
-        if config['DEBUG']:
-            _cache = NullCache()
-        else:
-            if appenv == 'bae':
-                from bae_memcache.cache import BaeMemcache
-                CACHE_USER = config.get('CACHE_USER')
-                CACHE_PWD = config.get('CACHE_PWD')
-                CACHE_ID = config.get('CACHE_ID')
-                CACHE_ADDR = config.get('CACHE_ADDR')
-                _cache = BaeMemcache(CACHE_ID, CACHE_ADDR, CACHE_USER, CACHE_PWD)
-                try:
-                    _cache.set(_k, _v)
-                except:
-                    _cache = NullCache()
-            elif appenv == 'sae':
-                import pylibmc as memcache
-                _cache = memcache.Client()
-                try:
-                    _cache.set(_k, _v)
-                except:
-                    _cache = NullCache()
-            elif appenv == 'production':
-                _cache = SimpleCache()
-                try:
-                    import memcache
-                    _mc = memcache.Client(app.config.get('MEMCACHED_SERVERS', []))
-                    if _mc.set(_k, _v):
-                        _cache = _mc
-                except:
-                    pass
-            else:
-                _cache = NullCache()
+        Example::
 
-        app.extensions['cache'] = _cache
+            # An example view function
+            @cache.cached(timeout=50)
+            def big_foo():
+                return big_bar_calc()
 
-    @property
-    def cache(self):
-        app = self.app or current_app
-        return app.extensions['cache']
+            # An example misc function to cache.
+            @cache.cached(key_prefix='MyCachedList')
+            def get_list():
+                return [random.randrange(0, 1) for i in range(50000)]
 
-    def cached(self, timeout=60 * 60, key=None):
-        cache = self.cache
-        if key is None:
-            key = self.app.config['MEMCACHE_KEY']
+            my_list = get_list()
+
+        .. note::
+
+            You MUST have a request context to actually called any functions
+            that are cached.
+
+        .. versionadded:: 0.4
+            The returned decorated function now has three function attributes
+            assigned to it. These attributes are readable/writable.
+
+                **uncached**
+                    The original undecorated function
+
+                **cache_timeout**
+                    The cache timeout value for this function. For a custom value
+                    to take affect, this must be set before the function is called.
+
+                **make_cache_key**
+                    A function used in generating the cache_key used.
+
+        :param timeout: Default None. If set to an integer, will cache for that
+                        amount of time. Unit of time is in seconds.
+        :param key_prefix: Default 'view/%(request.path)s'. Beginning key to .
+                           use for the cache key.
+
+                           .. versionadded:: 0.3.4
+                               Can optionally be a callable which takes no arguments
+                               but returns a string that will be used as the cache_key.
+
+        :param unless: Default None. Cache will *always* execute the caching
+                       facilities unless this callable is true.
+                       This will bypass the caching entirely.
+        """
+        if key_prefix is None:
+            key_prefix = self.app.config.get('CACHE_KEY', 'view/%s')
+        if timeout is None:
+            timeout = self.app.config.get('CACHE_DEFAULT_TIMEOUT', 300)
 
         def decorator(f):
             @wraps(f)
             def decorated_function(*args, **kwargs):
-                page = int(request.args.get('page', 1))
+                #: Bypass the cache entirely.
+                if callable(unless) and unless() is True:
+                    return f(*args, **kwargs)
 
-                # 这里要转换成str类型, 否则会报类型错误
-                _path = request.path
-                if isinstance(_path, text_type):
-                    _path = _path.encode('utf-8')
+                try:
+                    cache_key = decorated_function.make_cache_key(*args, **kwargs)
+                    if request.MOBILE:
+                        cache_key = 'mobile_%s' % cache_key
+                    page = int(request.args.get('page', 1))
+                    if page > 1:
+                        cache_key = '%s_%s' % (cache_key, page)
+                    rv = self.cache.get(cache_key)
+                except Exception:
+                    if current_app.debug:
+                        raise
+                    current_app.logger.exception("Exception possibly due to cache backend.")
+                    return f(*args, **kwargs)
 
-                # 对于非ASCII的URL，需要进行URL编码
-                if quote(_path).count('%25') <= 0:
-                    _path = quote(_path)
+                if rv is None:
+                    rv = f(*args, **kwargs)
 
-                _viewkey = 'mobile%s' % _path if request.MOBILE else _path
-                cache_key = str(key % _viewkey)
+                    # 添加缓存时间信息
+                    _suffix = u"\n<!-- cached at %s -->" % str(datetime.datetime.now())
+                    if hasattr(rv, "data"):
+                        rv.data += _suffix
+                    if isinstance(rv, text_type):
+                        rv += _suffix
 
-                if page > 1:
-                    cache_key = '%s_%s' % (cache_key, page)
-
-                rv = cache.get(cache_key)
-                if rv is not None: 
-                    return rv
-                rv = f(*args, **kwargs)
-                _suffix = u"\n<!-- cached at %s -->" % str(datetime.datetime.now())
-                if hasattr(rv, "data"):
-                    rv.data += _suffix
-                if isinstance(rv, unicode):
-                    rv += _suffix
-                cache.set(cache_key, rv, timeout)
+                    try:
+                        self.cache.set(cache_key, rv, decorated_function.cache_timeout)
+                    except Exception:
+                        if current_app.debug:
+                            raise
+                        current_app.logger.exception("Exception possibly due to cache backend.")
+                        return f(*args, **kwargs)
                 return rv
+
+            def make_cache_key(*args, **kwargs):
+                if callable(key_prefix):
+                    cache_key = key_prefix()
+                elif '%s' in key_prefix:
+                    # 这里要转换成str(UTF-8)类型, 否则会报类型错误
+                    _path = request.path
+                    if isinstance(_path, text_type):
+                        _path = _path.encode('utf-8')
+                    # 对于非ASCII的URL，需要进行URL编码
+                    if quote(_path).count('%25') <= 0:
+                        _path = quote(_path)
+                    cache_key = key_prefix % _path
+                else:
+                    cache_key = key_prefix
+
+                return cache_key
+
+            decorated_function.uncached = f
+            decorated_function.cache_timeout = timeout
+            decorated_function.make_cache_key = make_cache_key
+
             return decorated_function
         return decorator
+
+
+def baememcache(app, config, args, kwargs):
+    from bae_memcache import BaeMemcache
+    return BaeMemcache(config['CACHE_BAE_ID'],
+                       config['CACHE_BAE_SERVERS'],
+                       config['CACHE_BAE_USERNAME'],
+                       config['CACHE_BAE_PASSWORD'])
 
 
 mail = Mail()
 db = SQLAlchemy()
 
 login_manager = LoginManager()
-cache = Cache()
+cache = WtxlogCache()

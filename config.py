@@ -15,8 +15,10 @@ class Config:
     # 是否启用博客模式
     BLOG_MODE = True
 
-    BODY_FORMAT = 'html' # html or markdown
+    # html or markdown
+    BODY_FORMAT = 'html'
 
+    # tip: generate `SECRET_KEY` by `os.urandom(24)`
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
 
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
@@ -24,10 +26,10 @@ class Config:
 
     SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 
-    MAIL_SERVER = os.environ.get('MAIL_SERVER')
+    MAIL_SERVER = os.environ.get('MAIL_SERVER') or ''
     MAIL_PORT = int(os.environ.get('MAIL_PORT') or 25)
-    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
-    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME') or ''
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD') or ''
     # gmail的话带下面那行的注释去掉
     #MAIL_USE_TLS = True
     # qq企业邮箱的话带下面那行的注释去掉
@@ -37,19 +39,21 @@ class Config:
     APP_MAIL_SENDER = '%s Admin <%s>' % (SITE_NAME, MAIL_USERNAME)
     APP_ADMIN = os.environ.get('APP_ADMIN')
 
-    # cache keys
-    _PREFIX = md5(SECRET_KEY).hexdigest()[7:15]
-    MEMCACHE_KEY = _PREFIX + '_view_%s'
-    STATIC_KEY = _PREFIX + '_static_%s'
+    # flask-cache basic configuration values
+    CACHE_KEY = 'view/%s'
+    CACHE_DEFAULT_TIMEOUT = 300
+
+    # Used only for RedisCache, MemcachedCache and GAEMemcachedCache
+    CACHE_KEY_PREFIX = '%s_' % md5(SECRET_KEY).hexdigest()[7:15]
 
     # QiNiu Cloud Storage
-    QINIU_AK = os.environ.get('QINIU_AK')
-    QINIU_SK = os.environ.get('QINIU_SK')
-    QINIU_BUCKET = os.environ.get('QINIU_BUCKET')
+    QINIU_AK = os.environ.get('QINIU_AK') or ''
+    QINIU_SK = os.environ.get('QINIU_SK') or ''
+    QINIU_BUCKET = os.environ.get('QINIU_BUCKET') or ''
 
     @staticmethod
     def get_mailhandler():
-        # email errors to the administrators
+        # send email to the administrators if errors occurred
         from wtxlog.ext import MySMTPHandler
         credentials = None
         secure = None
@@ -99,12 +103,13 @@ class BAEConfig(Config):
     BAE_SK = ''
 
     # BAE MEMCACHE
-    CACHE_USER = BAE_AK
-    CACHE_PWD = BAE_SK
-    CACHE_ADDR = 'cache.duapp.com:20243'
-    CACHE_ID = ''
+    CACHE_TYPE = 'wtxlog.ext.baememcache'
+    CACHE_BAE_USERNAME = BAE_AK
+    CACHE_BAE_PASSWORD = BAE_SK
+    CACHE_BAE_SERVERS = 'cache.duapp.com:20243'
+    CACHE_BAE_ID = ''
 
-    # mysql config
+    # mysql configuration
     MYSQL_USER = BAE_AK
     MYSQL_PASS = BAE_SK
     MYSQL_HOST = 'sqld.duapp.com'
@@ -138,8 +143,11 @@ class BAEConfig(Config):
 
 class SAEConfig(Config):
 
+    # 需要先在控制面板启用Memcached服务，否则会报错
+    # 调试阶段，可以注释掉，或者改为其它类型，比如 simple
+    CACHE_TYPE = 'memcached'
+
     try:
-        # 如果是SAE环境，请把下面3行的注释去掉 
         from sae.const import (
             MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASS, MYSQL_DB
         )
@@ -163,7 +171,9 @@ class SAEConfig(Config):
 
 class JAEConfig(Config):
 
-    # mysql config
+    CACHE_TYPE = 'simple'
+
+    # mysql configuration
     MYSQL_USER = ''
     MYSQL_PASS = ''
     MYSQL_HOST = ''
@@ -194,12 +204,18 @@ class JAEConfig(Config):
 
 class ProductionConfig(Config):
 
-    MEMCACHED_SERVERS = ['127.0.0.1:11211']
+    # memcached type configuration values
+    CACHE_TYPE = 'memcached'
+    CACHE_MEMCACHED_SERVERS = ['127.0.0.1:11211']
+
+    # filesystem type configuration values
+    #CACHE_TYPE = 'filesystem'
+    #CACHE_DIR = os.path.join(basedir, 'data', 'cache')
 
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data_sqlite.db')
 
-    # mysql config
+    # mysql configuration
     MYSQL_USER = ''
     MYSQL_PASS = ''
     MYSQL_HOST = ''
