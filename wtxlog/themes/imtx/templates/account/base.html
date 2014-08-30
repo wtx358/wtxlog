@@ -8,5 +8,6 @@
     {% endfor %}
   </ul>
 {% block body %}{% endblock %}
+<p><a href="javascript:window.history.back();">Back</a> | <a href="{{ url_for('main.index') }}">Back Index</a></p>
 </body>
 </html>
