@@ -97,6 +97,16 @@ class DevelopmentConfig(Config):
         app.logger.addHandler(mail_handler)
 
 
+class TestingConfig(Config):
+
+    TESTING = True
+
+    SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
+    'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
+
+    WTF_CSRF_ENABLED = False
+
+
 class BAEConfig(Config):
 
     BAE_AK = ''
@@ -243,5 +253,6 @@ config = {
     'jae': JAEConfig,
     'local': DevelopmentConfig,
     'production': ProductionConfig,
+    'testing': TestingConfig,
     'sae': SAEConfig,
 }
