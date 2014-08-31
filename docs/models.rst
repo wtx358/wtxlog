@@ -146,6 +146,7 @@
 - anchor 锚文本
 - title 鼠标移过时显示的标题
 - url 链接URL
+- order 排序值，越小越前面
 - actived 是否有效
 - note 备注信息
 
