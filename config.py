@@ -215,12 +215,12 @@ class JAEConfig(Config):
 class ProductionConfig(Config):
 
     # memcached type configuration values
-    CACHE_TYPE = 'memcached'
-    CACHE_MEMCACHED_SERVERS = ['127.0.0.1:11211']
+    #CACHE_TYPE = 'memcached'
+    #CACHE_MEMCACHED_SERVERS = ['127.0.0.1:11211']
 
     # filesystem type configuration values
-    #CACHE_TYPE = 'filesystem'
-    #CACHE_DIR = os.path.join(basedir, 'data', 'cache')
+    CACHE_TYPE = 'filesystem'
+    CACHE_DIR = os.path.join(basedir, 'data', 'cache')
 
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data_sqlite.db')
