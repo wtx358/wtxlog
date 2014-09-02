@@ -30,7 +30,7 @@ manager.add_command('db', MigrateCommand)
 def deploy():
     """Run deployment tasks."""
     from flask.ext.migrate import upgrade
-    from app.models import Role, User
+    from wtxlog.models import Role, User
 
     upgrade()
     #db.create_all()
