@@ -1,9 +1,36 @@
-部署
-====
+应用部署
+========
 
 基本要求： Python 2.7.X
 
-设置依赖
+运行环境
+--------
+
+APP的运行环境默认会根据服务器环境变量 ``SERVER_SOFTWARE`` 来确定。
+BAE/JAE/SAE 这3个环境的 ``SERVER_SOFTWARE`` 是固定的；其他环境可以通过设
+置机器的环境变量 ``APP_CONFIG`` 来更改默认的运行环境。
+
+**LINUX设置方法（示例）** ::
+
+    APP_CONFIG='production' python manage.py deploy
+
+**WINDOWS设置方法（示例）** ::
+
+    set APP_CONFIG=production
+    python manage.py deploy
+
+**运行环境说明：**
+
+- ``development/default/local`` 调试开发环境，默认的选项，使用内置服务器
+  运行应用时为这个环境
+- ``production`` 生产环境，一般是指通过 Gunicorn 运行应用时的环境
+- ``testing`` 测试环境
+- ``bae`` BAE应用引擎环境
+- ``jae`` JAE应用引擎环境
+- ``sae`` SAE应用引擎环境
+
+
+部署应用
 --------
 
 本地环境
@@ -12,26 +39,168 @@
 **本地环境** 是指对操作系统有绝对操作权的环境，主要指Windows和Linux开发环境，
 以及Linux生产环境。
 
+本地环境通过 pip + virtualenv 方式部署。
+
+下载源码
+~~~~~~~~
+
+从 https://github.com/wtx358/wtxlog/ 下载 wtxlog 最新源代码
+
+安装依赖
+~~~~~~~~
+
 使用 ``requirements/common.txt`` 来安装依赖，本地环境默认使用SQLITE数据库::
 
     pip install -r requirements/common.txt
 
+运行程序
+~~~~~~~~
+
+如果通过 virtualenv 来运行程序，需要先激活虚拟环境。
+
+初始化数据库::
+
+    python manage.py deploy
+
+运行程序::
+
+    python manage.py runserver
+
+若需要强制开启 debug 和 reload 的模式，请加上参数 ``-d -r`` 。
+
+
 BAE环境
 +++++++
 
-只需要把 ``requirements.txt`` 的内容改成下面的即可，应用引擎会自动安装依赖::
+参考： :ref:`secret_key` , :ref:`database` , :ref:`cache`
+
+准备工作
+~~~~~~~~
+
+1. 申请 BAE 账号，创建工程，解决方案勾选“使用BAE”，类型选择“python-web”
+   ，代码版本工具建议选择 “git”。
+2. 进入 BAE3 应用管理控制台，开发者服务 -> 应用引擎
+3. 在扩展服务中添加 BAE MySQL 数据库，记下数据库相关信息，后面会用到
+4. 在扩展服务中添加 Cache 服务（如果有配额的话），记下 **资源名称**
+5. 在 **部署列表** 中 **添加部署** ，类型选择 python-web ，使用 SVN 或 GIT 
+   工具将代码checkout到本地
+
+更改设置
+~~~~~~~~
+
+1. 从 https://github.com/wtx358/wtxlog/ 下载 wtxlog 最新源代码
+2. 编辑根目录下的 ``config.py`` 文件
+   
+   更改 ``SECRET_KEY`` （位于 ``Config`` 类）::
+
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
+
+   ``SECRET_KEY`` 可使用 ``os.urandom(24)`` 随机生成。
+
+   更改 BAE 相关信息 （位于 ``BAEConfig`` 类）::
+
+    BAE_AK = ''
+    BAE_SK = ''
+
+    # BAE MEMCACHE
+    CACHE_TYPE = 'wtxlog.ext.baememcache'
+    CACHE_BAE_USERNAME = BAE_AK
+    CACHE_BAE_PASSWORD = BAE_SK
+    CACHE_BAE_SERVERS = 'cache.duapp.com:20243'
+    CACHE_BAE_ID = ''
+
+    # mysql configuration
+    MYSQL_USER = BAE_AK
+    MYSQL_PASS = BAE_SK
+    MYSQL_HOST = 'sqld.duapp.com'
+    MYSQL_PORT = '4050'
+    MYSQL_DB = ''
+
+   若没有启用 Cache 服务或者方便调试，请把 ``CACHE_TYPE`` 注释掉。
+
+设置依赖
+~~~~~~~~
+
+修改根目录 ``requirements.txt`` 文件内容如下::
 
     -r requirements/bae3.txt
+
+应用引擎会自动安装依赖。
+
+上传
+~~~~
+
+1. 将前面修改好的 wtxlog 代码拷贝到 BAE 本地目录
+2. 通过 SVN/GIT 上传所有文件
+3. 上传之后发布到最新版本
+
+接下来： :ref:`database_init` , :ref:`adminer`
 
 SAE环境
 +++++++
 
-这个稍微有点复杂，需要在本地先安装好依赖，然后导出依赖，复制到 ``mydeps`` 
-或者 ``deps`` 目录。
+参考： :ref:`secret_key` , :ref:`cache`
 
-方法如下：
+准备工作
+~~~~~~~~
 
-(1) 使用 ``virtualenv`` 创建一个pip虚拟环境，并进入
+1. 申请 SAE 开发账号, 创建 Python Web 应用 
+   
+   SAE 新手入门: http://sae.sina.com.cn/doc/tutorial/index.html
+
+2. 进入 SAE 应用管理控制台
+3. 在服务管理中初始化 MySQL 数据库
+4. 在服务管理中初始化 Memcache
+5. 使用 SVN 工具将代码 checkout 到本地
+
+更改设置
+~~~~~~~~
+
+1. 从 https://github.com/wtx358/wtxlog/ 下载 wtxlog 最新源代码
+2. 修改应用信息，编辑根目录下的 ``config.yaml`` 文件
+
+   将 ``config.yaml`` 的  ``name`` 和 ``version`` 改为你自己的::
+
+    name: appname
+    version: 1 
+
+3. 更改设置，编辑根目录下的 ``config.py`` 文件
+
+   更改 ``SECRET_KEY`` （位于 ``Config`` 类）::
+
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
+
+   ``SECRET_KEY`` 可使用 ``os.urandom(24)`` 随机生成。
+   
+   缓存设置（位于 ``SAEConfig`` 类）， SAE 内置 Memcached 缓存服务，需要
+   在控制面板初始化::
+
+    CACHE_TYPE = 'memcached'
+   
+   若没有初始化 Memcached 服务或者方便调试，请把 ``CACHE_TYPE`` 注释掉。
+
+安装依赖
+~~~~~~~~
+
+SAE 预装有一些模块，但有些版本比较旧，且不支持通过 ``requirements.txt``
+自动安装依赖，所以只能把依赖包导出来，连同代码一起上传到SVN代码库。
+
+基本思路：先本地通过 virtualenv 安装好依赖，然后利用 ``bundle.py`` 导出依赖，最
+后复制到应用根目录下的 ``mydeps`` 或者 ``deps`` 目录。
+
+步骤如下：
+
+(1) 使用 ``virtualenv`` 创建一个pip虚拟环境，并进入:
+    
+    LINUX::
+
+        virtualenv myenv
+        source myenv/bin/activate
+
+    WINDOWS::
+
+        virtualenv myenv
+        myenv\Scripts\activate.bat
 
 (2) 把 ``requirements/common.txt`` 复制到当前目录，并命名为 ``requirements.txt``
 
@@ -52,44 +221,79 @@ SAE环境
     虽然 SAE 支持 ``virtualenv.bundle.zip`` 这种依赖包导入方式，但经过测
     试，会引发一些不可控的问题，所以不建议使用这种方式。
 
+上传
+~~~~
+
+1. 将前面修改好的 wtxlog 代码拷贝到 SAE 本地目录
+2. 使用 SVN 上传所有文件
+3. 代码上传后应用引擎会自动部署代码
+
+接下来： :ref:`database_init` , :ref:`adminer`
+
 JAE环境
 +++++++
 
-只需要把 ``requirements.txt`` 的内容改成下面的即可，应用引擎会自动安装依赖::
-
-    -r requirements/jae.txt
-
-
-部署应用
---------
-
-在BAE部署应用
-+++++++++++++
-
-通过SVN/GIT上传源代码上传之后，在控制面板手动部署。
-
-上传前需要配置的地方： :ref:`secret_key` , :ref:`database` , :ref:`cache`
-
-在SAE部署应用
-+++++++++++++
-
-通过SVN上传代码，代码上传之后自动部署。
-
-上传前需要配置的地方： :ref:`secret_key` , :ref:`cache`
-
-在JAE部署应用
-+++++++++++++
-
-通过GIT上传代码之后，在控制面板手动部署。
-
-上传前需要配置的地方： :ref:`secret_key` , :ref:`database`
+参考： :ref:`secret_key` , :ref:`database`
 
 PS：由于PIP源的问题，经常会部署不成功，需要多试几次。
 
-在Linux云主机（VPS）部署应用
-++++++++++++++++++++++++++++
+准备工作
+~~~~~~~~
+
+1. 申请 JAE 开发账号, 新建应用，应用服务器类型选择 Python-Web 。
+2. 进入 JAE 应用引擎控制台
+3. 在云数据库中新建 MySQL 数据库，记下数据库相关信息，后面会用到
+4. 使用 GIT 工具将代码 checkout 到本地
+
+
+更改设置
+~~~~~~~~
+
+1. 从 https://github.com/wtx358/wtxlog/ 下载 wtxlog 最新源代码
+2. 编辑根目录下的 ``config.py`` 文件
+   
+   更改 ``SECRET_KEY`` （位于 ``Config`` 类）::
+
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
+
+   ``SECRET_KEY`` 可使用 ``os.urandom(24)`` 随机生成。
+
+   更改 JAE 相关信息 （位于 ``JAEConfig`` 类）::
+
+    # mysql configuration
+    MYSQL_USER = ''
+    MYSQL_PASS = ''
+    MYSQL_HOST = ''
+    MYSQL_PORT = ''
+    MYSQL_DB = ''
+
+设置依赖
+~~~~~~~~
+
+修改根目录 ``requirements.txt`` 文件内容如下::
+
+    -r requirements/jae.txt
+
+应用引擎会自动安装依赖。
+
+上传
+~~~~
+
+1. 将前面修改好的 wtxlog 代码拷贝到 BAE 本地目录
+2. 通过 GIT 上传所有文件
+3. 上传之后进行快速部署
+
+   PS：如果部署不成功，多试几次，或者加大内存再试。
+
+接下来： :ref:`database_init` , :ref:`adminer`
+
+生产环境
+++++++++
 
 推荐使用 Nginx + Gunicorn + Supervisor 这种相对简单的部署方式。
+
+
+.. _database_init:
 
 数据库初始化
 ++++++++++++
@@ -103,6 +307,9 @@ PS：由于PIP源的问题，经常会部署不成功，需要多试几次。
 **方法2**
 
 在应用引擎中，通过导入 ``schema.sql`` 文件的方法初始化数据库。
+
+
+.. _adminer:
 
 网站管理员
 ++++++++++
@@ -121,6 +328,10 @@ PS：由于PIP源的问题，经常会部署不成功，需要多试几次。
 
 配置信息
 --------
+
+
+基本配置信息
+++++++++++++
 
 管理员邮箱及SMTP信息
 ++++++++++++++++++++++++
