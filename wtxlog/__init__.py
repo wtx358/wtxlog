@@ -78,13 +78,13 @@ def create_app(config_name):
         return send_from_directory(app.static_folder, 'robots.txt')
 
     # 暂时解决因Gunicorn中引发ERROR 11而无法正常提交的问题
-    @app.teardown_request
-    def teardown_request(response_or_exc):
-        if app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN']:
-            try:
-                db.session.commit()
-            except:
-                db.session.rollback()
-        db.session.remove()
+    #@app.teardown_request
+    #def teardown_request(response_or_exc):
+    #    if app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN']:
+    #        try:
+    #            db.session.commit()
+    #        except:
+    #            db.session.rollback()
+    #    db.session.remove()
 
     return app
