@@ -38,9 +38,10 @@ class SaveUploadFile:
 
         qiniu.conf.ACCESS_KEY = current_app.config.get('QINIU_AK')
         qiniu.conf.SECRET_KEY = current_app.config.get('QINIU_SK')
-        bucket_name = current_app.config.get('QINIU_BUCKET')
+        _bucket = current_app.config.get('QINIU_BUCKET')
+        _domain = current_app.config.get('QINIU_DOMAIN')
 
-        policy = qiniu.rs.PutPolicy(bucket_name)
+        policy = qiniu.rs.PutPolicy(_bucket)
         uptoken = policy.token()
 
         extra = qiniu.io.PutExtra()
@@ -53,10 +54,9 @@ class SaveUploadFile:
 
         try:
             assert err is None 
-            url = 'http://%s.qiniudn.com/%s' % (bucket_name, self.filename)
+            return 'http://%s/%s' % (_domain, self.filename)
         except:
-            url = ''
-        return url
+            return ''
 
     def bcs_save_file3(self):
         """upload file to BCS in BAE3.0"""
