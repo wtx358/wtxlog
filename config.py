@@ -52,6 +52,7 @@ class Config:
     QINIU_AK = os.environ.get('QINIU_AK') or ''
     QINIU_SK = os.environ.get('QINIU_SK') or ''
     QINIU_BUCKET = os.environ.get('QINIU_BUCKET') or ''
+    QINIU_DOMAIN = '%s.qiniudn.com' % QINIU_BUCKET
 
     @staticmethod
     def get_mailhandler():
