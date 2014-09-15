@@ -520,7 +520,7 @@ class Article(db.Model):
     body = db.Column(db.Text, nullable=False)
     body_html = db.Column(db.Text)
 
-    published = db.Column(db.Boolean, default=False)
+    published = db.Column(db.Boolean, default=True)
     ontop = db.Column(db.Boolean, default=False)
     recommend = db.Column(db.Boolean, default=False)
 
