@@ -416,9 +416,74 @@ Nginx 配置::
 配置信息
 --------
 
-
-基本配置信息
+内置的配置值
 ++++++++++++
+
+.. list-table::
+
+  * - THEME
+    - 主题（模板）的名称
+  * - SITE_NAME
+    - 站点名称
+  * - BLOG_MODE
+    - 博客模式，默认为 ``True`` ，如果要做为 CMS ，则设为 ``False``
+  * - BODY_FORMAT
+    - 正文格式，支持 MARKDOWN 和 HTML 两种
+  * - SECRET_KEY
+    - 密钥，必须设置，很重要
+  * - MAIL_SERVER
+    - 邮件服务器地址
+  * - MAIL_PORT
+    - 邮件服务器端口，默认为25
+  * - MAIL_USERNAME
+    - 邮件服务器用户名，注意是明文的
+  * - MAIL_PASSWORD
+    - 邮件服务器用户密码，注意是明文的
+  * - MAIL_USE_TLS
+    - 使用 TLS 连接，GMAIL邮箱需要设置为 ``True``
+  * - MAIL_USE_SSL
+    - 使用 SSL 连接，QQ企业邮箱需要设置为 ``True``
+  * - APP_ADMIN
+    - 网站管理员邮箱
+  * - CACHE_TYPE
+    - 缓存类型，有 ``simple`` , ``memcached`` , ``filesystem`` , 
+      ``wtxlog.ext.baememcache`` 4 种。
+  * - CACHE_KEY
+    - 缓存名称，默认值为 ``view/%s``
+  * - CACHE_DEFAULT_TIMEOUT
+    - 缓存过期时间，默认为 300 秒
+  * - CACHE_KEY_PREFIX
+    - 内存类缓存前缀，只对 RedisCache, MemcachedCache 和 GAEMemcachedCache 有效
+  * - QINIU_AK
+    - 七牛云存储 API Key
+  * - QINIU_SK
+    - 七牛云存储 Secret Key
+  * - QINIU_BUCKET
+    - 七牛云存储 bucket 名称
+  * - QINIU_DOMAIN
+    - 七牛云存储域名，默认为 ``bucket.qiniudn.com``
+  * - BAE_AK
+    - BAE 应用引擎 API Key
+  * - BAE_SK
+    - BAE 应用引擎 Secret Key
+  * - CACHE_BAE_SERVERS
+    - BAE CACHE 服务主机地址
+  * - CACHE_BAE_ID
+    - BAE CACHE 服务名称
+  * - CACHE_BAE_USERNAME
+    - BAE CACHE 服务用户名，默认与 ``BAE_AK`` 相同
+  * - CACHE_BAE_PASSWORD
+    - BAE CACHE 服务用户密码，默认与 ``BAE_SK`` 相同
+  * - MYSQL_HOST
+    - MYSQL 主机地址
+  * - MYSQL_PORT
+    - MYSQL 主机端口
+  * - MYSQL_USER
+    - MYSQL 用户名
+  * - MYSQL_PASS
+    - MYSQL 用户密码
+  * - MYSQL_DB
+    - MYSQL 数据库名称
 
 管理员邮箱及SMTP信息
 ++++++++++++++++++++++++
