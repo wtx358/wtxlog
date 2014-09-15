@@ -292,6 +292,93 @@ PS：由于PIP源的问题，经常会部署不成功，需要多试几次。
 
 推荐使用 Nginx + Gunicorn + Supervisor 这种相对简单的部署方式。
 
+安装 Supervisor
+~~~~~~~~~~~~~~~
+
+Supervisor 通过 easy_install 或 pip 在系统级别安装::
+
+    easy_install supervisor
+
+或者::
+
+    pip install supervisor
+
+安装 Gunicorn
+~~~~~~~~~~~~~
+
+Gunicorn 通过 Virtualenv 在虚拟环境安装::
+
+    pip install gunicorn==18.0
+
+安装依赖
+~~~~~~~~
+
+安装 ``requirements/common.txt`` 中的依赖即可::
+
+    pip install -r requirements/common.txt
+
+配置文件
+~~~~~~~~
+
+注意： ``{{approot}}`` 为 wtxlog 应用程序实际所在绝对路径，请替换为实际
+路径。
+
+Supervisor 配置::
+
+    [program:wtxlog]
+    user=www
+    directory={{approot}}
+    command=/bin/env env/bin/gunicorn -b unix:app_wtxlog.sock manage:app
+    process_name=%(program_name)s
+    numprocs=1
+    autostart=true
+    autorestart=true
+    stopsignal=QUIT
+    redirect_stderr=true
+    stdout_logfile=app_wtxlog.log
+
+
+Nginx 配置::
+
+    server
+    {
+        server_name example.com;
+
+        set $approot {{approot}};
+        root $approot/wtxlog;
+
+        location / { try_files $uri @myapp; }
+        location @myapp {
+            proxy_pass http://unix:$approot/app_wtxlog.sock;
+            proxy_redirect off;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+
+        location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
+        {
+            expires      30d;
+        }
+
+        location ~ .*\.(js|css)?$
+        {
+            expires      12h;
+        }
+
+        location ^~ /admin/static/ {
+            alias $approot/wtxlog/static/admin/;
+            expires 30d;
+        }
+
+        location ^~ /_themes/imtx/ {
+            alias $approot/wtxlog/themes/imtx/static/;
+            expires 10d;
+        }
+
+        access_log  /home/wwwlogs/99xueli.net.log  access;
+    }
+
 
 .. _database_init:
 
