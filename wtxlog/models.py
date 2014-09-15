@@ -22,13 +22,16 @@ BODY_FORMAT = Config.BODY_FORMAT
 class Permission:
     '''定义角色拥有的权限'''
 
-    #写的文章是草稿，不公开
+    #: 写的文章是草稿，不公开
     WRITE_ARTICLES = 0x04
 
-    #可以公开文章
+    #: 可以公开文章
     PUBLISH_ARTICLES = 0x08
 
-    #管理后台的权限
+    #: 上传文件
+    UPLOAD_FILES = 0x10
+
+    #: 管理后台的权限
     ADMINISTER = 0x80
 
 

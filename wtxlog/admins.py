@@ -40,7 +40,7 @@ def format_datetime(self, request, obj, fieldname, *args, **kwargs):
 def view_on_site(self, request, obj, fieldname, *args, **kwargs):
     return Markup('%s%s' % (
         HTML.i(style='margin-right:5px;', class_='icon icon-eye-open'),
-        link_to(u'预览', obj.link, target='_blank'),
+        link_to(u'View', obj.link, target='_blank'),
     ))
 
 
@@ -56,7 +56,6 @@ class MyAdminIndexView(AdminIndexView):
 
 # Customized Post model admin
 class ArticleAdmin(sqla.ModelView):
-    # Visible columns in the list view
     
     create_template = "admin/model/a_create.html"
     edit_template = "admin/model/a_edit.html"
@@ -67,21 +66,6 @@ class ArticleAdmin(sqla.ModelView):
     form_excluded_columns = ('author', 'body_html', 'hits', 'created',
                              'last_modified',)
 
-    # List of columns that can be sorted. For 'user' column, use User.username as
-    # a column.
-    # column_sortable_list = ('created', 'title',)
-
-    column_labels = dict(
-            title=u'文章标题',
-            category=u'栏目',
-            published=u'已发布',
-            tags=u'标签',
-            ontop=u'置顶',
-            recommend=u'推荐',
-            created=u'创建时间',
-            view_on_site=u'预览'
-    )
-    
     column_searchable_list = ('title',)
 
     column_formatters = dict(
@@ -110,25 +94,6 @@ class ArticleAdmin(sqla.ModelView):
         'template': {'style': 'width:480px;'}, 
         'summary': {'style': 'width:680px; height:80px;'},
     }
-
-    # Pass arguments to WTForms. In this case, change label for text field to
-    # be 'Big Text' and add required() validator.
-    form_args = dict(
-        slug=dict(description=u'英文唯一标识符，建议小写英文字母、数字'),
-        title=dict(description=u'文章标题，极为重要'),
-        seotitle=dict(description=u'SEO标题'),
-        seokey=dict(description=u'SEO关键词'),
-        seodesc=dict(description=u'SEO描述'),
-        thumbnail=dict(description=u'图片规格建议100*100像素'),
-        thumbnail_big=dict(description=u'大缩略图，根据实际情况确定尺寸'),
-        template=dict(description=u'模板文件，使用默认请留空'),
-        summary=dict(description=u'文章摘要，建议认真填写。新增时若为空，则自动生成'),
-        body=dict(description=u'文章内容，格式为Markdown格式'),
-        body_html=dict(description=u'此项为程序根据body自动生成'),
-        published=dict(description=u'是否发布，打勾表示发布'),
-        ontop=dict(description=u'是否置顶，打勾表示置顶'),
-        recommend=dict(description=u'是否推荐，打勾表示推荐'),
-    )
 
     # Model handlers
     def on_model_change(self, form, model, is_created):
@@ -163,7 +128,6 @@ class CategoryAdmin(sqla.ModelView):
     create_template = "admin/model/a_create.html"
     edit_template = "admin/model/a_edit.html"
     
-    #column_exclude_list = ['thumbnail']
     column_list = ('name', 'longslug', 'seotitle', 'view_on_site')
 
     column_searchable_list = ('slug', 'longslug', 'name')
@@ -184,18 +148,6 @@ class CategoryAdmin(sqla.ModelView):
         'template': {'style': 'width:480px;'}, 
         'article_template': {'style': 'width:480px;'}, 
     }
-
-    form_args = dict(
-        slug=dict(description=u'英文唯一标识符，建议小写英文字母、数字'),
-        name=dict(description=u'栏目名称'),
-        thumbnail=dict(description=u'缩略图URL'),
-        seotitle=dict(description=u'SEO标题，空白的话默认与栏目名称相同'),
-        seokey=dict(description=u'栏目SEO关键词'),
-        seodesc=dict(description=u'栏目SEO描述'),
-        template=dict(description=u'栏目列表页模板，使用默认请留空'),
-        article_template=dict(description=u'栏目文章页模板，使用默认请留空'),
-        body=dict(description=u'栏目详细介绍'),
-    )
 
     # Model handlers
     def on_model_delete(self, model):
@@ -226,7 +178,6 @@ class TagAdmin(sqla.ModelView):
     create_template = "admin/model/a_create.html"
     edit_template = "admin/model/a_edit.html"
     
-    #column_exclude_list = ['thumbnail']
     column_list = ('name', 'seotitle', 'seokey', 'view_on_site')
 
     column_searchable_list = ('name',)
@@ -247,17 +198,6 @@ class TagAdmin(sqla.ModelView):
         'template': {'style': 'width:480px;'}, 
     }
 
-    form_args = dict(
-        slug=dict(description=u'英文唯一标识符，建议小写英文字母、数字'),
-        name=dict(description=u'Tag名称'),
-        thumbnail=dict(description=u'缩略图'),
-        seotitle=dict(description=u'SEO标题，空白的话默认与Tag名称相同'),
-        seokey=dict(description=u'Tag关键词'),
-        seodesc=dict(description=u'Tag描述'),
-        template=dict(description=u'列表页模板，使用默认请留空'),
-        body=dict(description=u'Tag详细介绍'),
-    )
-
     # Model handlers
     def on_model_change(self, form, model, is_created):
         if not model.id:
@@ -273,7 +213,6 @@ class TagAdmin(sqla.ModelView):
 
     def after_model_change(self, form, model, is_created):
         # 中文的路径特别需要注意
-        #cache_delete(unquote(model.shortlink))
         cache_delete(model.shortlink)
             
     def is_accessible(self):
@@ -285,7 +224,6 @@ class TopicAdmin(sqla.ModelView):
     create_template = "admin/model/a_create.html"
     edit_template = "admin/model/a_edit.html"
     
-    #column_exclude_list = ['thumbnail']
     column_list = ('name', 'slug', 'seotitle', 'view_on_site')
 
     form_excluded_columns = ('articles', 'body_html')
@@ -305,17 +243,6 @@ class TopicAdmin(sqla.ModelView):
         'seodesc': {'style': 'width:480px; height:80px;'}, 
         'template': {'style': 'width:480px;'}, 
     }
-
-    form_args = dict(
-        slug=dict(description=u'英文唯一标识符，建议小写英文字母、数字'),
-        name=dict(description=u'栏目名称'),
-        thumbnail=dict(description=u'缩略图URL'),
-        seotitle=dict(description=u'SEO标题，空白的话默认与栏目名称相同'),
-        seokey=dict(description=u'栏目SEO关键词'),
-        seodesc=dict(description=u'栏目SEO描述'),
-        template=dict(description=u'栏目列表页模板，使用默认请留空'),
-        body=dict(description=u'栏目详细介绍'),
-    )
 
     # Model handlers
     def on_model_change(self, form, model, is_created):
@@ -341,7 +268,6 @@ class FlatpageAdmin(sqla.ModelView):
     create_template = "admin/model/a_create.html"
     edit_template = "admin/model/a_edit.html"
 
-    #column_exclude_list = ['body', 'body_html', 'summary',]
     column_list = ('title', 'slug', 'seotitle', 'view_on_site')
 
     column_searchable_list = ('slug', 'title', )
@@ -360,16 +286,6 @@ class FlatpageAdmin(sqla.ModelView):
         'seodesc': {'style': 'width:480px; height:80px;'}, 
         'template': {'style': 'width:480px;'}, 
     }
-
-    form_args = dict(
-        slug=dict(description=u'英文唯一标识符，建议小写英文字母、数字'),
-        title=dict(description=u'页面标题'),
-        seotitle=dict(description=u'SEO标题'),
-        seokey=dict(description=u'SEO关键词'),
-        seodesc=dict(description=u'SEO描述'),
-        template=dict(description=u'内容页模板，使用默认请留空'),
-        body=dict(description=u'内容'),
-    )
 
     def is_accessible(self):
         return current_user.is_administrator()
@@ -396,12 +312,6 @@ class FriendLinkAdmin(sqla.ModelView):
         'note': {'style': 'width:480px; height:80px;'}, 
     }
 
-    form_args = dict(
-        anchor=dict(description=u'锚文本'),
-        title=dict(description=u'显示标题'),
-        url=dict(description=u'链接URL'),
-    )
-
     def is_accessible(self):
         return current_user.is_administrator()
 
@@ -417,12 +327,6 @@ class LinkAdmin(sqla.ModelView):
         'url': {'style': 'width:480px;'}, 
         'note': {'style': 'width:480px; height:80px;'}, 
     }
-
-    form_args = dict(
-        anchor=dict(description=u'锚文本'),
-        title=dict(description=u'显示标题'),
-        url=dict(description=u'链接URL'),
-    )
 
     def is_accessible(self):
         return current_user.is_administrator()
@@ -442,12 +346,6 @@ class LabelAdmin(sqla.ModelView):
         'html': {'style': 'width:640px; height:320px;'}, 
     }
 
-    form_args = dict(
-        slug=dict(description=u'英文唯一标识符，建议小写英文字母、数字'),
-        title=dict(description=u'标签标题'),
-        html=dict(description=u'HTML代码'),
-    )
-
     def is_accessible(self):
         return current_user.is_administrator()
 
@@ -464,12 +362,6 @@ class RedirectAdmin(sqla.ModelView):
         'note': {'style': 'width:480px; height:80px;'}, 
     }
 
-    form_args = dict(
-        old_path=dict(description=u'旧路径'),
-        new_path=dict(description=u'要转向的新路径'),
-        note=dict(description=u'备注'),
-    )
-    
     def is_accessible(self):
         return current_user.is_administrator()
 
@@ -496,17 +388,16 @@ class UserAdmin(sqla.ModelView):
 admin = Admin(index_view=MyAdminIndexView(), base_template="admin/my_master.html")
 
 # add views
-admin.add_view(TopicAdmin(Topic, db.session, name=u'专题'))
-admin.add_view(CategoryAdmin(Category, db.session, name=u'栏目'))
-admin.add_view(TagAdmin(Tag, db.session, name=u'标签'))
-admin.add_view(ArticleAdmin(Article, db.session, name=u'文章'))
-admin.add_view(FlatpageAdmin(Flatpage, db.session, name=u'单页面'))
+admin.add_view(TopicAdmin(Topic, db.session))
+admin.add_view(CategoryAdmin(Category, db.session))
+admin.add_view(TagAdmin(Tag, db.session))
+admin.add_view(ArticleAdmin(Article, db.session))
+admin.add_view(FlatpageAdmin(Flatpage, db.session))
 
-admin.add_view(LabelAdmin(Label, db.session, u'静态标签'))
+admin.add_view(LabelAdmin(Label, db.session))
 
-#admin.add_view(LinkAdmin(Link, db.session, category=u'链接', name=u'内部链接'))
-admin.add_view(FriendLinkAdmin(FriendLink, db.session, name=u'友情链接'))
-admin.add_view(RedirectAdmin(Redirect, db.session, name=u'重定向'))
+admin.add_view(FriendLinkAdmin(FriendLink, db.session))
+admin.add_view(RedirectAdmin(Redirect, db.session))
 
-admin.add_view(UserAdmin(User, db.session, name=u'用户'))
+admin.add_view(UserAdmin(User, db.session))
 
