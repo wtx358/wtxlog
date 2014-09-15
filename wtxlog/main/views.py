@@ -12,11 +12,13 @@ from werkzeug._compat import text_type, to_bytes
 from webhelpers.paginate import Page, PageURL
 from flask.ext.mobility.decorators import mobile_template
 
+from ..decorators import permission_required
 from ..utils.helpers import render_template, get_category_ids
 from ..utils.upload import SaveUploadFile
 from ..utils.metaweblog import blog_dispatcher
 from ..ext import cache
-from ..models import db, Article, Category, Tag, Flatpage, Topic, Role
+from ..models import db, Article, Category, Tag, Flatpage, Topic, \
+        Role, Permission
 from . import main
 
 IMAGE_TYPES = {
@@ -303,6 +305,7 @@ def feed():
 
 
 @main.route('/upload/', methods=['POST', 'OPTIONS'])
+@permission_required(Permission.UPLOAD_FILES)
 def upload():
     ''' 文件上传函数 '''
 
@@ -344,6 +347,7 @@ def upload():
     
 
 @main.route('/uploadremote/', methods=['POST', 'OPTIONS'])
+@permission_required(Permission.UPLOAD_FILES)
 def uploadremote():
     """ 
     xheditor保存远程图片简单实现
@@ -399,6 +403,7 @@ def xmlrpc():
 
 
 @main.route('/ckupload/', methods=['POST', 'OPTIONS'])
+@permission_required(Permission.UPLOAD_FILES)
 def ckupload():
     """CKEditor file upload"""
     data = None
