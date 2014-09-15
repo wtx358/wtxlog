@@ -12,7 +12,7 @@ from flask.ext.sqlalchemy import BaseQuery
 from flask import current_app, request, url_for
 from flask.ext.login import UserMixin, AnonymousUserMixin
 
-from .ext import db, keywords_split, text_type
+from .ext import db, keywords_split, text_type, to_bytes
 from .utils.filters import markdown_filter
 from config import Config
 
@@ -132,9 +132,7 @@ class User(UserMixin, db.Model):
         self.password_hash = generate_password_hash(password)
 
     def verify_password(self, password):
-        _hash = self.password_hash
-        if isinstance(_hash, text_type):
-            _hash = _hash.encode('utf-8')
+        _hash = to_bytes(self.password_hash)
         return check_password_hash(_hash, password)
 
     def generate_confirmation_token(self):

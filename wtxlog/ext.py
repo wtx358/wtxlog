@@ -9,7 +9,7 @@ from flask.ext.cache import Cache as FlaskCache
 from flask.ext.mail import Mail, Message
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
-from werkzeug._compat import text_type
+from werkzeug._compat import text_type, to_bytes
 
 
 def keywords_split(keywords):
@@ -216,9 +216,7 @@ class WtxlogCache(FlaskCache):
                     cache_key = key_prefix()
                 elif '%s' in key_prefix:
                     # 这里要转换成str(UTF-8)类型, 否则会报类型错误
-                    _path = request.path
-                    if isinstance(_path, text_type):
-                        _path = _path.encode('utf-8')
+                    _path = to_bytes(request.path, 'utf-8')
                     # 对于非ASCII的URL，需要进行URL编码
                     if quote(_path).count('%25') <= 0:
                         _path = quote(_path)
