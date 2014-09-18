@@ -23,5 +23,13 @@ Wtxlog内置栏目、标签（Tags）、文章等主要模型，可以满足绝�
 - Flask-Login
 - Flask-Mail
 
+## 文档
+
 Documentation: <http://wtxlog.readthedocs.org/>
+
+## 演示网站
+
+<http://flask123.sinaapp.com> Flask中文学习网 (SAE)
+<http://m.szhust.org> 深圳远程教育网 (BAE)
+<http://wtxlog.jd-app.com> Wtxlog (JAE)
 

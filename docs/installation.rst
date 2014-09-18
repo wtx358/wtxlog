@@ -335,7 +335,6 @@ Supervisor 配置::
     autorestart=true
     stopsignal=QUIT
     redirect_stderr=true
-    stdout_logfile=app_wtxlog.log
 
 
 Nginx 配置::
@@ -376,7 +375,7 @@ Nginx 配置::
             expires 10d;
         }
 
-        access_log  /home/wwwlogs/99xueli.net.log  access;
+        access_log  /path/to/example.com.log  access;
     }
 
 
