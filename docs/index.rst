@@ -39,6 +39,7 @@ Wtxlog内置栏目、标签（Tags）、文章等主要模型，可以满足绝�
 Contents:
 
 .. toctree::
+   :numbered:
    :maxdepth: 2
 
    installation.rst
