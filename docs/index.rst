@@ -40,9 +40,8 @@ Contents:
 
 .. toctree::
    :maxdepth: 2
-   
-   installation
-   models
-   filters
-   processors
+
+   installation.rst
+   models.rst
+   templating.rst
 
