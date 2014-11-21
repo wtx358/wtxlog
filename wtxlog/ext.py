@@ -3,7 +3,7 @@
 import logging
 import datetime
 from urllib2 import quote, unquote
-from flask import current_app, request
+from flask import current_app, request, redirect, url_for
 from functools import wraps
 from flask.ext.cache import Cache as FlaskCache
 from flask.ext.mail import Mail, Message
@@ -174,7 +174,14 @@ class WtxlogCache(FlaskCache):
         def decorator(f):
             @wraps(f)
             def decorated_function(*args, **kwargs):
-                #: Bypass the cache entirely.
+                # 如果是第一页，跳转到标准页面
+                # 比如： `/page/1/` 跳转到 `/`
+                _kw = request.view_args
+                if _kw.has_key('page') and _kw['page'] == 1:
+                    _kw.pop('page')
+                    return redirect(url_for(request.endpoint, **_kw), code=301)
+
+                # Bypass the cache entirely.
                 if callable(unless) and unless() is True:
                     return f(*args, **kwargs)
 
@@ -182,9 +189,6 @@ class WtxlogCache(FlaskCache):
                     cache_key = decorated_function.make_cache_key(*args, **kwargs)
                     if request.MOBILE:
                         cache_key = 'mobile_%s' % cache_key
-                    page = int(request.args.get('page', 1))
-                    if page > 1:
-                        cache_key = '%s_%s' % (cache_key, page)
                     rv = self.cache.get(cache_key)
                 except Exception:
                     if current_app.debug:

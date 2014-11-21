@@ -21,13 +21,13 @@ def utility_processor():
         archives = None
         if archives is None:
             begin_post = Article.query.order_by('created').first()
-            
+
             now = datetime.datetime.now()
 
             begin_s = begin_post.created if begin_post else now
             end_s = now
 
-            begin = begin_s 
+            begin = begin_s
             end = end_s
 
             total = (end.year - begin.year) * 12 - begin.month + end.month
@@ -115,7 +115,7 @@ def utility_processor():
     def get_related_articles(article_id, limit=10):
         """
         返回指定文章的相关文章列表
-        
+
         根据Tag来筛选
 
         :param article_id:

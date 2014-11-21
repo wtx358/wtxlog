@@ -66,7 +66,7 @@ class Role(db.Model):
 
     def __repr__(self):
         return '<Role %r>' % self.name
-    
+
     def __unicode__(self):
         return self.name
 
@@ -235,16 +235,16 @@ class AnonymousUser(AnonymousUserMixin):
 
 # Create M2M table
 article_tags_table = db.Table(
-    'article_tags', 
-    db.Model.metadata, 
-    db.Column('article_id', db.Integer, db.ForeignKey("articles.id", ondelete='CASCADE')), 
+    'article_tags',
+    db.Model.metadata,
+    db.Column('article_id', db.Integer, db.ForeignKey("articles.id", ondelete='CASCADE')),
     db.Column('tag_id', db.Integer, db.ForeignKey("tags.id", ondelete='CASCADE')),
 )
 
 
 class Category(db.Model):
     """目录"""
-    
+
     __tablename__ = "categories"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -253,18 +253,18 @@ class Category(db.Model):
     name = db.Column(db.String(64), nullable=False)
 
     parent_id = db.Column(db.Integer(), db.ForeignKey('categories.id'))
-    parent = db.relationship('Category', 
-                             primaryjoin = ('Category.parent_id == Category.id'), 
+    parent = db.relationship('Category',
+                             primaryjoin = ('Category.parent_id == Category.id'),
                              remote_side=id, backref=db.backref("children"))
 
     # SEO page title
-    seotitle = db.Column(db.String(128)) 
+    seotitle = db.Column(db.String(128))
     seokey = db.Column(db.String(128))
     seodesc = db.Column(db.String(300))
 
-    thumbnail = db.Column(db.String(255)) 
-    template = db.Column(db.String(255)) 
-    article_template = db.Column(db.String(255)) 
+    thumbnail = db.Column(db.String(255))
+    template = db.Column(db.String(255))
+    article_template = db.Column(db.String(255))
 
     body = db.Column(db.Text)
     body_html = db.Column(db.Text)
@@ -361,25 +361,25 @@ class TagQuery(BaseQuery):
     def search(self, keyword):
         keyword = '%' + keyword.strip() + '%'
         return self.filter(Article.title.ilike(keyword))
-        
-        
+
+
 class Tag(db.Model):
     """标签"""
-    
+
     __tablename__ = "tags"
-    
+
     query_class = TagQuery
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, index=True, nullable=False)
-    
+
     # SEO info
     seotitle = db.Column(db.String(128))
     seokey = db.Column(db.String(128))
     seodesc = db.Column(db.String(300))
 
-    thumbnail = db.Column(db.String(255)) 
-    template = db.Column(db.String(255)) 
+    thumbnail = db.Column(db.String(255))
+    template = db.Column(db.String(255))
 
     body = db.Column(db.Text)
     body_html = db.Column(db.Text)
@@ -395,7 +395,7 @@ class Tag(db.Model):
     @cached_property
     def link(self):
         return url_for('main.tag', name=self.name.lower(), _external=True)
-        
+
     @cached_property
     def shortlink(self):
         return url_for('main.tag', name=self.name.lower())
@@ -416,7 +416,7 @@ db.event.listen(Tag.body, 'set', Tag.on_changed_body)
 
 class Topic(db.Model):
     """专题"""
-    
+
     __tablename__ = "topics"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -424,12 +424,12 @@ class Topic(db.Model):
     name = db.Column(db.String(64), nullable=False)
 
     # SEO page title
-    seotitle = db.Column(db.String(128)) 
+    seotitle = db.Column(db.String(128))
     seokey = db.Column(db.String(128))
     seodesc = db.Column(db.String(300))
 
-    thumbnail = db.Column(db.String(255)) 
-    template = db.Column(db.String(255)) 
+    thumbnail = db.Column(db.String(255))
+    template = db.Column(db.String(255))
 
     body = db.Column(db.Text)
     body_html = db.Column(db.Text)
@@ -478,12 +478,12 @@ class ArticleQuery(BaseQuery):
     def archives(self, year, month):
         if not year:
             return self
-        
+
         criteria = []
         criteria.append(db.extract('year', Article.created)==year)
         if month:
             criteria.append(db.extract('month', Article.created)==month)
-        
+
         q = reduce(db.and_, criteria)
         return self.public().filter(q)
 
@@ -496,7 +496,7 @@ class Article(db.Model):
     query_class = ArticleQuery
 
     PER_PAGE = 10
-    
+
     id = db.Column(db.Integer, primary_key=True)
     slug = db.Column(db.String(200))
     title = db.Column(db.String(200), nullable=False)
@@ -504,7 +504,7 @@ class Article(db.Model):
     seotitle = db.Column(db.String(200))
     seokey = db.Column(db.String(128))
     seodesc = db.Column(db.String(300))
-    
+
     category_id = db.Column(db.Integer(), db.ForeignKey(Category.id), nullable=False,)
     category = db.relationship(Category, backref=db.backref("articles"))
 
@@ -515,7 +515,7 @@ class Article(db.Model):
 
     thumbnail = db.Column(db.String(255))
     thumbnail_big = db.Column(db.String(255))
-    template = db.Column(db.String(255)) 
+    template = db.Column(db.String(255))
 
     summary = db.Column(db.String(2000))
     body = db.Column(db.Text, nullable=False)
@@ -532,9 +532,9 @@ class Article(db.Model):
 
     created = db.Column(db.DateTime())
     last_modified = db.Column(db.DateTime())
-    
+
     __mapper_args__ = {'order_by': [ontop.desc(), id.desc()]}
-    
+
     def __repr__(self):
         return '<Post %r>' % (self.title)
 
@@ -555,7 +555,7 @@ class Article(db.Model):
 
     @cached_property
     def get_next(self):
-        _query = db.and_(Article.category_id.in_([self.category.id]), 
+        _query = db.and_(Article.category_id.in_([self.category.id]),
                          Article.id > self.id)
         return self.query.public().filter(_query) \
                          .order_by(Article.id.asc()) \
@@ -563,7 +563,7 @@ class Article(db.Model):
 
     @cached_property
     def get_prev(self):
-        _query = db.and_(Article.category_id.in_([self.category.id]), 
+        _query = db.and_(Article.category_id.in_([self.category.id]),
                          Article.id < self.id)
         return self.query.public().filter(_query) \
                          .order_by(Article.id.desc()) \
@@ -650,7 +650,7 @@ class Flatpage(db.Model):
     seotitle = db.Column(db.Unicode(200))
     seokey = db.Column(db.Unicode(128))
     seodesc = db.Column(db.Unicode(400))
-    template = db.Column(db.String(255)) 
+    template = db.Column(db.String(255))
     body = db.Column(db.Text, nullable=False)
     body_html = db.Column(db.Text, nullable=False)
 

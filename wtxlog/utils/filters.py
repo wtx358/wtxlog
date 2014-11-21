@@ -18,16 +18,16 @@ def markdown_filter(text, codehilite=True):
     但是fenced_code生成的代码是<pre><code>~~~</code></code>包围的
     """
     exts = [
-        'abbr', 'attr_list', 'def_list', 'sane_lists', 'fenced_code', 
-        'tables', 'toc', 'wikilinks', 
+        'abbr', 'attr_list', 'def_list', 'sane_lists', 'fenced_code',
+        'tables', 'toc', 'wikilinks',
     ]
 
     if codehilite:
         exts.append('codehilite(guess_lang=True,linenums=False)')
 
     return Markup(markdown.markdown(
-        text, 
-        extensions=exts, 
+        text,
+        extensions=exts,
         safe_mode=False,
     ))
 

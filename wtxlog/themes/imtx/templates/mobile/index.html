@@ -5,7 +5,7 @@
 {% block description %}{{ label('index_description') }}{% endblock %}
 
 {% block head_extend -%}
-  <link rel="canonical" href="{{ url_for('main.index', _external=True) }}" />
+  <link rel="canonical" href="{{ request.base_url }}" />
 {%- endblock %}
 
 {% block main %}

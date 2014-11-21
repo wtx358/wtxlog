@@ -21,7 +21,7 @@ class SaveUploadFile:
 
     def gen_dirname(self):
         return datetime.date.today().strftime('%Y%m')
-        
+
     def gen_filename(self):
         filename_prefix = datetime.datetime.now().strftime('%Y%m%d%H%M%S');
         return '%s%s' % (filename_prefix, str(random.randrange(1000, 10000)))
@@ -53,7 +53,7 @@ class SaveUploadFile:
         time.sleep(1) # 等待文件上传完成
 
         try:
-            assert err is None 
+            assert err is None
             return 'http://%s/%s' % (_domain, self.filename)
         except:
             return ''

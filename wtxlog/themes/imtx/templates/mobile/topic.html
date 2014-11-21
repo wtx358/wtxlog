@@ -5,7 +5,7 @@
 {% block description %}{{ topic.seodesc }}{% endblock %}
 
 {% block head_extend -%}
-  <link rel="canonical" href="{{ topic.link }}" />
+  <link rel="canonical" href="{{ request.base_url }}" />
 {%- endblock %}
 
 {% block main %}
