@@ -56,11 +56,11 @@ class MyAdminIndexView(AdminIndexView):
 
 # Customized Post model admin
 class ArticleAdmin(sqla.ModelView):
-    
+
     create_template = "admin/model/a_create.html"
     edit_template = "admin/model/a_edit.html"
 
-    column_list = ('title', 'category', 'tags', 'published', 'ontop', 
+    column_list = ('title', 'category', 'tags', 'published', 'ontop',
             'recommend', 'created', 'view_on_site')
 
     form_excluded_columns = ('author', 'body_html', 'hits', 'created',
@@ -82,16 +82,16 @@ class ArticleAdmin(sqla.ModelView):
 
     form_overrides = dict(seodesc=TextAreaField, body=EDITOR_WIDGET,
                           summary=TextAreaField)
-    
+
     form_widget_args = {
-        'title': {'style': 'width:480px;'}, 
-        'slug': {'style': 'width:480px;'}, 
-        'seotitle': {'style': 'width:480px;'}, 
-        'seokey': {'style': 'width:480px;'}, 
-        'seodesc': {'style': 'width:480px; height:80px;'}, 
-        'thumbnail': {'style': 'width:480px;'}, 
-        'thumbnail_big': {'style': 'width:480px;'}, 
-        'template': {'style': 'width:480px;'}, 
+        'title': {'style': 'width:480px;'},
+        'slug': {'style': 'width:480px;'},
+        'seotitle': {'style': 'width:480px;'},
+        'seokey': {'style': 'width:480px;'},
+        'seodesc': {'style': 'width:480px; height:80px;'},
+        'thumbnail': {'style': 'width:480px;'},
+        'thumbnail_big': {'style': 'width:480px;'},
+        'template': {'style': 'width:480px;'},
         'summary': {'style': 'width:680px; height:80px;'},
     }
 
@@ -121,13 +121,13 @@ class ArticleAdmin(sqla.ModelView):
             obj = Article.query.get(id)
             baidu_ping(obj.link)
         flash(u'PING请求已发送，请等待百度处理')
-        
+
 
 class CategoryAdmin(sqla.ModelView):
 
     create_template = "admin/model/a_create.html"
     edit_template = "admin/model/a_edit.html"
-    
+
     column_list = ('name', 'longslug', 'seotitle', 'view_on_site')
 
     column_searchable_list = ('slug', 'longslug', 'name')
@@ -138,15 +138,15 @@ class CategoryAdmin(sqla.ModelView):
 
     column_formatters = dict(view_on_site=view_on_site)
 
-    form_widget_args = { 
-        'slug': {'style': 'width:320px;'}, 
-        'name': {'style': 'width:320px;'}, 
-        'thumbnail': {'style': 'width:480px;'}, 
-        'seotitle': {'style': 'width:480px;'}, 
-        'seokey': {'style': 'width:480px;'}, 
-        'seodesc': {'style': 'width:480px; height:80px;'}, 
-        'template': {'style': 'width:480px;'}, 
-        'article_template': {'style': 'width:480px;'}, 
+    form_widget_args = {
+        'slug': {'style': 'width:320px;'},
+        'name': {'style': 'width:320px;'},
+        'thumbnail': {'style': 'width:480px;'},
+        'seotitle': {'style': 'width:480px;'},
+        'seokey': {'style': 'width:480px;'},
+        'seodesc': {'style': 'width:480px; height:80px;'},
+        'template': {'style': 'width:480px;'},
+        'article_template': {'style': 'width:480px;'},
     }
 
     # Model handlers
@@ -177,7 +177,7 @@ class TagAdmin(sqla.ModelView):
 
     create_template = "admin/model/a_create.html"
     edit_template = "admin/model/a_edit.html"
-    
+
     column_list = ('name', 'seotitle', 'seokey', 'view_on_site')
 
     column_searchable_list = ('name',)
@@ -189,13 +189,13 @@ class TagAdmin(sqla.ModelView):
     column_formatters = dict(view_on_site=view_on_site)
 
     form_widget_args = {
-        'slug': {'style': 'width:320px;'}, 
-        'name': {'style': 'width:320px;'}, 
-        'thumbnail': {'style': 'width:480px;'}, 
-        'seotitle': {'style': 'width:480px;'}, 
-        'seokey': {'style': 'width:480px;'}, 
-        'seodesc': {'style': 'width:480px; height:80px;'}, 
-        'template': {'style': 'width:480px;'}, 
+        'slug': {'style': 'width:320px;'},
+        'name': {'style': 'width:320px;'},
+        'thumbnail': {'style': 'width:480px;'},
+        'seotitle': {'style': 'width:480px;'},
+        'seokey': {'style': 'width:480px;'},
+        'seodesc': {'style': 'width:480px; height:80px;'},
+        'template': {'style': 'width:480px;'},
     }
 
     # Model handlers
@@ -214,7 +214,7 @@ class TagAdmin(sqla.ModelView):
     def after_model_change(self, form, model, is_created):
         # 中文的路径特别需要注意
         cache_delete(model.shortlink)
-            
+
     def is_accessible(self):
         return current_user.is_administrator()
 
@@ -223,7 +223,7 @@ class TopicAdmin(sqla.ModelView):
 
     create_template = "admin/model/a_create.html"
     edit_template = "admin/model/a_edit.html"
-    
+
     column_list = ('name', 'slug', 'seotitle', 'view_on_site')
 
     form_excluded_columns = ('articles', 'body_html')
@@ -234,14 +234,14 @@ class TopicAdmin(sqla.ModelView):
 
     column_formatters = dict(view_on_site=view_on_site)
 
-    form_widget_args = { 
-        'slug': {'style': 'width:320px;'}, 
-        'name': {'style': 'width:320px;'}, 
-        'thumbnail': {'style': 'width:480px;'}, 
-        'seotitle': {'style': 'width:480px;'}, 
-        'seokey': {'style': 'width:480px;'}, 
-        'seodesc': {'style': 'width:480px; height:80px;'}, 
-        'template': {'style': 'width:480px;'}, 
+    form_widget_args = {
+        'slug': {'style': 'width:320px;'},
+        'name': {'style': 'width:320px;'},
+        'thumbnail': {'style': 'width:480px;'},
+        'seotitle': {'style': 'width:480px;'},
+        'seokey': {'style': 'width:480px;'},
+        'seodesc': {'style': 'width:480px; height:80px;'},
+        'template': {'style': 'width:480px;'},
     }
 
     # Model handlers
@@ -279,12 +279,12 @@ class FlatpageAdmin(sqla.ModelView):
     form_overrides = dict(seodesc=TextAreaField, body=EDITOR_WIDGET)
 
     form_widget_args = {
-        'title': {'style': 'width:480px;'}, 
-        'slug': {'style': 'width:320px;'}, 
-        'seotitle': {'style': 'width:480px;'}, 
-        'seokey': {'style': 'width:480px;'}, 
-        'seodesc': {'style': 'width:480px; height:80px;'}, 
-        'template': {'style': 'width:480px;'}, 
+        'title': {'style': 'width:480px;'},
+        'slug': {'style': 'width:320px;'},
+        'seotitle': {'style': 'width:480px;'},
+        'seokey': {'style': 'width:480px;'},
+        'seodesc': {'style': 'width:480px; height:80px;'},
+        'template': {'style': 'width:480px;'},
     }
 
     def is_accessible(self):
@@ -298,7 +298,7 @@ class FlatpageAdmin(sqla.ModelView):
 
 
 class FriendLinkAdmin(sqla.ModelView):
-    
+
     column_exclude_list = ['note']
 
     column_searchable_list = ('anchor', 'title', 'url')
@@ -306,10 +306,10 @@ class FriendLinkAdmin(sqla.ModelView):
     form_overrides = dict(note=TextAreaField)
 
     form_widget_args = {
-        'anchor': {'style': 'width:320px;'}, 
-        'title': {'style': 'width:320px;'}, 
-        'url': {'style': 'width:480px;'}, 
-        'note': {'style': 'width:480px; height:80px;'}, 
+        'anchor': {'style': 'width:320px;'},
+        'title': {'style': 'width:320px;'},
+        'url': {'style': 'width:480px;'},
+        'note': {'style': 'width:480px; height:80px;'},
     }
 
     def is_accessible(self):
@@ -319,13 +319,13 @@ class FriendLinkAdmin(sqla.ModelView):
 class LinkAdmin(sqla.ModelView):
 
     column_exclude_list = ['note']
-    
+
     form_overrides = dict(note=TextAreaField)
 
     form_widget_args = {
-        'title': {'style': 'width:320px;'}, 
-        'url': {'style': 'width:480px;'}, 
-        'note': {'style': 'width:480px; height:80px;'}, 
+        'title': {'style': 'width:320px;'},
+        'url': {'style': 'width:480px;'},
+        'note': {'style': 'width:480px; height:80px;'},
     }
 
     def is_accessible(self):
@@ -337,13 +337,13 @@ class LabelAdmin(sqla.ModelView):
     column_list = ('slug', 'title')
 
     column_searchable_list = ('slug', 'title')
-    
+
     form_overrides = dict(html=TextAreaField)
 
     form_widget_args = {
-        'slug': {'style': 'width:480px;'}, 
-        'title': {'style': 'width:480px;'}, 
-        'html': {'style': 'width:640px; height:320px;'}, 
+        'slug': {'style': 'width:480px;'},
+        'title': {'style': 'width:480px;'},
+        'html': {'style': 'width:640px; height:320px;'},
     }
 
     def is_accessible(self):
@@ -357,9 +357,9 @@ class RedirectAdmin(sqla.ModelView):
     form_overrides = dict(note=TextAreaField)
 
     form_widget_args = {
-        'old_path': {'style': 'width:320px;'}, 
-        'new_path': {'style': 'width:320px;'}, 
-        'note': {'style': 'width:480px; height:80px;'}, 
+        'old_path': {'style': 'width:320px;'},
+        'new_path': {'style': 'width:320px;'},
+        'note': {'style': 'width:480px; height:80px;'},
     }
 
     def is_accessible(self):
@@ -377,7 +377,7 @@ class UserAdmin(sqla.ModelView):
     form_overrides = dict(about_me=TextAreaField)
 
     form_widget_args = {
-        'about_me': {'style': 'width:480px; height:80px;'}, 
+        'about_me': {'style': 'width:480px; height:80px;'},
     }
 
     def is_accessible(self):

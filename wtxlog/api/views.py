@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import request 
+from flask import request
 from ..models import db, Article
 from . import api
 

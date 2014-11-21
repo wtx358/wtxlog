@@ -26,7 +26,7 @@ def checkauth(pos=1):
 
             username = args[pos+0]
             password = args[pos+1]
-            
+
             #user = User.query.filter_by(email=username).first()
             user = User.authenticate(username, password)
             if user is None:
@@ -64,8 +64,8 @@ def post_struct(entry):
 
 @checkauth()
 def blogger_getUsersBlogs(discard):
-    SITE_NAME = current_app.config.get('SITE_NAME') 
-    return [{'blogid': '31415926', 
+    SITE_NAME = current_app.config.get('SITE_NAME')
+    return [{'blogid': '31415926',
              'url': url_for('main.index', _external=True),
              'blogName': SITE_NAME,
              'isAdmin': True,
@@ -166,7 +166,7 @@ def metaWeblog_newMediaObject(blogid, struct):
     fext = IMAGE_TYPES.get(media['type'])
 
     # data为二进制内容
-    data = media['bits'].data 
+    data = media['bits'].data
     filename = media['name']
 
     # 这部分根据情况自定义
@@ -182,16 +182,16 @@ def metaWeblog_getCategories(blogid):
     categories = Category.query.all()
 
     return  [{
-        'categoryId': category.id, 
-        'categoryName': category.name, 
-        'categoryDescription': category.seodesc, 
+        'categoryId': category.id,
+        'categoryName': category.name,
+        'categoryDescription': category.seodesc,
         'description': category.seodesc} for category in categories]
 
 
 @checkauth()
 def metaWeblog_getPost(postid):
 
-    post = Post.query.get(postid) 
+    post = Post.query.get(postid)
 
     if post:
         return post_struct(post)

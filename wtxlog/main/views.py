@@ -13,7 +13,7 @@ from webhelpers.paginate import Page, PageURL
 from flask.ext.mobility.decorators import mobile_template
 
 from ..decorators import permission_required
-from ..utils.helpers import render_template, get_category_ids
+from ..utils.helpers import render_template, get_category_ids, page_url
 from ..utils.upload import SaveUploadFile
 from ..utils.metaweblog import blog_dispatcher
 from ..ext import cache
@@ -36,21 +36,20 @@ def deploy():
 
 
 @main.route('/')
+@main.route('/page/<int:page>/')
 @mobile_template('{mobile/}%s')
 @cache.cached()
-def index(template):
+def index(template, page=1):
     _template = template % 'index.html'
     blog_mode = current_app.config.get("BLOG_MODE")
     if blog_mode:
-        page = int(request.args.get('page', 1))
-
-        _url = PageURL(url_for('main.index'), {"page": page})
+        _url = page_url
         _query = Article.query.public()
         pagination = Page(_query, page=page, items_per_page=Article.PER_PAGE, url=_url)
         articles = pagination.items
 
         return render_template(_template,
-                               articles=articles, 
+                               articles=articles,
                                pagination=pagination)
     else:
         return render_template(_template)
@@ -71,15 +70,14 @@ def article(template, article_id):
 
 
 @main.route('/category/<path:longslug>/')
+@main.route('/category/<path:longslug>/page/<int:page>/')
 @mobile_template('{mobile/}%s')
 @cache.cached(86400)
-def category(template, longslug):
+def category(template, longslug, page=1):
     category = Category.query.filter_by(longslug=longslug).first_or_404()
     cate_ids = get_category_ids(longslug)
 
-    page = int(request.args.get('page', 1))
-
-    _url = PageURL(category.link, {"page": page})
+    _url = page_url
     _query = Article.query.public().filter(Article.category_id.in_(cate_ids))
     pagination = Page(_query, page=page, items_per_page=Article.PER_PAGE, url=_url)
 
@@ -87,18 +85,17 @@ def category(template, longslug):
 
     _template = template % (category.template or 'category.html')
     return render_template(_template,
-                           category=category, 
+                           category=category,
                            pagination=pagination,
                            articles=articles)
 
 
 @main.route('/archives/<int:year>/<int:month>/')
+@main.route('/archives/<int:year>/<int:month>/page/<int:page>/')
 @mobile_template('{mobile/}%s')
 @cache.cached(86400)
-def archives(template, year, month):
-    page = int(request.args.get('page', 1))
-
-    _url = PageURL(url_for('main.archives', year=year, month=month), {"page": page})
+def archives(template, year, month, page=1):
+    _url = page_url
     _query = Article.query.archives(year, month)
     pagination = Page(_query, page=page, items_per_page=Article.PER_PAGE, url=_url)
 
@@ -126,15 +123,16 @@ def tags(template):
 
 
 @main.route('/tag/<name>/')
+@main.route('/tag/<name>/page/<int:page>/')
 @mobile_template('{mobile/}%s')
 @cache.cached(86400)
-def tag(template, name):
-    '''
+def tag(template, name, page=1):
+    """
     :param template:
         模板文件，此参数自动传入
     :param name:
         Tag名称，若为非ASCII字符，一般是经过URL编码的
-    '''
+    """
     # 若name为非ASCII字符，传入时一般是经过URL编码的
     # 若name为URL编码，则需要解码为Unicode
     # URL编码判断方法：若已为URL编码, 再次编码会在每个码之前出现`%25`
@@ -143,10 +141,8 @@ def tag(template, name):
         name = urllib.unquote(_name)
 
     tag = Tag.query.filter_by(name=name).first_or_404()
-    
-    page = int(request.args.get('page', 1))
-    
-    _url = PageURL(url_for('main.tag', name=name), {"page": page})
+
+    _url = page_url
     _query = Article.query.public().filter(Article.tags.any(id=tag.id))
     pagination = Page(_query, page=page, items_per_page=Article.PER_PAGE, url=_url)
 
@@ -154,7 +150,7 @@ def tag(template, name):
 
     _template = template % (tag.template or 'tag.html')
     return render_template(_template,
-                           tag=tag, 
+                           tag=tag,
                            pagination=pagination,
                            articles=articles)
 
@@ -173,14 +169,13 @@ def topics(template):
 
 
 @main.route('/topic/<slug>/')
+@main.route('/topic/<slug>/page/<int:page>/')
 @mobile_template('{mobile/}%s')
 @cache.cached(86400)
-def topic(template, slug):
+def topic(template, slug, page=1):
     topic = Topic.query.filter_by(slug=slug).first_or_404()
 
-    page = int(request.args.get('page', 1))
-
-    _url = PageURL(url_for('main.topic', slug=slug), {"page": page})
+    _url = page_url
     _query = Article.query.public().filter(Article.topic_id==topic.id)
     pagination = Page(_query, page=page, items_per_page=Article.PER_PAGE, url=_url)
 
@@ -188,7 +183,7 @@ def topic(template, slug):
 
     _template = template % (topic.template or 'topic.html')
     return render_template(_template,
-                           topic=topic, 
+                           topic=topic,
                            pagination=pagination,
                            articles=articles)
 
@@ -210,16 +205,16 @@ def search(template):
     pagination = None
     articles = None
     if keyword:
-        _url = PageURL(url_for('main.search'), 
+        _url = PageURL(url_for('main.search'),
                        {"page": page, "keyword": keyword.encode('utf-8')})
         _query = Article.query.search(keyword)
         pagination = Page(_query, page=page, items_per_page=Article.PER_PAGE, url=_url)
 
         articles = pagination.items
-    
+
     _template = template % 'search.html'
     return render_template(_template,
-                           articles=articles, 
+                           articles=articles,
                            keyword = keyword,
                            pagination=pagination)
 
@@ -238,8 +233,8 @@ def sitemap():
     pages = []
 
     pages.append(
-        [url_for('.index', _external=True), 
-         datetime.datetime.now().isoformat(), 
+        [url_for('.index', _external=True),
+         datetime.datetime.now().isoformat(),
          'weekly', 1],
     )
 
@@ -268,7 +263,7 @@ def sitemap():
         url = article.link
         modified_time = article.last_modified.isoformat()
         pages.append([url, modified_time, 'weekly', 0.5])
-    
+
     sitemap_xml = render_template('sitemap.xml', pages=pages)
     res = make_response(sitemap_xml)
     res.headers["Content-Type"] = "application/xml"
@@ -281,8 +276,8 @@ def feed():
     site_name = current_app.config.get('SITE_NAME')
 
     feed = AtomFeed(
-        u"%s Recent Articles" % site_name, 
-        feed_url=request.url, 
+        u"%s Recent Articles" % site_name,
+        feed_url=request.url,
         url=request.url_root,
     )
 
@@ -290,7 +285,7 @@ def feed():
 
     for article in articles:
         feed.add(
-            article.title, 
+            article.title,
             unicode(article.summary),
             content_type='html',
             author=article.author,
@@ -309,7 +304,7 @@ def feed():
 def upload():
     ''' 文件上传函数 '''
 
-    result = {"err":"", "msg":{"url":"","localfile":""}} 
+    result = {"err":"", "msg":{"url":"","localfile":""}}
     fname = ''
     fext = ''
     data = None
@@ -344,12 +339,12 @@ def upload():
         pass
 
     return json.dumps(result)
-    
+
 
 @main.route('/uploadremote/', methods=['POST', 'OPTIONS'])
 @permission_required(Permission.UPLOAD_FILES)
 def uploadremote():
-    """ 
+    """
     xheditor保存远程图片简单实现
     URL用"|"分隔，返回的字符串也是用"|"分隔
     返回格式是字符串，不是JSON格式

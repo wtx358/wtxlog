@@ -6,9 +6,9 @@
 {% block description %}{{ topic.seodesc }}{% endblock %}
 
 {% block head_extend -%}
-  <link rel="canonical" href="{{ topic.link }}" />
-  <meta name="mobile-agent" content="format=html5;url={{ topic.link }}"/>
-  <meta name="mobile-agent" content="format=xhtml;url={{ topic.link }}"/>
+  <link rel="canonical" href="{{ request.base_url }}" />
+  <meta name="mobile-agent" content="format=html5;url={{ request.base_url }}"/>
+  <meta name="mobile-agent" content="format=xhtml;url={{ request.base_url }}"/>
 {%- endblock %}
 
 {% block main %}

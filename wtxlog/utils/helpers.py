@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import xmlrpclib
-from flask import current_app, url_for
+from flask import current_app, request, redirect, url_for
 from flask.ext.themes import render_theme_template, get_theme
 from ..models import Category, Tag
 
@@ -21,6 +21,16 @@ def get_category_ids(longslug=''):
         return [cate.id for cate in cates.all()]
     else:
         return []
+
+
+def page_url(page):
+    """根据页码返回URL"""
+    _kwargs = request.view_args
+    if _kwargs.has_key('page'):
+        _kwargs.pop('page')
+    if page > 1:
+        return url_for(request.endpoint, page=page, **_kwargs)
+    return url_for(request.endpoint, **_kwargs)
 
 
 def baidu_ping(url):

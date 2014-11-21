@@ -5,7 +5,7 @@
 {% block description %}{{ category.seodesc }}{% endblock %}
 
 {% block head_extend -%}
-  <link rel="canonical" href="{{ category.link }}" />
+  <link rel="canonical" href="{{ request.base_url }}" />
 {%- endblock %}
 
 {% block main %}

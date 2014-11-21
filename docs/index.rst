@@ -26,6 +26,9 @@ Wtxlog内置栏目、标签（Tags）、文章等主要模型，可以满足绝�
 - 新增文章发布后自动PING通知百度
 - 其它功能：Sitemap, Feed, robots.txt, favicon.ico, etc.
 
+.. note::
+   源码： `wtxlog @ GitHub <https://github.com/wtx358/wtxlog>`_
+
 主要依赖的第三方Flask插件
 -------------------------
 

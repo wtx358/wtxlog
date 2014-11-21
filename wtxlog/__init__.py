@@ -22,7 +22,7 @@ def load_user(user_id):
 
 def get_appconfig():
     _env = os.getenv('SERVER_SOFTWARE')
-    if _env: 
+    if _env:
         if _env.startswith('bae'):
             env = 'bae'
         elif _env.startswith('direwolf'):
@@ -52,7 +52,7 @@ def create_app(config_name):
     from .utils.filters import register_filters
     register_filters(app)
 
-    from .utils.processors import utility_processor 
+    from .utils.processors import utility_processor
     app.context_processor(utility_processor)
 
     from .api import api as api_blueprint

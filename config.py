@@ -145,8 +145,8 @@ class BAEConfig(Config):
             _logger.setLevel(logging.DEBUG)
             from bae_log import handlers
             _handler = handlers.BaeLogHandler(
-                    ak=app.config.get('BAE_AK'), 
-                    sk=app.config.get('BAE_SK'), 
+                    ak=app.config.get('BAE_AK'),
+                    sk=app.config.get('BAE_SK'),
                     bufcount=bufcount,
             )
             return _handler

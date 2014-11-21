@@ -6,9 +6,9 @@
 {% block author %}{{ config['SITE_NAME'] }}{% endblock %}
 
 {% block head_extend -%}
-  <link rel="canonical" href="{{ url_for('main.index', _external=True) }}" />
-  <meta name="mobile-agent" content="format=html5;url={{ url_for('main.index', _external=True) }}"/>
-  <meta name="mobile-agent" content="format=xhtml;url={{ url_for('main.index', _external=True) }}"/>
+  <link rel="canonical" href="{{ request.base_url }}" />
+  <meta name="mobile-agent" content="format=html5;url={{ request.base_url }}"/>
+  <meta name="mobile-agent" content="format=xhtml;url={{ request.base_url }}"/>
 {%- endblock %}
 
 {% block main %}

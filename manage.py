@@ -5,7 +5,7 @@ import sys
 from os import path
 
 deps_paths = [
-    path.join(path.split(path.realpath(__file__))[0], 'deps'), 
+    path.join(path.split(path.realpath(__file__))[0], 'deps'),
     path.join(path.split(path.realpath(__file__))[0], 'mydeps'),
 ]
 
