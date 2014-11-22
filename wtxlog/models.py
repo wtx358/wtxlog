@@ -543,7 +543,7 @@ class Article(db.Model):
 
     @cached_property
     def has_more(self):
-        return self.body.find('<!--more-->') > 0 or (self.summary.find('...') > 0)
+        return (self.body.find('<!--more-->') >= 0) or (self.summary.find('...') > 0)
 
     @cached_property
     def link(self):
