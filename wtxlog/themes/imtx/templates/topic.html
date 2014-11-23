@@ -11,6 +11,8 @@
   <meta name="mobile-agent" content="format=xhtml;url={{ request.base_url }}"/>
 {%- endblock %}
 
+{% block crumb %}<a href="{{ url_for('main.topics') }}">专题</a><b>&#187;</b>{{ topic.name }}{% endblock %}
+
 {% block main %}
   {% include theme('article_lists.html') %}
 {% endblock %}

@@ -9,9 +9,10 @@
   <meta name="mobile-agent" content="format=xhtml;url={{ url_for('main.tags', _external=True) }}"/>
 {%- endblock %}
 
+{% block crumb %}Tags{% endblock %}
+
 {% block main %}
 <div class="post">
-
   <h2 class="">栏目</h2>
   <div class="entry">
     {% with categories = category_lists() %}

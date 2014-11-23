@@ -11,6 +11,8 @@
   <meta name="mobile-agent" content="format=xhtml;url={{ flatpage.link }}"/>
 {%- endblock %}
 
+{% block crumb %}{{ flatpage.title }}{% endblock %}
+
 {% block main %}
   <div class="post">
     <h2 class="pagetitle">{{ flatpage.title }}</h2>

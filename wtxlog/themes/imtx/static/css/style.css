@@ -191,6 +191,8 @@ a:hover {
 	width:197px;
 	height:33px
 }
+.crumb {padding-left:22px; margin:10px 0 0; color:#666;}
+.crumb b {padding-left: 3px; padding-right:3px;}
 #tags {
 	font-style:italic;
 	font-weight:bold;
@@ -201,8 +203,7 @@ a:hover {
 }
 .narrowcolumn {
 	float:left;
-	padding:0 0 20px;
-	margin:0;
+	margin:0 0 20px;
 	width:550px
 }
 .narrowcolumn .postmetadata {
@@ -260,7 +261,7 @@ html>body .entry li {
 .entry form {
 	text-align:center
 }
-.entry h2 {font-size:18px; color:#f06; border-bottom:2px solid #ccc; 
+.entry h2 {font-size:18px; color:#f06; border-bottom:2px solid #ccc;
 padding:5px 0; margin:15px 0;}
 .entry h3 {font-size:16px; color:#369; border-bottom:1px dashed #ccc;
 padding:5px 0; margin:10px 0;}
@@ -488,7 +489,7 @@ code {
 	/*display:block;*/
     background:#f0f0f0;
 	border:1px solid #e2e2e2;
-    border-radius:3px 3px 3px 3px; 
+    border-radius:3px 3px 3px 3px;
     color:#222;
 	padding:1px 3px;
 	margin:0 2px;
@@ -532,8 +533,8 @@ blockquote cite {
 
 /* high light begin */
 pre>code {background:none; border:none; margin:0; padding:0;}
-pre {border:1px solid #D7EAED !important; margin:15px 0 0; padding:4px; 
-    overflow:auto; background:url(../images/code.png) repeat; 
+pre {border:1px solid #D7EAED !important; margin:15px 0 0; padding:4px;
+    overflow:auto; background:url(../images/code.png) repeat;
     border-radius:1px 1px 1px 1px; }
 .codehilite .hll { background-color: #ffffcc; }
 .codehilite .c { color: #408080; font-style: italic } /* Comment */

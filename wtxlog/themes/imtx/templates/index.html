@@ -11,10 +11,11 @@
   <meta name="mobile-agent" content="format=xhtml;url={{ request.base_url }}"/>
 {%- endblock %}
 
+{% block crumbwrap %}{% endblock %}
+
 {% block main %}
   {% include theme('article_lists.html') %}
 {% endblock %}
-
 
 {% block friendlinks %}
 

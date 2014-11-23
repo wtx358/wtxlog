@@ -10,6 +10,8 @@
   <meta name="mobile-agent" content="format=xhtml;url={{ request.base_url }}"/>
 {%- endblock %}
 
+{% block crumb %}{{ nav_by_category(category, True) }}{% endblock %}
+
 {% block main %}
   {% include theme('article_lists.html') %}
 {% endblock %}

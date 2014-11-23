@@ -2,6 +2,8 @@
 
 {% block title %}搜索: {{ keyword }}{% if pagination and pagination.page>1 %}_第{{ pagination.page }}页{% endif %}{% endblock %}
 
+{% block crumb %}搜索: <em>{{ keyword }}</em>{% endblock %}
+
 {% block main %}
   <h2>Search Results for {{ keyword }}</h2>
   {% include theme('article_lists.html') %}
