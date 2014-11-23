@@ -22,6 +22,12 @@
 {%- endmacro %}
 {# 面包屑导航结束 #}
 
+{# LOGO部分代码开始 #}
+{% macro logo() -%}
+<a href="{{ url_for('main.index') }}" title="{{ config['SITE_NAME'] }}"><span class="none">{{ config['SITE_NAME'] }}</span></a>
+{% endmacro %}
+{# LOGO部分代码结束 #}
+
 {# 定义导航菜单 #}
 {% set navigation_bar = [
     (url_for('main.index'), 'index', 'Home'),
@@ -35,7 +41,7 @@
     <div id="bgcontain">
       <div id="header">
         {% block logo %}
-        <h1 class="logo"><a href="{{ url_for('main.index') }}" title="{{ config['SITE_NAME'] }}"><span class="none">{{ config['SITE_NAME'] }}</span></a></h1>
+        <div class="logo">{{ logo() }}</div>
         {% endblock %}
         <form action="{{ url_for('main.search') }}" method="GET">
           <div>

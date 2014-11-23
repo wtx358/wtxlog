@@ -1,7 +1,7 @@
-{% if category %}<h2 class="">Category Archives: {{ category.name }}</h2>{% endif %}
-{% if tag %}<h2 class="">Tag Archives: {{ tag.name }}</h2>{% endif %}
-{% if topic %}<h2 class="">Topic Archives: {{ topic.name }}</h2>{% endif %}
-{% if year or month %}<h2 class="">Monthly Archives: {{ year }}-{{ month }}</h2>{% endif %}
+{% if category %}<h1 class="">Category Archives: {{ category.name }}</h1>{% endif %}
+{% if tag %}<h1 class="">Tag Archives: {{ tag.name }}</h1>{% endif %}
+{% if topic %}<h1 class="">Topic Archives: {{ topic.name }}</h1>{% endif %}
+{% if year or month %}<h1 class="">Monthly Archives: {{ year }}-{{ month }}</h1>{% endif %}
 {% if not keyword %}{% set keyword=None %}{% endif %}
 
 {% if articles %}

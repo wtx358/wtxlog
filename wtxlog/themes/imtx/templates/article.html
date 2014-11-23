@@ -11,10 +11,6 @@
   {% if article.get_next %}<link rel="next" title="{{ article.get_next.title}}" href="{{ article.get_next.link }}" />{% endif %}
 {%- endblock %}
 
-{% block logo %}
-  <div class="logo"><a class="logo-img" title="{{ config['SITE_NAME'] }}" href="{{ url_for('main.index') }}"><span class="none">{{ config['SITE_NAME'] }}</span></a></div>
-{% endblock %}
-
 {% block crumb %}{{ nav_by_category(article.category) }}<b>&#187;</b>{{ article.title }}{% endblock %}
 
 {% block main %}
