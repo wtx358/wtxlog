@@ -11,27 +11,18 @@
   {% if article.get_next %}<link rel="next" title="{{ article.get_next.title}}" href="{{ article.get_next.link }}" />{% endif %}
 {%- endblock %}
 
-{% block logo %}
-  <div class="logo"><a class="logo-img" title="{{ config['SITE_NAME'] }}" href="{{ url_for('main.index') }}"><span class="none">{{ config['SITE_NAME'] }}</span></a></div>
-{% endblock %}
+{% block crumb %}{{ nav_by_category(article.category) }}<b>&#187;</b>{{ article.title }}{% endblock %}
 
 {% block main %}
-
 <div class="post" id="article-{{ article.id }}">
-  <!--location begin -->
-  <div style="margin-bottom:10px">
-    {{ nav_by_category(article.category) }} 正文
-  </div>
-  <!--location end -->
-
   <ul class="date">
     <li class="day">{{ article.created|date('%d') }}</li>
-    <li class="month">{{ article.created|date('%b') }}</li>
+    <li class="month">{{ article.created|date('%m') }}月</li>
   </ul>
 
   <div class="title">
     <h1 class="topic"><a href="{{ article.link }}" rel="bookmark" title="{{ article.title }}">{{ article.title }}</a></h1>
-    <p class="postmeta">Post by {{ article.author }} at {{ article.created|date('%Y') }}. 
+    <p class="postmeta">Post by {{ article.author }} at {{ article.created|date('%Y') }}.
     Category: <a href="{{ article.category.link }}">{{ article.category.name }}</a>.
     <span id="articlehits"><img src="{{ theme_static('images/loading.gif') }}" /></span> Views.</p></div>
 

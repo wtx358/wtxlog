@@ -1,7 +1,7 @@
-{% if category %}<h2 class="">Category Archives: {{ category.name }}</h2>{% endif %}
-{% if tag %}<h2 class="">Tag Archives: {{ tag.name }}</h2>{% endif %}
-{% if topic %}<h2 class="">Topic Archives: {{ topic.name }}</h2>{% endif %}
-{% if year or month %}<h2 class="">Monthly Archives: {{ year }}-{{ month }}</h2>{% endif %}
+{% if category %}<h1 class="">Category Archives: {{ category.name }}</h1>{% endif %}
+{% if tag %}<h1 class="">Tag Archives: {{ tag.name }}</h1>{% endif %}
+{% if topic %}<h1 class="">Topic Archives: {{ topic.name }}</h1>{% endif %}
+{% if year or month %}<h1 class="">Monthly Archives: {{ year }}-{{ month }}</h1>{% endif %}
 {% if not keyword %}{% set keyword=None %}{% endif %}
 
 {% if articles %}
@@ -9,13 +9,13 @@
 <div class="post" id="article-{{ article.id }}">
   <ul class="date">
     <li class="day">{{ article.created|date('%d') }}</li>
-    <li class="month">{{ article.created|date('%b') }}</li>
+    <li class="month">{{ article.created|date('%m') }}月</li>
   </ul>
 
   <div class="title">
     <h2 class="topic">{% if article.ontop %}[置顶]{% endif %}<a class="keyword" href="{{ article.link }}" rel="bookmark" title="{{ article.title }}">{{ article.title|emphasis(keyword)|safe }}</a></h2>
     <p class="postmeta">Post by {{ article.author }} at {{
-    article.created|date('%Y') }}. Category: <a href="{{ article.category.link }}">{{ article.category.name }}</a>. 
+    article.created|date('%Y') }}. Category: <a href="{{ article.category.link }}">{{ article.category.name }}</a>.
     {{ article.hits }} Views.</p></div>
 
   <div class="clear"></div>

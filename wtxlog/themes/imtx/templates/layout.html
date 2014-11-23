@@ -13,11 +13,20 @@
     {% block head_extend %}{% endblock %}
   </head>
 
-{% macro nav_by_category(category) -%}
-<a href="{{ url_for('main.index') }}">Home</a> <b>&#187;</b> {% for cate in category.parents %}
-  <a href="{{ cate.link }}">{{ cate.name }}</a> <b>&#187;</b>
-  {% endfor %}
+{# 面包屑导航开始 #}
+{# notself为真则不加链接，用于栏目页 #}
+{% macro nav_by_category(category, notself=False) -%}
+{% for cate in category.parents -%}
+{% if notself and cate == category %}{{ cate.name }}{% else %}<a href="{{ cate.link }}">{{ cate.name }}</a>{% endif %}{% if not loop.last %}<b>&#187;</b>{% endif %}
+{% endfor -%}
+{%- endmacro %}
+{# 面包屑导航结束 #}
+
+{# LOGO部分代码开始 #}
+{% macro logo() -%}
+<a href="{{ url_for('main.index') }}" title="{{ config['SITE_NAME'] }}"><span class="none">{{ config['SITE_NAME'] }}</span></a>
 {% endmacro %}
+{# LOGO部分代码结束 #}
 
 {# 定义导航菜单 #}
 {% set navigation_bar = [
@@ -29,10 +38,10 @@
 {% set active_page = active_page|default('index') -%}
 
   <body>
-    <div id="bgcontain"> 
+    <div id="bgcontain">
       <div id="header">
         {% block logo %}
-        <h1 class="logo"><a href="{{ url_for('main.index') }}" title="{{ config['SITE_NAME'] }}"><span class="none">{{ config['SITE_NAME'] }}</span></a></h1>
+        <div class="logo">{{ logo() }}</div>
         {% endblock %}
         <form action="{{ url_for('main.search') }}" method="GET">
           <div>
@@ -40,7 +49,7 @@
             <input type="submit" id="searchsubmit" value="" />
           </div>
         </form>
-      </div> 
+      </div>
 
       <div id="menu">
         <ul>
@@ -50,6 +59,7 @@
           <li id="pattern"></li>
         </ul>
       </div>
+      {% block crumbwrap %}<div class="crumb"><a href="{{ url_for('main.index') }}">Home</a><b>&#187;</b>{% block crumb %}{% endblock %}</div>{% endblock %}
       <div class="contain clear">
         <div id="content" class="narrowcolumn">
           {% block main %}
@@ -152,10 +162,10 @@
       {% block footer %}
       <div id="footer">
         <p>&copy; 2014 {{ config['SITE_NAME'] }}
-        - <a href="{{ url_for('main.feed') }}">Entries(RSS)</a> 
+        - <a href="{{ url_for('main.feed') }}">Entries(RSS)</a>
         - <a href="{{ url_for('main.sitemap') }}">Sitemap</a>
         <br/>
-        Powered by <a href="http://flask.pocoo.org" target="_blank" rel="external nofollow">Flask</a> | 
+        Powered by <a href="http://flask.pocoo.org" target="_blank" rel="external nofollow">Flask</a> |
     Theme designed By <a href="http://imtx.me/" target="_blank" rel="nofollow">IMTX</a> & <a href="http://www.hoofei.com/" rel="nofollow" target="_blank">Hoofei</a>
         </p>
       </div>

@@ -6,6 +6,8 @@
   <link rel="canonical" href="{{ request.base_url }}" />
 {% endblock %}
 
+{% block crumb %}Monthly Archives: {{ year }}-{{ month }}{% endblock %}
+
 {% block main %}
   {% include theme('article_lists.html') %}
 {% endblock %}
