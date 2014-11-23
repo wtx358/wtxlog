@@ -9,13 +9,13 @@
 <div class="post" id="article-{{ article.id }}">
   <ul class="date">
     <li class="day">{{ article.created|date('%d') }}</li>
-    <li class="month">{{ article.created|date('%b') }}</li>
+    <li class="month">{{ article.created|date('%m') }}月</li>
   </ul>
 
   <div class="title">
     <h2 class="topic">{% if article.ontop %}[置顶]{% endif %}<a class="keyword" href="{{ article.link }}" rel="bookmark" title="{{ article.title }}">{{ article.title|emphasis(keyword)|safe }}</a></h2>
     <p class="postmeta">Post by {{ article.author }} at {{
-    article.created|date('%Y') }}. Category: <a href="{{ article.category.link }}">{{ article.category.name }}</a>. 
+    article.created|date('%Y') }}. Category: <a href="{{ article.category.link }}">{{ article.category.name }}</a>.
     {{ article.hits }} Views.</p></div>
 
   <div class="clear"></div>
