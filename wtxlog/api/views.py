@@ -15,4 +15,3 @@ def gethits():
         db.session.commit()
         return str(article.hits)
     return 'err'
-

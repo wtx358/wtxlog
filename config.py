@@ -187,11 +187,11 @@ class JAEConfig(Config):
     CACHE_TYPE = 'simple'
 
     # mysql configuration
-    MYSQL_USER = ''
-    MYSQL_PASS = ''
-    MYSQL_HOST = ''
-    MYSQL_PORT = ''
-    MYSQL_DB = ''
+    MYSQL_USER = '' or os.getenv('MYSQL_USER')
+    MYSQL_PASS = '' or os.getenv('MYSQL_PASS')
+    MYSQL_HOST = '' or os.getenv('MYSQL_HOST')
+    MYSQL_PORT = '' or os.getenv('MYSQL_PORT')
+    MYSQL_DB = '' or os.getenv('MYSQL_DB')
 
     SQLALCHEMY_DATABASE_URI = 'mysql://%s:%s@%s:%s/%s' % (
         MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_PORT, MYSQL_DB
@@ -208,11 +208,12 @@ class JAEConfig(Config):
         # logfile path: /home/vcap/app/logs/jae.log
         # this logfile would be clean when app rebuild or restart
         _log_file = os.path.join(os.getenv('HOME'), 'logs/jae.log')
-        file_handler = logging.FileHandler(_log_file)
-        formatter = logging.Formatter('%(asctime)s %(levelname)-8s %(message)s',
-                                      '%Y-%m-%d %H:%M:%S')
-        file_handler.setFormatter(formatter)
-        app.logger.addHandler(file_handler)
+        if os.path.isfile(_log_file):
+            file_handler = logging.FileHandler(_log_file)
+            formatter = logging.Formatter('%(asctime)s %(levelname)-8s %(message)s',
+                                          '%Y-%m-%d %H:%M:%S')
+            file_handler.setFormatter(formatter)
+            app.logger.addHandler(file_handler)
 
 
 class ProductionConfig(Config):

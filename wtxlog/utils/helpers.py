@@ -26,7 +26,7 @@ def get_category_ids(longslug=''):
 def page_url(page):
     """根据页码返回URL"""
     _kwargs = request.view_args
-    if _kwargs.has_key('page'):
+    if 'page' in _kwargs:
         _kwargs.pop('page')
     if page > 1:
         return url_for(request.endpoint, page=page, **_kwargs)
@@ -54,10 +54,10 @@ def baidu_ping(url):
         # 返回0表示提交成功
         current_app.logger.info('begin to ping baidu: <%s>' % url)
         result = rpc_server.weblogUpdates.extendedPing(
-           current_app.config.get('SITE_NAME'),
-           url_for('main.index', _external=True),
-           url,
-           url_for('main.feed', _external=True)
+            current_app.config.get('SITE_NAME'),
+            url_for('main.index', _external=True),
+            url,
+            url_for('main.feed', _external=True)
         )
     except:
         pass
@@ -66,4 +66,3 @@ def baidu_ping(url):
         current_app.logger.warning('<%s> ping to baidu failed' % url)
 
     return result == 0
-

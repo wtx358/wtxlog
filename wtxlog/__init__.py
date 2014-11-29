@@ -10,7 +10,7 @@ from models import User, AnonymousUser
 
 # 默认是basic, strong这个强度在BAE3下造成登陆几秒之后就退出的现象
 # 而JAE,SAE上不会出现, 也有可能是应用引擎环境的问题, 暂时使用默认值
-#login_manager.session_protection = 'strong'
+# login_manager.session_protection = 'strong'
 login_manager.login_view = 'account.login'
 login_manager.anonymous_user = AnonymousUser
 
@@ -77,13 +77,13 @@ def create_app(config_name):
         return send_from_directory(app.static_folder, 'robots.txt')
 
     # 暂时解决因Gunicorn中引发ERROR 11而无法正常提交的问题
-    #@app.teardown_request
-    #def teardown_request(response_or_exc):
-    #    if app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN']:
-    #        try:
-    #            db.session.commit()
-    #        except:
-    #            db.session.rollback()
-    #    db.session.remove()
+    # @app.teardown_request
+    # def teardown_request(response_or_exc):
+    #     if app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN']:
+    #         try:
+    #             db.session.commit()
+    #         except:
+    #             db.session.rollback()
+    #     db.session.remove()
 
     return app

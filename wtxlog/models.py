@@ -108,20 +108,20 @@ class User(UserMixin, db.Model):
         :param username: 用户名或者电子邮件地址
         :param password: 用户密码
         """
-        user = User.query.filter(db.or_(User.username==username,
-            User.email==username)).first()
+        user = User.query.filter(db.or_(User.username == username,
+                                        User.email == username)).first()
         if user and user.verify_password(password):
             return user
         return None
 
     @staticmethod
     def make_unique_username(username):
-        if User.query.filter_by(username = username).first() == None:
+        if User.query.filter_by(username=username).first() is None:
             return username
         version = 2
         while True:
             new_username = username + str(version)
-            if User.query.filter_by(username = new_username).first() == None:
+            if User.query.filter_by(username=new_username).first() is None:
                 break
             version += 1
         return new_username
@@ -254,7 +254,7 @@ class Category(db.Model):
 
     parent_id = db.Column(db.Integer(), db.ForeignKey('categories.id'))
     parent = db.relationship('Category',
-                             primaryjoin = ('Category.parent_id == Category.id'),
+                             primaryjoin=('Category.parent_id == Category.id'),
                              remote_side=id, backref=db.backref("children"))
 
     # SEO page title
@@ -480,9 +480,9 @@ class ArticleQuery(BaseQuery):
             return self
 
         criteria = []
-        criteria.append(db.extract('year', Article.created)==year)
+        criteria.append(db.extract('year', Article.created) == year)
         if month:
-            criteria.append(db.extract('month', Article.created)==month)
+            criteria.append(db.extract('month', Article.created) == month)
 
         q = reduce(db.and_, criteria)
         return self.public().filter(q)
@@ -543,7 +543,7 @@ class Article(db.Model):
 
     @cached_property
     def has_more(self):
-        return self.body.find('<!--more-->') > 0 or (self.summary.find('...') > 0)
+        return (self.body.find('<!--more-->') >= 0) or (self.summary.find('...') > 0)
 
     @cached_property
     def link(self):
@@ -716,5 +716,3 @@ class Redirect(db.Model):
 
     def __unicode__(self):
         return self.old_path
-
-

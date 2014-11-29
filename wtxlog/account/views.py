@@ -16,6 +16,7 @@ from .forms import *
 def index():
     return render_template('account/index.html')
 
+
 @account.route('/login/', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -154,5 +155,3 @@ def change_email(token):
     else:
         flash('Invalid request.')
     return redirect(url_for('.index'))
-
-

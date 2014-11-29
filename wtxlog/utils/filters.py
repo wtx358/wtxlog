@@ -32,7 +32,6 @@ def markdown_filter(text, codehilite=True):
     ))
 
 
-
 def date_filter(dt, fmt='%Y-%m-%d %H:%M'):
     return dt.strftime(fmt)
 

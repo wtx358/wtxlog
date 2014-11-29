@@ -24,16 +24,16 @@ def checkauth(pos=1):
         @wraps(f)
         def _wrapper(*args, **kwargs):
 
-            username = args[pos+0]
-            password = args[pos+1]
+            username = args[pos + 0]
+            password = args[pos + 1]
 
-            #user = User.query.filter_by(email=username).first()
+            # user = User.query.filter_by(email=username).first()
             user = User.authenticate(username, password)
             if user is None:
                 raise ValueError('Authentication Failure')
             g.auth_user = user
 
-            args = args[0:pos] + args[pos+2:]
+            args = args[0:pos] + args[pos + 2:]
             return f(*args, **kwargs)
         return _wrapper
     return _decorate
@@ -43,9 +43,9 @@ def post_struct(entry):
     """post struct"""
 
     if not entry:
-         raise Fault(404, 'Post does not exist')
+        raise Fault(404, 'Post does not exist')
 
-    categories = [entry.category.name,]
+    categories = [entry.category.name, ]
 
     struct = {
         'postid': str(entry.id),
@@ -58,9 +58,9 @@ def post_struct(entry):
     return struct
 
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # blogger
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 @checkauth()
 def blogger_getUsersBlogs(discard):
@@ -81,9 +81,9 @@ def blogger_deletePost(appkey, postid, publish=False):
     return True
 
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # metaWeblog
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 @checkauth()
 def metaWeblog_newPost(blogid, struct, publish):
@@ -104,16 +104,16 @@ def metaWeblog_newPost(blogid, struct, publish):
     post = Post()
     post.title = _post['title']
     post.body = content
-    #post.content_html = markdown_filter(innerlink_filter(content))
+    # post.content_html = markdown_filter(innerlink_filter(content))
     post.category_id = category_id
     post.author = g.auth_user
     if g.auth_user.is_administrator():
         post.published = True
-    #post.source = u'metaWeblog'
+    # post.source = u'metaWeblog'
     post.created = datetime.now()
     post.last_modified = post.created
-    #more_start = post.content.find('<!--more-->')
-    #post.summary = markdown_filter(post.content[:more_start], codehilite=False)
+    # more_start = post.content.find('<!--more-->')
+    # post.summary = markdown_filter(post.content[:more_start], codehilite=False)
     db.session.add(post)
     db.session.commit()
 
@@ -141,9 +141,9 @@ def metaWeblog_editPost(postid, struct, publish):
         if category_id and post.category_id != category_id:
             post.category_id = category_id
         post.body = content
-        #post.content_html = markdown_filter(innerlink_filter(content))
-        #more_start = post.content.find('<!--more-->')
-        #post.summary = markdown_filter(post.content[:more_start], codehilite=False)
+        # post.content_html = markdown_filter(innerlink_filter(content))
+        # more_start = post.content.find('<!--more-->')
+        # post.summary = markdown_filter(post.content[:more_start], codehilite=False)
         post.last_modified = datetime.now()
         db.session.add(post)
         db.session.commit()
@@ -158,8 +158,8 @@ def metaWeblog_newMediaObject(blogid, struct):
 
     IMAGE_TYPES = {
         'image/jpeg': '.jpg',
-        'image/png' : '.png',
-        'image/gif' : '.gif',
+        'image/png': '.png',
+        'image/gif': '.gif',
     }
 
     media = struct
@@ -181,7 +181,7 @@ def metaWeblog_getCategories(blogid):
 
     categories = Category.query.all()
 
-    return  [{
+    return [{
         'categoryId': category.id,
         'categoryName': category.name,
         'categoryDescription': category.seodesc,
@@ -204,7 +204,7 @@ def metaWeblog_getRecentPosts(blogid, num=20):
     return [post_struct(post) for post in posts]
 
 
-##------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 
 class BlogXMLRPCDispatcher(SimpleXMLRPCDispatcher):
@@ -217,14 +217,13 @@ class BlogXMLRPCDispatcher(SimpleXMLRPCDispatcher):
 
 
 blog_dispatcher = BlogXMLRPCDispatcher({
-    'blogger.getUsersBlogs' : blogger_getUsersBlogs,
-    'blogger.deletePost' : blogger_deletePost,
+    'blogger.getUsersBlogs': blogger_getUsersBlogs,
+    'blogger.deletePost': blogger_deletePost,
 
-    'metaWeblog.newPost' : metaWeblog_newPost,
-    'metaWeblog.editPost' : metaWeblog_editPost,
-    'metaWeblog.getCategories' : metaWeblog_getCategories,
-    'metaWeblog.getPost' : metaWeblog_getPost,
-    'metaWeblog.getRecentPosts' : metaWeblog_getRecentPosts,
-    'metaWeblog.newMediaObject' : metaWeblog_newMediaObject,
+    'metaWeblog.newPost': metaWeblog_newPost,
+    'metaWeblog.editPost': metaWeblog_editPost,
+    'metaWeblog.getCategories': metaWeblog_getCategories,
+    'metaWeblog.getPost': metaWeblog_getPost,
+    'metaWeblog.getRecentPosts': metaWeblog_getRecentPosts,
+    'metaWeblog.newMediaObject': metaWeblog_newMediaObject,
 })
-
