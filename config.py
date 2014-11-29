@@ -23,7 +23,7 @@ class Config:
     SECRET_KEY = os.getenv('SECRET_KEY') or 'hard to guess string'
 
     # Consider SQLALCHEMY_COMMIT_ON_TEARDOWN harmful
-    #SQLALCHEMY_COMMIT_ON_TEARDOWN = True
+    # SQLALCHEMY_COMMIT_ON_TEARDOWN = True
 
     SQLALCHEMY_POOL_RECYCLE = 10
 
@@ -34,9 +34,9 @@ class Config:
     MAIL_USERNAME = os.getenv('MAIL_USERNAME') or ''
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD') or ''
     # gmail的话带下面那行的注释去掉
-    #MAIL_USE_TLS = True
+    # MAIL_USE_TLS = True
     # qq企业邮箱的话带下面那行的注释去掉
-    #MAIL_USE_SSL = True
+    # MAIL_USE_SSL = True
 
     APP_MAIL_SUBJECT_PREFIX = '[%s]' % SITE_NAME
     APP_MAIL_SENDER = '%s Admin <%s>' % (SITE_NAME, MAIL_USERNAME)
@@ -91,7 +91,7 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_ECHO = True
 
     SQLALCHEMY_DATABASE_URI = os.getenv('DEV_DATABASE_URL') or \
-            'sqlite:///' + os.path.join(basedir, datadir, 'data_dev_sqlite.db')
+        'sqlite:///' + os.path.join(basedir, datadir, 'data_dev_sqlite.db')
 
     @classmethod
     def init_app(cls, app):
@@ -106,7 +106,7 @@ class TestingConfig(Config):
     TESTING = True
 
     SQLALCHEMY_DATABASE_URI = os.getenv('TEST_DATABASE_URL') or \
-            'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
+        'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
 
     WTF_CSRF_ENABLED = False
 
@@ -120,8 +120,7 @@ class BAEConfig(Config):
     CACHE_TYPE = 'wtxlog.ext.baememcache'
     CACHE_BAE_USERNAME = BAE_AK
     CACHE_BAE_PASSWORD = BAE_SK
-    CACHE_BAE_SERVERS = os.getenv('CACHE_BAE_SERVERS') or \
-            'cache.duapp.com:20243'
+    CACHE_BAE_SERVERS = os.getenv('CACHE_BAE_SERVERS') or 'cache.duapp.com:20243'
     CACHE_BAE_ID = os.getenv('CACHE_BAE_ID') or ''
 
     # mysql configuration
@@ -223,15 +222,15 @@ class JAEConfig(Config):
 class ProductionConfig(Config):
 
     # memcached type configuration values
-    #CACHE_TYPE = 'memcached'
-    #CACHE_MEMCACHED_SERVERS = ['127.0.0.1:11211']
+    # CACHE_TYPE = 'memcached'
+    # CACHE_MEMCACHED_SERVERS = ['127.0.0.1:11211']
 
     # filesystem type configuration values
     CACHE_TYPE = 'filesystem'
     CACHE_DIR = os.path.join(basedir, datadir, 'cache')
 
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') or \
-            'sqlite:///' + os.path.join(basedir, datadir, 'data_sqlite.db')
+        'sqlite:///' + os.path.join(basedir, datadir, 'data_sqlite.db')
 
     # mysql configuration
     MYSQL_USER = os.getenv('MYSQL_USER') or ''
@@ -240,11 +239,12 @@ class ProductionConfig(Config):
     MYSQL_PORT = os.getenv('MYSQL_PORT') or ''
     MYSQL_DB = os.getenv('MYSQL_DB') or ''
 
-    if len(MYSQL_USER) > 0 and len(MYSQL_PASS) > 0 and len(MYSQL_HOST) > 0 \
-            and len(MYSQL_PORT) > 0 and len(MYSQL_DB) > 0 :
+    if (len(MYSQL_USER) > 0 and len(MYSQL_PASS) > 0 and
+            len(MYSQL_HOST) > 0 and len(MYSQL_PORT) > 0 and
+            len(MYSQL_DB) > 0):
         SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') or \
-                'mysql://%s:%s@%s:%s/%s' % (MYSQL_USER, MYSQL_PASS,
-                                            MYSQL_HOST, MYSQL_PORT, MYSQL_DB)
+            'mysql://%s:%s@%s:%s/%s' % (MYSQL_USER, MYSQL_PASS, MYSQL_HOST,
+                                        MYSQL_PORT, MYSQL_DB)
 
     @classmethod
     def init_app(cls, app):
