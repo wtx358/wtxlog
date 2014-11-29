@@ -127,11 +127,10 @@ def utility_processor():
         article = Article.query.get(article_id)
         if article:
             ids = db.session.query('article_id') \
-                            .from_statement( \
-                                'SELECT article_id FROM ' \
-                                'article_tags WHERE tag_id IN ' \
-                                '(SELECT tag_id FROM article_tags ' \
-                                'WHERE article_id=:article_id)') \
+                            .from_statement('SELECT article_id FROM '
+                                            'article_tags WHERE tag_id IN '
+                                            '(SELECT tag_id FROM article_tags '
+                                            'WHERE article_id=:article_id)') \
                             .params(article_id=article_id).all()
 
             article_ids = [_id[0] for _id in ids]
@@ -208,7 +207,7 @@ def utility_processor():
         if isinstance(category, Category):
             cate_ids = get_category_ids(category.longslug)
             _query = _query.filter(Article.category_id.in_(cate_ids))
-        return _query.filter(Article.thumbnail != None).limit(int(limit)).all()
+        return _query.filter(Article.thumbnail.isnot(None)).limit(int(limit)).all()
 
     def get_articles_by_category(longslug='', limit=10, expand=True):
         """

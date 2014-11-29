@@ -61,22 +61,20 @@ class ArticleAdmin(sqla.ModelView):
     edit_template = "admin/model/a_edit.html"
 
     column_list = ('title', 'category', 'tags', 'published', 'ontop',
-            'recommend', 'created', 'view_on_site')
+                   'recommend', 'created', 'view_on_site')
 
     form_excluded_columns = ('author', 'body_html', 'hits', 'created',
                              'last_modified',)
 
     column_searchable_list = ('title',)
 
-    column_formatters = dict(
-            view_on_site=view_on_site,
-            created=format_datetime,
-    )
+    column_formatters = dict(view_on_site=view_on_site,
+                             created=format_datetime)
 
     form_create_rules = (
-            'title', 'seotitle', 'category', 'topic', 'tags', 'body',
-            'summary', 'published', 'ontop', 'recommend', 'seokey',
-            'seodesc', 'thumbnail', 'thumbnail_big', 'template',
+        'title', 'seotitle', 'category', 'topic', 'tags', 'body',
+        'summary', 'published', 'ontop', 'recommend', 'seokey',
+        'seodesc', 'thumbnail', 'thumbnail_big', 'template',
     )
     form_edit_rules = form_create_rules
 
@@ -263,6 +261,7 @@ class TopicAdmin(sqla.ModelView):
     def is_accessible(self):
         return current_user.is_administrator()
 
+
 class FlatpageAdmin(sqla.ModelView):
 
     create_template = "admin/model/a_create.html"
@@ -400,4 +399,3 @@ admin.add_view(FriendLinkAdmin(FriendLink, db.session))
 admin.add_view(RedirectAdmin(Redirect, db.session))
 
 admin.add_view(UserAdmin(User, db.session))
-

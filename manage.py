@@ -33,7 +33,7 @@ def deploy():
     from wtxlog.models import Role, User
 
     upgrade()
-    #db.create_all()
+    # db.create_all()
 
     # create user roles
     Role.insert_roles()

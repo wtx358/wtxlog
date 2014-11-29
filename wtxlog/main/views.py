@@ -18,13 +18,13 @@ from ..utils.upload import SaveUploadFile
 from ..utils.metaweblog import blog_dispatcher
 from ..ext import cache
 from ..models import db, Article, Category, Tag, Flatpage, Topic, \
-        Role, Permission
+    Role, Permission
 from . import main
 
 IMAGE_TYPES = {
     'image/jpeg': '.jpg',
-    'image/png' : '.png',
-    'image/gif' : '.gif',
+    'image/png': '.png',
+    'image/gif': '.gif',
 }
 
 
@@ -64,8 +64,8 @@ def article(template, article_id):
     if not article.published:
         abort(403)
 
-    _template = template % (article.category.article_template or \
-            article.template or 'article.html')
+    _template = template % (article.category.article_template or
+                            article.template or 'article.html')
     return render_template(_template, article=article)
 
 
@@ -105,8 +105,8 @@ def archives(template, year, month, page=1):
     return render_template(_template,
                            pagination=pagination,
                            articles=articles,
-                           year = year,
-                           month = month)
+                           year=year,
+                           month=month)
 
 
 @main.route('/tag/')
@@ -176,7 +176,7 @@ def topic(template, slug, page=1):
     topic = Topic.query.filter_by(slug=slug).first_or_404()
 
     _url = page_url
-    _query = Article.query.public().filter(Article.topic_id==topic.id)
+    _query = Article.query.public().filter(Article.topic_id == topic.id)
     pagination = Page(_query, page=page, items_per_page=Article.PER_PAGE, url=_url)
 
     articles = pagination.items
@@ -215,7 +215,7 @@ def search(template):
     _template = template % 'search.html'
     return render_template(_template,
                            articles=articles,
-                           keyword = keyword,
+                           keyword=keyword,
                            pagination=pagination)
 
 
@@ -243,7 +243,7 @@ def sitemap():
 
     for cate in cates:
         pages.append([cate.link,
-                      '', #datetime.datetime.now().isoformat(),
+                      '',  # datetime.datetime.now().isoformat(),
                       'weekly',
                       0.8])
 
@@ -252,7 +252,7 @@ def sitemap():
 
     for tag in tags:
         pages.append([tag.link,
-                      '', #datetime.datetime.now().isoformat(),
+                      '',  # datetime.datetime.now().isoformat(),
                       'weekly',
                       0.6])
 
@@ -304,18 +304,18 @@ def feed():
 def upload():
     ''' 文件上传函数 '''
 
-    result = {"err":"", "msg":{"url":"","localfile":""}}
+    result = {"err": "", "msg": {"url": "", "localfile": ""}}
     fname = ''
     fext = ''
     data = None
 
-    if request.method=='POST' and 'filedata' in request.files:
+    if request.method == 'POST' and 'filedata' in request.files:
         # 传统上传模式，IE浏览器使用这种模式
         fileobj = request.files['filedata']
         result["msg"]["localfile"] = fileobj.filename
         fname, fext = os.path.splitext(fileobj.filename)
         data = fileobj.read()
-    elif request.headers.has_key('CONTENT_DISPOSITION'):
+    elif 'CONTENT_DISPOSITION' in request.headers:
         # HTML5上传模式，FIREFOX等默认使用此模式
         pattern = re.compile(r"""\s.*?\s?filename\s*=\s*['|"]?([^\s'"]+).*?""", re.I)
         _d = request.headers.get('CONTENT_DISPOSITION').encode('utf-8')
@@ -350,7 +350,7 @@ def uploadremote():
     返回格式是字符串，不是JSON格式
     """
     localdomain_re = re.compile("""https?:\/\/[^\/]*?(bcs\.duapp\.com)\/""", re.I)
-    imageTypes = {'gif':'.gif', 'jpeg':'.jpg', 'jpg':'.jpg', 'png':'.png'}
+    imageTypes = {'gif': '.gif', 'jpeg': '.jpg', 'jpg': '.jpg', 'png': '.png'}
     urlout = []
     result = ''
     srcUrl = request.form.get('urls', None)
@@ -391,7 +391,7 @@ def xmlrpc():
     * <http://blog.csdn.net/priderock/article/details/1754503>
     """
 
-    #return blog_dispatcher._marshaled_dispatch(request.data)
+    # return blog_dispatcher._marshaled_dispatch(request.data)
     response_data = blog_dispatcher._marshaled_dispatch(request.data)
     return current_app.response_class(response_data,
                                       content_type='text/xml')
@@ -406,7 +406,7 @@ def ckupload():
     url = ''
     callback = request.args.get("CKEditorFuncNum")
 
-    if request.method=='POST' and 'upload' in request.files:
+    if request.method == 'POST' and 'upload' in request.files:
         # 传统上传模式，IE浏览器使用这种模式
         fileobj = request.files['upload']
         data = fileobj.read()
@@ -430,4 +430,3 @@ def ckupload():
     response = make_response(res)
     response.headers["Content-Type"] = "text/html"
     return response
-

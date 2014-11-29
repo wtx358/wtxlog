@@ -177,7 +177,7 @@ class WtxlogCache(FlaskCache):
                 # 如果是第一页，跳转到标准页面
                 # 比如： `/page/1/` 跳转到 `/`
                 _kw = request.view_args
-                if _kw.has_key('page') and _kw['page'] == 1:
+                if 'page' in _kw and _kw['page'] == 1:
                     _kw.pop('page')
                     return redirect(url_for(request.endpoint, **_kw), code=301)
 

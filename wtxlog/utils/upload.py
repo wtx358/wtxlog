@@ -23,12 +23,12 @@ class SaveUploadFile:
         return datetime.date.today().strftime('%Y%m')
 
     def gen_filename(self):
-        filename_prefix = datetime.datetime.now().strftime('%Y%m%d%H%M%S');
+        filename_prefix = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
         return '%s%s' % (filename_prefix, str(random.randrange(1000, 10000)))
 
     def save(self):
         return self.qiniu_save_file()
-        #return self.bcs_save_file3()
+        # return self.bcs_save_file3()
 
     def qiniu_save_file(self):
         # 七牛云存储文件上传
@@ -50,7 +50,7 @@ class SaveUploadFile:
         # data 可以是str或read()able对象
         # data = StringIO.StringIO("hello2!")
         ret, err = qiniu.io.put(uptoken, self.filename, self.data, extra)
-        time.sleep(1) # 等待文件上传完成
+        time.sleep(1)  # 等待文件上传完成
 
         try:
             assert err is None
@@ -71,7 +71,7 @@ class SaveUploadFile:
         b = bcs.bucket(BCS_NAME)
         o = b.object('/%s' % self.filename.encode('utf-8'))
         result = o.put(self.data)
-        time.sleep(1) # 等待文件上传完成
+        time.sleep(1)  # 等待文件上传完成
         try:
             assert result['status'] == 200
             return 'http://%s/%s/%s' % (BCS_HOST, BCS_NAME, self.filename)

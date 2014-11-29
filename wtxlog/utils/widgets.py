@@ -23,4 +23,3 @@ class CKTextAreaWidget(widgets.TextArea):
 
 class CKTextAreaField(fields.TextAreaField):
     widget = CKTextAreaWidget()
-
