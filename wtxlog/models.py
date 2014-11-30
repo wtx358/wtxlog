@@ -575,7 +575,7 @@ class Article(db.Model):
             return truncate(remove_formatting(_html), length=200, whole_word=True)
 
         value = target.body
-        if not target.summary.strip():
+        if target.summary is None or target.summary.strip() == '':
             # 新增文章时，如果 summary 为空，则自动生成
             if BODY_FORMAT == 'html':
                 target.summary = _format(value)
