@@ -91,7 +91,7 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_ECHO = True
 
     SQLALCHEMY_DATABASE_URI = os.getenv('DEV_DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, datadir, 'data_dev_sqlite.db')
+        'sqlite:///' + os.path.join(basedir, 'data_dev_sqlite.db')
 
     @classmethod
     def init_app(cls, app):
@@ -230,7 +230,7 @@ class ProductionConfig(Config):
     CACHE_DIR = os.path.join(basedir, datadir, 'cache')
 
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, datadir, 'data_sqlite.db')
+        'sqlite:///' + os.path.join(basedir, 'data_sqlite.db')
 
     # mysql configuration
     MYSQL_USER = os.getenv('MYSQL_USER') or ''
