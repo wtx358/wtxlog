@@ -95,10 +95,13 @@ def metaWeblog_newPost(blogid, struct, publish):
 
     if category_name:
         category = Category.query.filter_by(name=category_name).first()
-        category_id = category.id
     else:
         category = Category.query.first()
+
+    if isinstance(category, Category):
         category_id = category.id
+    else:
+        raise Fault(-1, 'There have no category found. Please add a new one.')
 
     content = pattern_wiz.sub('', _post['description'])
     post = Post()
