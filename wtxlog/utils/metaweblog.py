@@ -28,9 +28,9 @@ def checkauth(pos=1):
             password = args[pos + 1]
 
             # user = User.query.filter_by(email=username).first()
-            user = User.authenticate(username, password)
-            if user is None:
-                raise ValueError('Authentication Failure')
+            errmsg, user = User.authenticate(username, password)
+            if errmsg is not None:
+                raise ValueError(errmsg)
             g.auth_user = user
 
             args = args[0:pos] + args[pos + 2:]

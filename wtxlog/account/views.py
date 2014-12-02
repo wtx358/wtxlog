@@ -21,11 +21,11 @@ def index():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.authenticate(form.email.data, form.password.data)
-        if user:
+        errmsg, user = User.authenticate(form.email.data, form.password.data)
+        if errmsg is None and isinstance(user, User):
             login_user(user, form.remember_me.data)
             return redirect(request.args.get('next') or url_for('.index'))
-        flash('Invalid username or password.')
+        flash(errmsg)
     return render_template('account/login.html', form=form)
 
 

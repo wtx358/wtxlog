@@ -103,16 +103,19 @@ class User(UserMixin, db.Model):
     @staticmethod
     def authenticate(username, password):
         """
-        验证用户：如果成功，返回User模型，否则返回None
+        验证用户
 
         :param username: 用户名或者电子邮件地址
         :param password: 用户密码
         """
         user = User.query.filter(db.or_(User.username == username,
                                         User.email == username)).first()
-        if user and user.verify_password(password):
-            return user
-        return None
+        if isinstance(user, User):
+            if user.verify_password(password):
+                return (None, user)
+            else:
+                return ('Invalid Password', None)
+        return ('Invalid Username', None)
 
     @staticmethod
     def make_unique_username(username):
