@@ -485,7 +485,7 @@ code, pre {
     white-space: pre-wrap;
     font-size: 12px;
 }
-code {
+p code {
 	/*display:block;*/
     background:#f0f0f0;
 	border:1px solid #e2e2e2;
