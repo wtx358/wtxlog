@@ -498,6 +498,16 @@ blockquote cite {
 	margin:5px 0 0;
 	display:block
 }
+table {
+    border: 1px solid #dddddd;
+    border-collapse: collapse;
+    margin: 1em 0;
+    width: 100%;
+}
+th, td {
+    padding: 3px;
+    border: 1px solid #ccc;
+}
 #footer {
 	background:#0954a6;
 	border-top:3px solid #b8ed63;
