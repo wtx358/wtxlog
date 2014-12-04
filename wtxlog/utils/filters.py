@@ -43,8 +43,8 @@ def timestamp_filter(stamp, fmt='%Y-%m-%d %H:%M'):
 def emphasis(text, keyword=None):
     if keyword is not None:
         for _keyword in keywords_split(keyword):
-            _pattern = re.compile(_keyword, flags=re.I)
-            text = _pattern.sub('<em>%s</em>' % _keyword, text)
+            _pattern = re.compile(r'(%s)' % _keyword, flags=re.I)
+            text = _pattern.sub(r'<em>\1</em>', text)
     return text
 
 
