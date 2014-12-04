@@ -7,6 +7,7 @@ from flask.ext.login import current_user, login_required
 from flask.ext.admin import Admin, AdminIndexView, BaseView, expose, helpers
 from flask.ext.admin.contrib import sqla
 from flask.ext.admin.actions import action
+from flask.ext.admin.form.fields import Select2Field
 from webhelpers.html import HTML
 from webhelpers.html.tags import link_to
 
@@ -383,6 +384,22 @@ class UserAdmin(sqla.ModelView):
         return current_user.is_administrator()
 
 
+class SettingAdmin(sqla.ModelView):
+
+    form_overrides = dict(
+        rawvalue=TextAreaField,
+        formatter=Select2Field,
+        description=TextAreaField,
+    )
+
+    form_args = dict(
+        formatter=dict(choices=Setting.FORMATS)
+    )
+
+    def is_accessible(self):
+        return current_user.is_administrator()
+
+
 # init
 admin = Admin(index_view=MyAdminIndexView(), base_template="admin/my_master.html")
 
@@ -397,5 +414,7 @@ admin.add_view(LabelAdmin(Label, db.session))
 
 admin.add_view(FriendLinkAdmin(FriendLink, db.session))
 admin.add_view(RedirectAdmin(Redirect, db.session))
+
+admin.add_view(SettingAdmin(Setting, db.session))
 
 admin.add_view(UserAdmin(User, db.session))
