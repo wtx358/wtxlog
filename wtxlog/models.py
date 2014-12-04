@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import re
 import hashlib
 from datetime import datetime
 from werkzeug import cached_property
@@ -17,6 +18,8 @@ from .utils.filters import markdown_filter
 from config import Config
 
 BODY_FORMAT = Config.BODY_FORMAT
+
+pattern_hasmore = re.compile(r'<!--more-->', re.I)
 
 
 class Permission:
@@ -546,7 +549,8 @@ class Article(db.Model):
 
     @cached_property
     def has_more(self):
-        return (self.body.find('<!--more-->') >= 0) or (self.summary.find('...') > 0)
+        return pattern_hasmore.search(self.body) is not None or \
+            self.summary.find('...') >= 0
 
     @cached_property
     def link(self):
@@ -583,8 +587,9 @@ class Article(db.Model):
             if BODY_FORMAT == 'html':
                 target.summary = _format(value)
             else:
-                more_start = value.find('<!--more-->')
-                if more_start > 0:
+                _match = pattern_hasmore.search(value)
+                if _match is not None:
+                    more_start = _match.start()
                     target.summary = _format(markdown_filter(value[:more_start]))
                 else:
                     target.summary = _format(target.body_html)
