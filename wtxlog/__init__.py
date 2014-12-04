@@ -48,12 +48,14 @@ def configure_custom_settings(app):
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
+
+    db.init_app(app)
+    db.app = app
+
+    configure_custom_settings(app)
     config[config_name].init_app(app)
 
     cache.init_app(app)
-    db.init_app(app)
-    db.app = app
-    configure_custom_settings(app)
     login_manager.init_app(app)
     mail.init_app(app)
     setup_themes(app)
