@@ -5,7 +5,7 @@ from datetime import datetime
 from werkzeug import cached_property
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import URLSafeTimedSerializer as Serializer
-from webhelpers.text import remove_formatting, truncate
+from jinja2.filters import do_striptags, do_truncate
 
 from flask.ext.sqlalchemy import BaseQuery
 
@@ -575,7 +575,7 @@ class Article(db.Model):
     @staticmethod
     def before_insert(mapper, connection, target):
         def _format(_html):
-            return truncate(remove_formatting(_html), length=200, whole_word=True)
+            return do_truncate(do_striptags(_html), length=200)
 
         value = target.body
         if target.summary is None or target.summary.strip() == '':
