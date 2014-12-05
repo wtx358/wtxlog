@@ -6,7 +6,6 @@ from datetime import datetime
 import xmlrpclib
 from xmlrpclib import Fault
 
-from hashlib import sha1
 from functools import wraps
 from SimpleXMLRPCServer import SimpleXMLRPCDispatcher
 
@@ -43,7 +42,7 @@ def post_struct(entry):
     """post struct"""
 
     if not entry:
-        raise Fault(404, 'Post does not exist')
+        raise Fault(-1, 'Post does not exist')
 
     categories = [entry.category.name, ]
 
@@ -144,15 +143,12 @@ def metaWeblog_editPost(postid, struct, publish):
         if category_id and post.category_id != category_id:
             post.category_id = category_id
         post.body = content
-        # post.content_html = markdown_filter(innerlink_filter(content))
-        # more_start = post.content.find('<!--more-->')
-        # post.summary = markdown_filter(post.content[:more_start], codehilite=False)
         post.last_modified = datetime.now()
         db.session.add(post)
         db.session.commit()
-        result = True
-
-    return result
+        return True
+    else:
+        raise Fault(-1, 'The post that you edit does not exist yet.')
 
 
 @checkauth()
@@ -198,6 +194,8 @@ def metaWeblog_getPost(postid):
 
     if post:
         return post_struct(post)
+    else:
+        raise Fault(-1, 'The post that you get does not exist.')
 
 
 @checkauth()
