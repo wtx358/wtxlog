@@ -23,6 +23,22 @@ BODY_FORMAT = Config.BODY_FORMAT
 pattern_hasmore = re.compile(r'<!--more-->', re.I)
 
 
+def markitup(text):
+    """
+    把Markdown转换为HTML
+
+    默认不生成高亮代码。
+
+    若需要生成高亮代码，需在Setting增加codehilite设置值，类型为int，
+    值大于0. 另外需要安装Pygments。
+    """
+    try:
+        _flag = Setting.get('codehilite', False) and True
+    except:
+        _flag = False
+    return markdown_filter(text, codehilite=_flag)
+
+
 class Permission:
     '''定义角色拥有的权限'''
 
@@ -324,7 +340,7 @@ class Category(db.Model):
         if BODY_FORMAT == 'html':
             target.body_html = value
         else:
-            target.body_html = markdown_filter(value)
+            target.body_html = markitup(value)
 
     def on_changed_longslug(target, value, oldvalue, initiator):
         '''如果栏目有子栏目，则不允许更改longslug，因为会造成longslug不一致'''
@@ -416,7 +432,7 @@ class Tag(db.Model):
         if BODY_FORMAT == 'html':
             target.body_html = value
         else:
-            target.body_html = markdown_filter(value)
+            target.body_html = markitup(value)
 
 db.event.listen(Tag.body, 'set', Tag.on_changed_body)
 
@@ -462,7 +478,7 @@ class Topic(db.Model):
         if BODY_FORMAT == 'html':
             target.body_html = value
         else:
-            target.body_html = markdown_filter(value)
+            target.body_html = markitup(value)
 
 db.event.listen(Topic.body, 'set', Topic.on_changed_body)
 
@@ -591,7 +607,7 @@ class Article(db.Model):
                 _match = pattern_hasmore.search(value)
                 if _match is not None:
                     more_start = _match.start()
-                    target.summary = _format(markdown_filter(value[:more_start]))
+                    target.summary = _format(markitup(value[:more_start]))
                 else:
                     target.summary = _format(target.body_html)
 
@@ -600,7 +616,7 @@ class Article(db.Model):
         if BODY_FORMAT == 'html':
             target.body_html = value
         else:
-            target.body_html = markdown_filter(value)
+            target.body_html = markitup(value)
 
 db.event.listen(Article.body, 'set', Article.on_changed_body)
 db.event.listen(Article, 'before_insert', Article.before_insert)
@@ -684,7 +700,7 @@ class Flatpage(db.Model):
         if BODY_FORMAT == 'html':
             target.body_html = value
         else:
-            target.body_html = markdown_filter(value)
+            target.body_html = markitup(value)
 
 db.event.listen(Flatpage.body, 'set', Flatpage.on_changed_body)
 
