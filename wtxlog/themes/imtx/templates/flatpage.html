@@ -6,6 +6,7 @@
 {% block title %}{{ flatpage.seotitle or flatpage.title }}{% endblock %}
 
 {% block head_extend -%}
+  <link href="{{ theme_static('css/highlight-default.css') }}" rel="stylesheet" type="text/css" media="all" />
   <link rel="canonical" href="{{ flatpage.link }}" />
   <meta name="mobile-agent" content="format=html5;url={{ flatpage.link }}"/>
   <meta name="mobile-agent" content="format=xhtml;url={{ flatpage.link }}"/>
@@ -22,3 +23,7 @@
   </div>
 {% endblock %}
 
+{% block tail -%}
+  <script src="{{ theme_static('js/highlight.min.js') }}"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+{%- endblock %}

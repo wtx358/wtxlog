@@ -3,6 +3,7 @@
 {% block title %}{{ article.title }}{% endblock %}
 
 {% block head_extend -%}
+  <link href="{{ theme_static('css/highlight-default.css') }}" rel="stylesheet" type="text/css" media="all" />
   <meta name="author" content="{% block author %}{{ article.author }}{% endblock %}" />
   <link rel="canonical" href="{{ article.link }}" />
   <meta name="mobile-agent" content="format=html5;url={{ article.link }}"/>
@@ -81,5 +82,7 @@
   <script type="text/javascript" src="http://v1.ujian.cc/code/ujian.js?uid=1685977"></script>
   <!-- UY END -->
   <script>gethits({{ article.id }}, 'articlehits');</script>
+  <script src="{{ theme_static('js/highlight.min.js') }}"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
 {%- endblock %}
 
