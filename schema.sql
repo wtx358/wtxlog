@@ -305,3 +305,19 @@ CREATE TABLE IF NOT EXISTS `users` (
   KEY `role_id` (`role_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+
+--
+-- 表的结构 `settings`
+--
+
+CREATE TABLE IF NOT EXISTS `settings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) NOT NULL,
+  `rawvalue` varchar(4096) NOT NULL,
+  `formatter` varchar(16) NOT NULL,
+  `builtin` tinyint(1) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
