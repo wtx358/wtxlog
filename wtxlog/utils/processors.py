@@ -6,7 +6,8 @@ import datetime
 
 from flask import request, Markup, render_template_string
 from flask.ext.restless.search import create_query
-from ..models import db, Article, Category, Tag, FriendLink, Link, Label, Topic
+from ..models import db, Article, Category, Tag, FriendLink, Link, \
+    Label, Topic, Setting
 from helpers import get_category_ids
 
 
@@ -252,6 +253,7 @@ def utility_processor():
         Tag=Tag,
         Topic=Topic,
         FriendLink=FriendLink,
+        Setting=Setting,
         model_query=model_query,
         archives=archives,
         get_category_ids=get_category_ids,
