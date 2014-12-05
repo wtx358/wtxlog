@@ -759,7 +759,7 @@ class Setting(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), unique=True, nullable=False)
-    rawvalue = db.Column(db.String(255), nullable=False)
+    rawvalue = db.Column(db.String(4096), nullable=False)
     formatter = db.Column(db.String(16), default='text', nullable=False)
     #: set True for Builtin Configuration Value
     builtin = db.Column(db.Boolean, default=False)
