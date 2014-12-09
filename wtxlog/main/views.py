@@ -230,44 +230,51 @@ def sitemap_xsl():
 @cache.cached(86400)
 def sitemap():
     """Generate sitemap.xml. Makes a list of urls and date modified."""
-    pages = []
+    urlset = []
 
-    pages.append(
-        [url_for('.index', _external=True),
-         datetime.datetime.now().isoformat(),
-         'weekly', 1],
-    )
+    urlset.append(dict(
+        loc=url_for('.index', _external=True),
+        lastmod=datetime.date.today().isoformat(),
+        changefreq='weekly',
+        priority=1,
+    ))
 
     # categories
-    cates = Category.query.all()
+    categories = Category.query.all()
 
-    for cate in cates:
-        pages.append([cate.link,
-                      '',  # datetime.datetime.now().isoformat(),
-                      'weekly',
-                      0.8])
+    for category in categories:
+        urlset.append(dict(
+            loc=category.link,
+            changefreq='weekly',
+            priority=0.8,
+        ))
 
     # tags
     tags = Tag.query.all()
 
     for tag in tags:
-        pages.append([tag.link,
-                      '',  # datetime.datetime.now().isoformat(),
-                      'weekly',
-                      0.6])
+        urlset.append(dict(
+            loc=tag.link,
+            changefreq='weekly',
+            priority=0.6,
+        ))
 
     # articles model pages
     articles = Article.query.public().all()
 
     for article in articles:
         url = article.link
-        modified_time = article.last_modified.isoformat()
-        pages.append([url, modified_time, 'weekly', 0.5])
+        modified_time = article.last_modified.date().isoformat()
+        urlset.append(dict(
+            loc=url,
+            lastmod=modified_time,
+            changefreq='monthly',
+            priority=0.5,
+        ))
 
-    sitemap_xml = render_template('sitemap.xml', pages=pages)
+    sitemap_xml = render_template('sitemap.xml', urlset=urlset)
     res = make_response(sitemap_xml)
     res.headers["Content-Type"] = "application/xml"
-
     return res
 
 

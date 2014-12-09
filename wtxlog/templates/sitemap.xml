@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="{{ url_for('main.sitemap_xsl') }}"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    {% for page in pages %}<url>
-        <loc>{{ page[0]|safe }}</loc>
-        <lastmod>{{ page[1] }}</lastmod>
-        <changefreq>{{ page[2] }}</changefreq>
-        <priority>{{ page[3] }}</priority>
-    </url>
-    {% endfor %}
+{% for url in urlset -%}<url><loc>{{ url['loc']|safe }}</loc>
+{%- if 'lastmod' in url %}<lastmod>{{ url['lastmod'] }}</lastmod>{% endif %}
+{%- if 'changefreq' in url %}<changefreq>{{ url['changefreq'] }}</changefreq>{% endif %}
+{%- if 'priority' in url %}<priority>{{ url['priority'] }}</priority>{% endif %}</url>
+{% endfor -%}
 </urlset>
