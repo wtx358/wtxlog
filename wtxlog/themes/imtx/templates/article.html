@@ -1,6 +1,6 @@
 {% extends theme('layout.html') %}
 
-{% block title %}{{ article.title }}{% endblock %}
+{% block title %}{{ article.seotitle or article.title }}{% endblock %}
 
 {% block head_extend -%}
   <link href="{{ theme_static('css/highlight-default.css') }}" rel="stylesheet" type="text/css" media="all" />

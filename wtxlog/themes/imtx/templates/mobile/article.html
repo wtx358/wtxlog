@@ -1,6 +1,6 @@
 {% extends theme('mobile/layout.html') %}
 
-{% block title %}{{ article.title }}{% endblock %}
+{% block title %}{{ article.seotitle or article.title }}{% endblock %}
 
 {% block head_extend -%}
   <link rel="canonical" href="{{ article.link }}" />
