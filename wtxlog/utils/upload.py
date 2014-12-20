@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
+import os
 import time
 import random
 import datetime
-from flask import current_app
+from flask import current_app, url_for
 
 
 class SaveUploadFile:
@@ -27,8 +28,10 @@ class SaveUploadFile:
         return '%s%s' % (filename_prefix, str(random.randrange(1000, 10000)))
 
     def save(self):
-        return self.qiniu_save_file()
-        # return self.bcs_save_file3()
+        if current_app.config.get('QINIU_AK') and \
+            current_app.config.get('QINIU_SK'):
+            return self.qiniu_save_file()
+        return self.local_save_file()
 
     def qiniu_save_file(self):
         # 七牛云存储文件上传
@@ -77,3 +80,25 @@ class SaveUploadFile:
             return 'http://%s/%s/%s' % (BCS_HOST, BCS_NAME, self.filename)
         except:
             return ''
+
+    def local_save_file(self):
+        '''保存文件到static目录'''
+        error = None
+        UPLOAD_FOLDER = os.path.join(current_app.static_folder, 'uploadfiles')
+        filepath = os.path.join(UPLOAD_FOLDER, self.filename)
+
+        # 检查路径是否存在，不存在则创建
+        dirname = os.path.dirname(filepath)
+        if not os.path.exists(dirname):
+            try:
+                os.makedirs(dirname)
+            except:
+                error = 'ERROR_CREATE_DIR'
+        elif not os.access(dirname, os.W_OK):
+            error = 'ERROR_DIR_NOT_WRITEABLE'
+
+        if not error:
+            with open(filepath, 'wb') as fp:
+                fp.write(self.data)
+            return url_for('static', filename='%s/%s' % ('uploadfiles', self.filename))
+        return ''
