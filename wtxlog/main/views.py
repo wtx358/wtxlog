@@ -222,7 +222,7 @@ def search(template):
 @main.route('/sitemap.xsl')
 def sitemap_xsl():
     response = make_response(render_template('sitemap.xsl'))
-    response.headers["Content-Type"] = "text/xml"
+    response.mimetype = 'text/xsl'
     return response
 
 
@@ -274,7 +274,7 @@ def sitemap():
 
     sitemap_xml = render_template('sitemap.xml', urlset=urlset)
     res = make_response(sitemap_xml)
-    res.headers["Content-Type"] = "application/xml"
+    res.mimetype = 'application/xml'
     return res
 
 
@@ -302,7 +302,7 @@ def feed():
         )
 
     res = make_response(feed.get_response())
-    res.headers["Content-Type"] = "application/xml"
+    res.mimetype = 'application/xml'
     return res
 
 
@@ -400,8 +400,7 @@ def xmlrpc():
 
     # return blog_dispatcher._marshaled_dispatch(request.data)
     response_data = blog_dispatcher._marshaled_dispatch(request.data)
-    return current_app.response_class(response_data,
-                                      content_type='text/xml')
+    return current_app.response_class(response_data, mimetype='text/xml')
 
 
 @main.route('/ckupload/', methods=['POST', 'OPTIONS'])
