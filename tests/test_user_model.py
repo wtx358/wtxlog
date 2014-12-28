@@ -4,7 +4,7 @@ import os
 import time
 import unittest
 
-from manage import create_app
+from wtxlog import create_app
 from wtxlog.models import db, AnonymousUser, Permission, Role, User
 
 class UserModelTestCase(unittest.TestCase):
