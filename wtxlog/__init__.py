@@ -52,7 +52,8 @@ def create_app(config_name):
     db.init_app(app)
     db.app = app
 
-    configure_custom_settings(app)
+    if not app.config['TESTING']:
+        configure_custom_settings(app)
     config[config_name].init_app(app)
 
     cache.init_app(app)
