@@ -39,5 +39,17 @@ def deploy():
     Role.insert_roles()
 
 
+@manager.shell
+def make_shell_context():
+    from wtxlog.models import User, Role, Permission, Category, Tag, \
+        Article, Topic, Link, FriendLink, Flatpage, Label, Redirect, Setting
+    return dict(
+        app=app, db=db, User=User, Role=Role, Permission=Permission,
+        Category=Category, Tag=Tag, Article=Article, Topic=Topic,
+        Link=Link, FriendLink=FriendLink, Flatpage=Flatpage,
+        Label=Label, Redirect=Redirect, Setting=Setting
+    )
+
+
 if __name__ == '__main__':
     manager.run()
