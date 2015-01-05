@@ -90,7 +90,7 @@ class DevelopmentConfig(Config):
 
     SQLALCHEMY_ECHO = True
 
-    SQLALCHEMY_DATABASE_URI = os.getenv('DEV_DATABASE_URL') or \
+    SQLALCHEMY_DATABASE_URI = os.getenv('DEV_DATABASE_URI') or \
         'sqlite:///' + os.path.join(basedir, 'data_dev_sqlite.db')
 
     @classmethod
@@ -105,7 +105,7 @@ class TestingConfig(Config):
 
     TESTING = True
 
-    SQLALCHEMY_DATABASE_URI = os.getenv('TEST_DATABASE_URL') or \
+    SQLALCHEMY_DATABASE_URI = os.getenv('TEST_DATABASE_URI') or \
         'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
 
     WTF_CSRF_ENABLED = False
@@ -130,9 +130,9 @@ class BAEConfig(Config):
     MYSQL_PORT = os.getenv('MYSQL_PORT') or '4050'
     MYSQL_DB = os.getenv('MYSQL_DB') or ''
 
-    SQLALCHEMY_DATABASE_URI = 'mysql://%s:%s@%s:%s/%s' % (
-        MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_PORT, MYSQL_DB
-    )
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI') or \
+        'mysql://%s:%s@%s:%s/%s' % (MYSQL_USER, MYSQL_PASS, MYSQL_HOST,
+                                    MYSQL_PORT, MYSQL_DB)
 
     @classmethod
     def init_app(cls, app):
@@ -194,9 +194,9 @@ class JAEConfig(Config):
     MYSQL_PORT = os.getenv('MYSQL_PORT') or ''
     MYSQL_DB = os.getenv('MYSQL_DB') or ''
 
-    SQLALCHEMY_DATABASE_URI = 'mysql://%s:%s@%s:%s/%s' % (
-        MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_PORT, MYSQL_DB
-    )
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI') or \
+        'mysql://%s:%s@%s:%s/%s' % (MYSQL_USER, MYSQL_PASS, MYSQL_HOST,
+                                    MYSQL_PORT, MYSQL_DB)
 
     @classmethod
     def init_app(cls, app):
@@ -229,7 +229,7 @@ class ProductionConfig(Config):
     CACHE_TYPE = 'filesystem'
     CACHE_DIR = os.path.join(basedir, datadir, 'cache')
 
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') or \
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI') or \
         'sqlite:///' + os.path.join(basedir, 'data_sqlite.db')
 
     # mysql configuration
@@ -242,7 +242,7 @@ class ProductionConfig(Config):
     if (len(MYSQL_USER) > 0 and len(MYSQL_PASS) > 0 and
             len(MYSQL_HOST) > 0 and len(MYSQL_PORT) > 0 and
             len(MYSQL_DB) > 0):
-        SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') or \
+        SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI') or \
             'mysql://%s:%s@%s:%s/%s' % (MYSQL_USER, MYSQL_PASS, MYSQL_HOST,
                                         MYSQL_PORT, MYSQL_DB)
 
