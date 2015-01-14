@@ -7,8 +7,8 @@
         <i class="icon-user"></i> {{ current_user.username }} <span class="caret"></span>
     </a>
     <ul class="dropdown-menu">
-      <li><a href="{{ url_for('account.index') }}">Profile</a></li>
-      <li><a href="{{ url_for('account.logout') }}">Logout</a></li>
+      <li><a href="{{ url_for('account.index') }}">{{ _('Profile') }}</a></li>
+      <li><a href="{{ url_for('account.logout') }}">{{ _('Logout') }}</a></li>
     </ul>
 </div>
 {% endif %}

@@ -3,6 +3,7 @@
 from urllib import unquote
 from datetime import datetime
 from flask import redirect, url_for, Markup, flash
+from flask.ext.babelex import lazy_gettext as _
 from flask.ext.login import current_user, login_required
 from flask.ext.admin import Admin, AdminIndexView, BaseView, expose, helpers
 from flask.ext.admin.contrib import sqla
@@ -41,7 +42,7 @@ def format_datetime(self, request, obj, fieldname, *args, **kwargs):
 def view_on_site(self, request, obj, fieldname, *args, **kwargs):
     return Markup('%s%s' % (
         HTML.i(style='margin-right:5px;', class_='icon icon-eye-open'),
-        link_to(u'View', obj.link, target='_blank'),
+        link_to(_('View'), obj.link, target='_blank'),
     ))
 
 
@@ -81,6 +82,26 @@ class ArticleAdmin(sqla.ModelView):
 
     form_overrides = dict(seodesc=TextAreaField, body=EDITOR_WIDGET,
                           summary=TextAreaField)
+
+    column_labels = dict(
+        title=_('Title'),
+        seotitle=_('SEOTitle'),
+        category=_('Category'),
+        topic=_('Topic'),
+        tags=_('Tags'),
+        body=_('Body'),
+        summary=_('Summary'),
+        published=_('Published'),
+        ontop=_('Ontop'),
+        recommend=_('Recommend'),
+        seokey=_('SEO Keyword'),
+        seodesc=_('SEO Description'),
+        thumbnail=_('Thumbnail'),
+        thumbnail_big=_('Big Thumbnail'),
+        template=_('Template'),
+        created=_('Created'),
+        view_on_site=_('View on Site'),
+    )
 
     form_widget_args = {
         'title': {'style': 'width:480px;'},
@@ -137,6 +158,20 @@ class CategoryAdmin(sqla.ModelView):
 
     column_formatters = dict(view_on_site=view_on_site)
 
+    column_labels = dict(
+        parent=_('Parent'),
+        slug=_('Slug'),
+        name=_('Name'),
+        seotitle=_('SEOTitle'),
+        body=_('Body'),
+        seokey=_('SEO Keyword'),
+        seodesc=_('SEO Description'),
+        thumbnail=_('Thumbnail'),
+        template=_('Template'),
+        article_template=_('Template of Articles'),
+        view_on_site=_('View on Site'),
+    )
+
     form_widget_args = {
         'slug': {'style': 'width:320px;'},
         'name': {'style': 'width:320px;'},
@@ -187,6 +222,18 @@ class TagAdmin(sqla.ModelView):
 
     column_formatters = dict(view_on_site=view_on_site)
 
+    column_labels = dict(
+        slug=_('Slug'),
+        name=_('Name'),
+        seotitle=_('SEOTitle'),
+        body=_('Body'),
+        seokey=_('SEO Keyword'),
+        seodesc=_('SEO Description'),
+        thumbnail=_('Thumbnail'),
+        template=_('Template'),
+        view_on_site=_('View on Site'),
+    )
+
     form_widget_args = {
         'slug': {'style': 'width:320px;'},
         'name': {'style': 'width:320px;'},
@@ -233,6 +280,18 @@ class TopicAdmin(sqla.ModelView):
 
     column_formatters = dict(view_on_site=view_on_site)
 
+    column_labels = dict(
+        slug=_('Slug'),
+        name=_('Name'),
+        seotitle=_('SEOTitle'),
+        body=_('Body'),
+        seokey=_('SEO Keyword'),
+        seodesc=_('SEO Description'),
+        thumbnail=_('Thumbnail'),
+        template=_('Template'),
+        view_on_site=_('View on Site'),
+    )
+
     form_widget_args = {
         'slug': {'style': 'width:320px;'},
         'name': {'style': 'width:320px;'},
@@ -278,6 +337,18 @@ class FlatpageAdmin(sqla.ModelView):
 
     form_overrides = dict(seodesc=TextAreaField, body=EDITOR_WIDGET)
 
+    column_labels = dict(
+        slug=_('Slug'),
+        title=_('Title'),
+        seotitle=_('SEOTitle'),
+        body=_('Body'),
+        seokey=_('SEO Keyword'),
+        seodesc=_('SEO Description'),
+        thumbnail=_('Thumbnail'),
+        template=_('Template'),
+        view_on_site=_('View on Site'),
+    )
+
     form_widget_args = {
         'title': {'style': 'width:480px;'},
         'slug': {'style': 'width:320px;'},
@@ -304,6 +375,15 @@ class FriendLinkAdmin(sqla.ModelView):
     column_searchable_list = ('anchor', 'title', 'url')
 
     form_overrides = dict(note=TextAreaField)
+
+    column_labels = dict(
+        anchor=_('Anchor Text'),
+        title=_('Title'),
+        url=_('URL'),
+        actived=_('Actived'),
+        order=_('Order'),
+        note=_('Note'),
+    )
 
     form_widget_args = {
         'anchor': {'style': 'width:320px;'},
@@ -340,6 +420,12 @@ class LabelAdmin(sqla.ModelView):
 
     form_overrides = dict(html=TextAreaField)
 
+    column_labels = dict(
+        slug=_('Slug'),
+        title=_('Title'),
+        html=_('Html Code'),
+    )
+
     form_widget_args = {
         'slug': {'style': 'width:480px;'},
         'title': {'style': 'width:480px;'},
@@ -355,6 +441,12 @@ class RedirectAdmin(sqla.ModelView):
     column_searchable_list = ('old_path', 'new_path')
 
     form_overrides = dict(note=TextAreaField)
+
+    column_labels = dict(
+        old_path=_('Old Path'),
+        new_path=_('New Path'),
+        note=_('Note'),
+    )
 
     form_widget_args = {
         'old_path': {'style': 'width:320px;'},
@@ -376,6 +468,15 @@ class UserAdmin(sqla.ModelView):
 
     form_overrides = dict(about_me=TextAreaField)
 
+    column_labels = dict(
+        email=_('Email'),
+        username=_('Username'),
+        name=_('Nickname'),
+        confirmed=_('Confirmed'),
+        about_me=_('About Me'),
+        role=_('Role'),
+    )
+
     form_widget_args = {
         'about_me': {'style': 'width:480px; height:80px;'},
     }
@@ -392,6 +493,14 @@ class SettingAdmin(sqla.ModelView):
         description=TextAreaField,
     )
 
+    column_labels = dict(
+        name=_('Name'),
+        rawvalue=_('Raw Value'),
+        formatter=_('Formatter'),
+        builtin=_('Builtin'),
+        description=_('Description'),
+    )
+
     form_args = dict(
         formatter=dict(choices=Setting.FORMATS)
     )
@@ -401,20 +510,22 @@ class SettingAdmin(sqla.ModelView):
 
 
 # init
-admin = Admin(index_view=MyAdminIndexView(), base_template="admin/my_master.html")
+admin = Admin(index_view=MyAdminIndexView(),
+              name=_('Admin'),
+              base_template="admin/my_master.html")
 
 # add views
-admin.add_view(TopicAdmin(Topic, db.session))
-admin.add_view(CategoryAdmin(Category, db.session))
-admin.add_view(TagAdmin(Tag, db.session))
-admin.add_view(ArticleAdmin(Article, db.session))
-admin.add_view(FlatpageAdmin(Flatpage, db.session))
+admin.add_view(TopicAdmin(Topic, db.session, name=_('Topic')))
+admin.add_view(CategoryAdmin(Category, db.session, name=_('Category')))
+admin.add_view(TagAdmin(Tag, db.session, name=_('Tag')))
+admin.add_view(ArticleAdmin(Article, db.session, name=_('Article')))
+admin.add_view(FlatpageAdmin(Flatpage, db.session, name=_('Flatpage')))
 
-admin.add_view(LabelAdmin(Label, db.session))
+admin.add_view(LabelAdmin(Label, db.session, name=_('Snippet')))
 
-admin.add_view(FriendLinkAdmin(FriendLink, db.session))
-admin.add_view(RedirectAdmin(Redirect, db.session))
+admin.add_view(FriendLinkAdmin(FriendLink, db.session, name=_('FriendLink')))
+admin.add_view(RedirectAdmin(Redirect, db.session, name=_('Redirect')))
 
-admin.add_view(SettingAdmin(Setting, db.session))
+admin.add_view(SettingAdmin(Setting, db.session, name=_('Setting')))
 
-admin.add_view(UserAdmin(User, db.session))
+admin.add_view(UserAdmin(User, db.session, name=_('User')))
