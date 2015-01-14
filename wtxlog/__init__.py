@@ -5,7 +5,7 @@ from flask import Flask, send_from_directory
 from flask.ext.themes import setup_themes
 from flask.ext.mobility import Mobility
 from config import config
-from ext import cache, db, mail, login_manager
+from ext import babel, cache, db, mail, login_manager
 from models import User, AnonymousUser, Setting
 
 # 默认是basic, strong这个强度在BAE3下造成登陆几秒之后就退出的现象
@@ -56,6 +56,7 @@ def create_app(config_name):
         configure_custom_settings(app)
     config[config_name].init_app(app)
 
+    babel.init_app(app)
     cache.init_app(app)
     login_manager.init_app(app)
     mail.init_app(app)
@@ -88,15 +89,5 @@ def create_app(config_name):
     @app.route('/robots.txt')
     def robotstxt():
         return send_from_directory(app.static_folder, 'robots.txt')
-
-    # 暂时解决因Gunicorn中引发ERROR 11而无法正常提交的问题
-    # @app.teardown_request
-    # def teardown_request(response_or_exc):
-    #     if app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN']:
-    #         try:
-    #             db.session.commit()
-    #         except:
-    #             db.session.rollback()
-    #     db.session.remove()
 
     return app

@@ -5,6 +5,7 @@ import datetime
 from urllib2 import quote, unquote
 from flask import current_app, request, redirect, url_for
 from functools import wraps
+from flask.ext.babelex import Babel
 from flask.ext.cache import Cache as FlaskCache
 from flask.ext.mail import Mail, Message
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -248,6 +249,12 @@ def baememcache(app, config, args, kwargs):
 
 mail = Mail()
 db = SQLAlchemy()
+babel = Babel()
 
 login_manager = LoginManager()
 cache = WtxlogCache()
+
+
+@babel.localeselector
+def get_locale():
+    return request.accept_languages.best_match(['en', 'zh'])
