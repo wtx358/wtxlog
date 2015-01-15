@@ -1,11 +1,11 @@
 /**
- * @license Copyright (c) 2003-2013, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.html or http://ckeditor.com/license
  */
 
 CKEDITOR.editorConfig = function( config ) {
 	// Define changes to default configuration here.
-	// For complete reference see:
+	// For the complete reference:
 	// http://docs.ckeditor.com/#!/api/CKEDITOR.config
 
 	// The toolbar groups arrangement, optimized for two toolbar rows.
@@ -26,25 +26,21 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'about' }
 	];
 
-	// Remove some buttons provided by the standard plugins, which are
-	// not needed in the Standard(s) toolbar.
+	// Remove some buttons, provided by the standard plugins, which we don't
+	// need to have in the Standard(s) toolbar.
 	config.removeButtons = 'Underline,Subscript,Superscript';
 
-	// Set the most common block elements.
+	// Se the most common block elements.
 	config.format_tags = 'p;h1;h2;h3;pre';
 
-	// Simplify the dialog windows.
+	// Make dialogs simpler.
 	config.removeDialogTabs = 'image:advanced;link:advanced';
-
+	
 	config.extraPlugins = 'justify,font,colordialog,colorbutton';
 
 	// file upload url
 	config.filebrowserUploadUrl = '/ckupload/';
 
-	// default interface language
-	config.language = 'zh-cn';
-
-	// default sizes
 	config.width = 700;
 	config.height = 360;
 	config.resize_enabled = false; 
