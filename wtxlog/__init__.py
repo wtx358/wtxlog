@@ -39,7 +39,7 @@ def get_appconfig():
 def configure_custom_settings(app):
     try:
         s = Setting.query.filter_by(builtin=True)
-        settings = {i.name: i.value for i in s.all()}
+        settings = dict((i.name, i.value) for i in s.all())
         app.config.update(settings)
     except Exception as e:
         print(str(e))
