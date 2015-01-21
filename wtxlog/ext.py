@@ -63,7 +63,7 @@ class MySMTPHandler(logging.Handler):
         self.use_ssl = use_ssl
         self._timeout = 5.0
 
-    def getSubject(self, record):
+    def get_subject(self, record):
         """
         Determine the subject for the email.
 
@@ -90,7 +90,7 @@ class MySMTPHandler(logging.Handler):
                 smtp = smtplib.SMTP(self.mailhost, port, timeout=self._timeout)
 
             _msg = self.format(record)
-            msg = Message(self.getSubject(record),
+            msg = Message(self.get_subject(record),
                           sender=self.fromaddr, recipients=self.toaddrs)
             msg.body = _msg
 

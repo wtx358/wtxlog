@@ -132,10 +132,10 @@ class User(UserMixin, db.Model):
                                         User.email == username)).first()
         if isinstance(user, User):
             if user.verify_password(password):
-                return (None, user)
+                return None, user
             else:
-                return ('Invalid Password', None)
-        return ('Invalid Username', None)
+                return 'Invalid Password', None
+        return 'Invalid Username', None
 
     @staticmethod
     def make_unique_username(username):

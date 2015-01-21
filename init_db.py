@@ -32,6 +32,6 @@ if __name__ == '__main__':
     db.session.add(category)
     db.session.commit()
 
-    print '=================================='
-    print 'Init Done.'
-    print '=================================='
+    print('==================================')
+    print('Init Done.')
+    print('==================================')
