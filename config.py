@@ -81,7 +81,11 @@ class Config:
 
     @staticmethod
     def init_app(app):
-        pass
+        _handler = logging.StreamHandler()
+        app.logger.addHandler(_handler)
+
+        mail_handler = Config.get_mailhandler()
+        app.logger.addHandler(mail_handler)
 
 
 class DevelopmentConfig(Config):
@@ -96,9 +100,6 @@ class DevelopmentConfig(Config):
     @classmethod
     def init_app(cls, app):
         Config.init_app(app)
-
-        mail_handler = Config.get_mailhandler()
-        app.logger.addHandler(mail_handler)
 
 
 class TestingConfig(Config):
@@ -138,9 +139,6 @@ class BAEConfig(Config):
     def init_app(cls, app):
         Config.init_app(app)
 
-        mail_handler = Config.get_mailhandler()
-        app.logger.addHandler(mail_handler)
-
         def _create_logger(bufcount=256):
             _logger = logging.getLogger()
             _logger.setLevel(logging.DEBUG)
@@ -176,12 +174,6 @@ class SAEConfig(Config):
     def init_app(cls, app):
         Config.init_app(app)
 
-        mail_handler = Config.get_mailhandler()
-        app.logger.addHandler(mail_handler)
-
-        _handler = logging.StreamHandler()
-        app.logger.addHandler(_handler)
-
 
 class JAEConfig(Config):
 
@@ -201,9 +193,6 @@ class JAEConfig(Config):
     @classmethod
     def init_app(cls, app):
         Config.init_app(app)
-
-        mail_handler = Config.get_mailhandler()
-        app.logger.addHandler(mail_handler)
 
         # http://jae.jd.com/help/create_app.html?targ=94#a32
         # logfile path: /home/vcap/app/logs/jae.log
