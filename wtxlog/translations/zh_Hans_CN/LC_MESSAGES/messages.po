@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wtxlog VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-01-14 23:06+0800\n"
+"POT-Creation-Date: 2015-01-27 12:26+0800\n"
 "PO-Revision-Date: 2015-01-14 22:43+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: zh_Hans_CN <LL@li.org>\n"
@@ -21,20 +21,20 @@ msgstr ""
 msgid "View"
 msgstr "查看"
 
-#: ../admins.py:87 ../admins.py:342 ../admins.py:381 ../admins.py:425
+#: ../admins.py:87 ../admins.py:343 ../admins.py:382 ../admins.py:426
 msgid "Title"
 msgstr "标题"
 
-#: ../admins.py:88 ../admins.py:165 ../admins.py:228 ../admins.py:286
-#: ../admins.py:343
+#: ../admins.py:88 ../admins.py:166 ../admins.py:229 ../admins.py:287
+#: ../admins.py:344
 msgid "SEOTitle"
 msgstr "SEO标题"
 
-#: ../admins.py:89 ../admins.py:519
+#: ../admins.py:89 ../admins.py:520
 msgid "Category"
 msgstr "分类"
 
-#: ../admins.py:90 ../admins.py:518
+#: ../admins.py:90 ../admins.py:519
 msgid "Topic"
 msgstr "专题"
 
@@ -42,8 +42,8 @@ msgstr "专题"
 msgid "Tags"
 msgstr "标签"
 
-#: ../admins.py:92 ../admins.py:166 ../admins.py:229 ../admins.py:287
-#: ../admins.py:344
+#: ../admins.py:92 ../admins.py:167 ../admins.py:230 ../admins.py:288
+#: ../admins.py:345
 msgid "Body"
 msgstr "正文"
 
@@ -63,18 +63,18 @@ msgstr "置顶"
 msgid "Recommend"
 msgstr "推荐"
 
-#: ../admins.py:97 ../admins.py:167 ../admins.py:230 ../admins.py:288
-#: ../admins.py:345
+#: ../admins.py:97 ../admins.py:168 ../admins.py:231 ../admins.py:289
+#: ../admins.py:346
 msgid "SEO Keyword"
 msgstr "SEO关键词"
 
-#: ../admins.py:98 ../admins.py:168 ../admins.py:231 ../admins.py:289
-#: ../admins.py:346
+#: ../admins.py:98 ../admins.py:169 ../admins.py:232 ../admins.py:290
+#: ../admins.py:347
 msgid "SEO Description"
 msgstr "SEO描述"
 
-#: ../admins.py:99 ../admins.py:169 ../admins.py:232 ../admins.py:290
-#: ../admins.py:347
+#: ../admins.py:99 ../admins.py:170 ../admins.py:233 ../admins.py:291
+#: ../admins.py:348
 msgid "Thumbnail"
 msgstr "缩略图"
 
@@ -82,8 +82,8 @@ msgstr "缩略图"
 msgid "Big Thumbnail"
 msgstr "大缩略图"
 
-#: ../admins.py:101 ../admins.py:170 ../admins.py:233 ../admins.py:291
-#: ../admins.py:348
+#: ../admins.py:101 ../admins.py:171 ../admins.py:234 ../admins.py:292
+#: ../admins.py:349
 msgid "Template"
 msgstr "模板"
 
@@ -91,8 +91,8 @@ msgstr "模板"
 msgid "Created"
 msgstr "创建"
 
-#: ../admins.py:103 ../admins.py:172 ../admins.py:234 ../admins.py:292
-#: ../admins.py:349
+#: ../admins.py:103 ../admins.py:173 ../admins.py:235 ../admins.py:293
+#: ../admins.py:350
 msgid "View on Site"
 msgstr "在网站上查看"
 
@@ -100,124 +100,128 @@ msgstr "在网站上查看"
 msgid "Parent"
 msgstr "父级"
 
-#: ../admins.py:163 ../admins.py:226 ../admins.py:284 ../admins.py:341
-#: ../admins.py:424
+#: ../admins.py:163 ../admins.py:227 ../admins.py:285 ../admins.py:342
+#: ../admins.py:425
 msgid "Slug"
 msgstr "标识符"
 
-#: ../admins.py:164 ../admins.py:227 ../admins.py:285 ../admins.py:497
+#: ../admins.py:164
+msgid "LongSlug"
+msgstr "路径"
+
+#: ../admins.py:165 ../admins.py:228 ../admins.py:286 ../admins.py:498
 msgid "Name"
 msgstr "名称"
 
-#: ../admins.py:171
+#: ../admins.py:172
 msgid "Template of Articles"
 msgstr "文章模板"
 
-#: ../admins.py:380
+#: ../admins.py:381
 msgid "Anchor Text"
 msgstr "锚文本"
 
-#: ../admins.py:382
+#: ../admins.py:383
 msgid "URL"
 msgstr "URL链接"
 
-#: ../admins.py:383
+#: ../admins.py:384
 msgid "Actived"
 msgstr "生效"
 
-#: ../admins.py:384
+#: ../admins.py:385
 msgid "Order"
 msgstr "排序"
 
-#: ../admins.py:385 ../admins.py:448
+#: ../admins.py:386 ../admins.py:449
 msgid "Note"
 msgstr "注释"
 
-#: ../admins.py:426
+#: ../admins.py:427
 msgid "Html Code"
 msgstr "HTML代码"
 
-#: ../admins.py:446
+#: ../admins.py:447
 msgid "Old Path"
 msgstr "旧的路径"
 
-#: ../admins.py:447
+#: ../admins.py:448
 msgid "New Path"
 msgstr "新的路径"
 
-#: ../admins.py:472
+#: ../admins.py:473
 msgid "Email"
 msgstr "电子邮件"
 
-#: ../admins.py:473
+#: ../admins.py:474
 msgid "Username"
 msgstr "用户名"
 
-#: ../admins.py:474
+#: ../admins.py:475
 msgid "Nickname"
 msgstr "昵称"
 
-#: ../admins.py:475
+#: ../admins.py:476
 msgid "Confirmed"
 msgstr "确认"
 
-#: ../admins.py:476
+#: ../admins.py:477
 msgid "About Me"
 msgstr "关于我"
 
-#: ../admins.py:477
+#: ../admins.py:478
 msgid "Role"
 msgstr "角色"
 
-#: ../admins.py:498
+#: ../admins.py:499
 msgid "Raw Value"
 msgstr "原始值"
 
-#: ../admins.py:499
+#: ../admins.py:500
 msgid "Formatter"
 msgstr "格式化类型"
 
-#: ../admins.py:500
+#: ../admins.py:501
 msgid "Builtin"
 msgstr "内置"
 
-#: ../admins.py:501
+#: ../admins.py:502
 msgid "Description"
 msgstr "描述"
 
-#: ../admins.py:514
+#: ../admins.py:515
 msgid "Admin"
 msgstr "网站管理"
 
-#: ../admins.py:520
+#: ../admins.py:521
 msgid "Tag"
 msgstr "标签"
 
-#: ../admins.py:521
+#: ../admins.py:522
 msgid "Article"
 msgstr "文章"
 
-#: ../admins.py:522
+#: ../admins.py:523
 msgid "Flatpage"
 msgstr "单页面"
 
-#: ../admins.py:524
+#: ../admins.py:525
 msgid "Snippet"
 msgstr "静态标签"
 
-#: ../admins.py:526
+#: ../admins.py:527
 msgid "FriendLink"
 msgstr "友情链接"
 
-#: ../admins.py:527
+#: ../admins.py:528
 msgid "Redirect"
 msgstr "重定向"
 
-#: ../admins.py:529
+#: ../admins.py:530
 msgid "Setting"
 msgstr "网站设置"
 
-#: ../admins.py:531
+#: ../admins.py:532
 msgid "User"
 msgstr "用户"
 

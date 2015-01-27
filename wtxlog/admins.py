@@ -161,6 +161,7 @@ class CategoryAdmin(sqla.ModelView):
     column_labels = dict(
         parent=_('Parent'),
         slug=_('Slug'),
+        longslug=_('LongSlug'),
         name=_('Name'),
         seotitle=_('SEOTitle'),
         body=_('Body'),
