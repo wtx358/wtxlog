@@ -29,8 +29,8 @@
             height       : 500,
             maxsplitsize : 1000,
             markedOptions: { gfm: true, tables: true, breaks: true, pedantic: true, sanitize: false, smartLists: true, smartypants: false, langPrefix: 'lang-'},
-            codemirror   : { mode: 'htmlmixed', lineWrapping: true, dragDrop: false, autoCloseTags: true, matchTags: true, autoCloseBrackets: true, matchBrackets: true, indentUnit: 4, indentWithTabs: false, tabSize: 4, hintOptions: {completionSingle:false} },
-            toolbar      : [ 'bold', 'italic', 'strike', 'link', 'image', 'blockquote', 'listUl', 'listOl' ],
+            codemirror   : { mode: 'htmlmixed', lineWrapping: true, dragDrop: false, autoCloseTags: true, matchTags: true, autoCloseBrackets: true, matchBrackets: true, indentUnit: 4, indentWithTabs: false, tabSize: 4, hintOptions: {completionSingle:false}, lineNumbers: true, styleActiveLine: true },
+            toolbar      : [ 'bold', 'italic', 'strike', 'link', 'image', 'imageUpload', 'blockquote', 'listUl', 'listOl' ],
             lblPreview   : 'Preview',
             lblCodeview  : 'HTML',
             lblMarkedview: 'Markdown'
@@ -421,6 +421,10 @@
                     title  : 'Image',
                     label  : '<i class="@-icon-picture-o"></i>'
                 },
+                imageUpload : {
+                    title  : 'Image Upload',
+                    label  : '<i class="@-icon-upload"></i>'
+                },
                 listUl : {
                     title  : 'Unordered List',
                     label  : '<i class="@-icon-list-ul"></i>'
@@ -522,6 +526,15 @@
             addAction('blockquote', '> $1', 'replaceLine');
             addAction('link', '[$1](http://)');
             addAction('image', '![$1](http://)');
+
+            editor.on('action.imageUpload', function() {
+                var modal = UIkit.modal("#upload", {center:true});
+                if ( modal.isActive() ) {
+                    modal.hide();
+                } else {
+                    modal.show();
+                }
+            });
 
             editor.on('action.listUl', function() {
 
