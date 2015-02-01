@@ -4,7 +4,7 @@
 Just for development time
 """
 
-from manage import app, db
+from manage import db
 from wtxlog.models import User, Role, Category
 
 if __name__ == '__main__':

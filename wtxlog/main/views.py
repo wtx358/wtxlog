@@ -8,7 +8,7 @@ import datetime
 
 from flask import request, url_for, redirect, current_app, make_response, abort
 from werkzeug.contrib.atom import AtomFeed
-from werkzeug._compat import text_type, to_bytes
+from werkzeug._compat import to_bytes
 from webhelpers.paginate import Page, PageURL
 from flask.ext.mobility.decorators import mobile_template
 
@@ -370,6 +370,7 @@ def uploadremote():
 
                 urlreturn = ''
 
+                ONLINE = False
                 if ONLINE:
                     obj = SaveUploadFile(fext, downfile.read())
                     urlreturn = obj.save()

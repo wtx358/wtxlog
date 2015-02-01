@@ -29,7 +29,7 @@ class SaveUploadFile:
 
     def save(self):
         if current_app.config.get('QINIU_AK') and \
-            current_app.config.get('QINIU_SK'):
+                current_app.config.get('QINIU_SK'):
             return self.qiniu_save_file()
         return self.local_save_file()
 

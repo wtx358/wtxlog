@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import datetime
-
 from threading import Thread
 from functools import wraps
 from flask import abort
 from flask.ext.login import current_user
 
-from ext import cache
-from config import Config
 from models import Permission
 
 

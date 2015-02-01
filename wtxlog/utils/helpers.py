@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import xmlrpclib
-from flask import current_app, request, redirect, url_for
+from flask import current_app, request, url_for
 from flask.ext.themes import render_theme_template, get_theme
-from ..models import Category, Tag
+from ..models import Category
 
 
 def get_current_theme():

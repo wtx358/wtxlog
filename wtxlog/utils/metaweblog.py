@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import re
-import time
 from datetime import datetime
-import xmlrpclib
 from xmlrpclib import Fault
 
 from functools import wraps
 from SimpleXMLRPCServer import SimpleXMLRPCDispatcher
 
 from flask import url_for, current_app, g
-from filters import markdown_filter
 from .upload import SaveUploadFile
 from ..models import db, User, Article as Post, Category
 
@@ -106,7 +103,6 @@ def metaWeblog_newPost(blogid, struct, publish):
     post = Post()
     post.title = _post['title']
     post.body = content
-    # post.content_html = markdown_filter(innerlink_filter(content))
     post.category_id = category_id
     post.author = g.auth_user
     if g.auth_user.is_administrator():
@@ -115,7 +111,6 @@ def metaWeblog_newPost(blogid, struct, publish):
     post.created = datetime.now()
     post.last_modified = post.created
     # more_start = post.content.find('<!--more-->')
-    # post.summary = markdown_filter(post.content[:more_start], codehilite=False)
     db.session.add(post)
     db.session.commit()
 
@@ -125,7 +120,6 @@ def metaWeblog_newPost(blogid, struct, publish):
 @checkauth()
 def metaWeblog_editPost(postid, struct, publish):
     """修改（更新）博客"""
-    result = False
     _post = struct
 
     category_id = None
@@ -166,7 +160,6 @@ def metaWeblog_newMediaObject(blogid, struct):
 
     # data为二进制内容
     data = media['bits'].data
-    filename = media['name']
 
     # 这部分根据情况自定义
     obj = SaveUploadFile(fext, data)

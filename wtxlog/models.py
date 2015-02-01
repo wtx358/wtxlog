@@ -14,7 +14,7 @@ from flask.ext.sqlalchemy import BaseQuery
 from flask import current_app, request, url_for
 from flask.ext.login import UserMixin, AnonymousUserMixin
 
-from .ext import db, keywords_split, text_type, to_bytes
+from .ext import db, keywords_split, to_bytes
 from .utils.filters import markdown_filter
 from config import Config
 

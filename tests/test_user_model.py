@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import os
 import time
 import unittest
 
 from wtxlog import create_app
 from wtxlog.models import db, AnonymousUser, Permission, Role, User
+
 
 class UserModelTestCase(unittest.TestCase):
     def setUp(self):
@@ -111,19 +111,19 @@ class UserModelTestCase(unittest.TestCase):
         self.assertFalse(u.can(Permission.WRITE_ARTICLES))
 
     def test_avatar(self):
-        u = User(username = 'john', email = 'john@example.com')
+        u = User(username='john', email='john@example.com')
         with self.app.test_request_context('/'):
             avatar = u.gravatar(128)
             expected = 'http://www.gravatar.com/avatar/d4c74594d841139328695756648b6bd6'
             assert avatar[0:len(expected)] == expected
 
     def test_make_unique_nickname(self):
-        u = User(username = 'john', email = 'john@example.com')
+        u = User(username='john', email='john@example.com')
         db.session.add(u)
         db.session.commit()
         username = User.make_unique_username('john')
         assert username != 'john'
-        u = User(username = username, email = 'susan@example.com')
+        u = User(username=username, email='susan@example.com')
         db.session.add(u)
         db.session.commit()
         username2 = User.make_unique_username('john')
