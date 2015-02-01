@@ -1,7 +1,7 @@
 {% if config['BODY_FORMAT'] == 'html' %}
 <script src="{{ url_for('static', filename='admin/ckeditor/ckeditor.js') }}"></script>
 {% else %}
-{% if Setting.get('mdeditor') == 'cmeditor' %}
+{% if Setting.get('mdeditor') != 'markitup' %}
 <!-- image upload modal -->
 <div id="upload" class="uk-modal">
     <div class="uk-modal-dialog">
