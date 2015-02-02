@@ -1,16 +1,19 @@
 function mycallback(json, ed) {
     var data = $.parseJSON(json);
-    var block = ['!', '[', data.msg.localfile, ']', '(', data.msg.url.replace('!', ''), ')'];
-    ed.replaceSelection(block.join(''));
-    var modal = UIkit.modal("#upload", {center:true});
-    modal.hide();
-    ed.editor.focus();
+    var modal = UIkit.modal("#upload");
+    if (modal.isActive()) {
+        $('#preview').html('<img style="max-height: 300px; max-width: 100%" alt="'+data.msg.localfile+'" src="'+data.msg.url.replace('!', '')+'" />');
+    } else {
+        var block = ['!', '[', data.msg.localfile, ']', '(', data.msg.url.replace('!', ''), ')'];
+        ed.replaceSelection(block.join(''));
+    }
 }
 
 $(document).ready(function() {
     var htmleditor = UIkit.htmleditor($('.markitup'), {markdown:true, mode:'tab', lineNumbers: true});
 
     var progressbar = $("#progressbar"),
+        preview = $("#preview"),
         bar         = progressbar.find('.uk-progress-bar'),
         settings    = {
             action: '/upload/', // upload url
@@ -38,4 +41,16 @@ $(document).ready(function() {
     var select = UIkit.uploadSelect($("#upload-select"), settings),
         drop   = UIkit.uploadDrop($("#upload-drop"), settings),
         drop2  = UIkit.uploadDrop($(".CodeMirror-code"), settings);
+
+    $("#btn_upload_submit").click(function() {
+        var preview_img = $('#preview>img');
+        var src = preview_img.attr('src'),
+        text = preview_img.attr('alt');
+        if (typeof(src) == "undefined") {src="http://";}
+        var block = ['!', '[', text, ']', '(', src, ')'];
+        htmleditor.replaceSelection(block.join(''));
+        var modal = UIkit.modal("#upload");
+        preview.html('');
+        modal.hide();
+    })
 });
