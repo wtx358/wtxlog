@@ -1,64 +1,56 @@
-var editor_obj = $('.markitup')[0];
-
 function mycallback(json, ed) {
-	var data = $.parseJSON(json);
-	var block = ['!', '[', data.msg.localfile, ']', '(', data.msg.url.replace('!', ''), ')'];
-	ed.replaceSelection(block.join(''));
-	ed.focus();
+    var data = $.parseJSON(json);
+    var modal = UIkit.modal("#upload");
+    if (modal.isActive()) {
+        $('#preview').html('<img style="max-height: 300px; max-width: 100%" alt="'+data.msg.localfile+'" src="'+data.msg.url.replace('!', '')+'" />');
+    } else {
+        var block = ['!', '[', data.msg.localfile, ']', '(', data.msg.url.replace('!', ''), ')'];
+        ed.replaceSelection(block.join(''));
+    }
 }
 
-function upload(fromfile, editor) {
-	xhr = new XMLHttpRequest();
-	xhr.onreadystatechange=function(){
-		if(xhr.readyState===4) {
-			mycallback(xhr.responseText, editor);
-		}
-	};
-	xhr.open("POST", "/upload/");
-	xhr.setRequestHeader('Content-Type', 'application/octet-stream');
-	xhr.setRequestHeader('Content-Disposition', 'attachment; name="filedata"; filename="'+encodeURIComponent(fromfile.name)+'"');
-	if (xhr.sendAsBinary&&fromfile.getAsBinary) {
-		xhr.sendAsBinary(fromfile.getAsBinary());
-	}
-	else {
-		xhr.send(fromfile);
-	}
-}
+$(document).ready(function() {
+    var htmleditor = UIkit.htmleditor($('.markitup'), {markdown:true, mode:'tab', lineNumbers: true});
 
-CodeMirror.commands.save = function(){ /*alert("Saving");*/ $("input[name$='_continue_editing']").click();  };
-//var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-var editor = CodeMirror.fromTextArea(editor_obj, {
-	lineNumbers: true,
-	lineWrapping: true,
-	styleActiveLine: true,
-	mode: "markdown",
-	keyMap: "vim",
-	matchBrackets: true,
-	showCursorWhenSelecting: true,
-	showTrailingSpace: true,
-	dragDrop: true,
-	extraKeys: {
-		"Enter": "newlineAndIndentContinueMarkdownList",
-		"F11": function(cm) {
-		  cm.setOption("fullScreen", !cm.getOption("fullScreen"));
-		},
-	},
-});
+    var progressbar = $("#progressbar"),
+        preview = $("#preview"),
+        bar         = progressbar.find('.uk-progress-bar'),
+        settings    = {
+            action: '/upload/', // upload url
+            param: 'filedata',
+            allow : '*.(jpg|jpeg|gif|png)', // allow only images
 
-CodeMirror.on(editor, "drop", function (editor, e) {
-	e.preventDefault(); 
-	var files = e.dataTransfer.files; upload(files[0], editor); 
-});
+            loadstart: function() {
+                bar.css("width", "0%").text("0%");
+                progressbar.removeClass("uk-hidden");
+            },
 
-/*
-var commandDisplay = document.getElementById('command-display');
-var keys = '';
-CodeMirror.on(editor, 'vim-keypress', function(key) {
-	keys = keys + key;
-	commandDisplay.innerHTML = keys;
+            progress: function(percent) {
+                percent = Math.ceil(percent);
+                bar.css("width", percent+"%").text(percent+"%");
+            },
+
+            allcomplete: function(response) {
+                bar.css("width", "100%").text("100%");
+                setTimeout(function(){
+                    progressbar.addClass("uk-hidden");
+                }, 250);
+                mycallback(response, htmleditor);
+            }
+        };
+    var select = UIkit.uploadSelect($("#upload-select"), settings),
+        drop   = UIkit.uploadDrop($("#upload-drop"), settings),
+        drop2  = UIkit.uploadDrop($(".CodeMirror-code"), settings);
+
+    $("#btn_upload_submit").click(function() {
+        var preview_img = $('#preview>img');
+        var src = preview_img.attr('src'),
+        text = preview_img.attr('alt');
+        if (typeof(src) == "undefined") {src="http://";}
+        var block = ['!', '[', text, ']', '(', src, ')'];
+        htmleditor.replaceSelection(block.join(''));
+        var modal = UIkit.modal("#upload");
+        preview.html('');
+        modal.hide();
+    })
 });
-CodeMirror.on(editor, 'vim-command-done', function(e) {
-	keys = '';
-	commandDisplay.innerHTML = keys;
-});
-*/

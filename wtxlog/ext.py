@@ -2,7 +2,7 @@
 
 import logging
 import datetime
-from urllib2 import quote, unquote
+from urllib2 import quote
 from flask import current_app, request, redirect, url_for
 from functools import wraps
 from flask.ext.babelex import Babel
@@ -80,7 +80,6 @@ class MySMTPHandler(logging.Handler):
         """
         try:
             import smtplib
-            from email.utils import formatdate
             port = self.mailport
             if not port:
                 port = smtplib.SMTP_PORT

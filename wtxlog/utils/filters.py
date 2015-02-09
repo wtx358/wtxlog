@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import re
-import time
-import random
 import markdown
 import datetime
 
-from flask import Markup, request
+from flask import Markup
 from ..ext import keywords_split
 
 __all__ = ['register_filters', 'markdown_filter']

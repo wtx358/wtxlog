@@ -1,32 +1,58 @@
 {% if config['BODY_FORMAT'] == 'html' %}
 <script src="{{ url_for('static', filename='admin/ckeditor/ckeditor.js') }}"></script>
 {% else %}
-{% if Setting.get('mdeditor') == 'cmeditor' %}
-<link rel="stylesheet" href="/static/admin/cmeditor/lib/codemirror.css">
-<link rel="stylesheet" href="/static/admin/cmeditor/addon/dialog/dialog.css">
-<link rel="stylesheet" href="/static/admin/cmeditor/addon/display/fullscreen.css">
+{% if Setting.get('mdeditor') != 'markitup' %}
+<!-- image upload modal -->
+<div id="upload" class="uk-modal">
+    <div class="uk-modal-dialog">
+        <a class="uk-modal-close uk-close"></a>
+        <div class="uk-modal-header"><h2>{{ _('Upload Image') }}</h2></div>
 
+        <div id="upload-drop" class="uk-placeholder uk-text-center">
+            <i class="uk-icon-cloud-upload uk-icon-medium uk-text-muted uk-margin-small-right"></i> <a class="uk-form-file">{{ _('Attach Images by dropping them here or selecting one') }}<input id="upload-select" type="file"></a>.
+        </div>
+        <div id="progressbar" class="uk-progress uk-hidden">
+            <div class="uk-progress-bar" style="width: 0%;">0%</div>
+        </div>
+
+        <div id="preview" class="uk-text-center uk-margin-small-top"></div>
+        <div class="uk-modal-footer">
+            <div class="uk-modal-footer uk-text-right">
+            <button type="button" class="uk-button uk-modal-close">{{ _('Cancel') }}</button>
+            <button type="button" class="uk-button uk-button-primary" id="btn_upload_submit">{{ _('Submit') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='admin/uikit/css/uikit.min.css') }}" />
+<script type="text/javascript" src="{{ url_for('static', filename='admin/uikit/js/uikit.min.js') }}"></script>
+
+<!-- Codemirror and marked dependencies -->
+<link rel="stylesheet" href="{{ url_for('static', filename='admin/cmeditor/lib/codemirror.css') }}">
 <script type="text/javascript" src="{{ url_for('static', filename='admin/cmeditor/lib/codemirror.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='admin/cmeditor/mode/markdown/markdown.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='admin/cmeditor/addon/dialog/dialog.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='admin/cmeditor/addon/search/searchcursor.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='admin/cmeditor/addon/edit/matchbrackets.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='admin/cmeditor/addon/edit/continuelist.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='admin/cmeditor/addon/display/fullscreen.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/cmeditor/mode/xml/xml.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/cmeditor/mode/gfm/gfm.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/cmeditor/addon/mode/overlay.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='admin/cmeditor/addon/selection/active-line.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='admin/cmeditor/addon/edit/trailingspace.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='admin/cmeditor/keymap/vim.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/marked/marked.min.js') }}"></script>
 
-<style type="text/css">
-.CodeMirror {border: 3px solid #ccc; }
-.keybuffer {font-size: 13px; width: 300px; height: 30px;}
-.cm-trailingspace {
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAACCAYAAAB/qH1jAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QUXCToH00Y1UgAAACFJREFUCNdjPMDBUc/AwNDAAAFMTAwMDA0OP34wQgX/AQBYgwYEx4f9lQAAAABJRU5ErkJggg==);
-  background-position: bottom left;
-  background-repeat: repeat-x;}
+<!-- HTML editor and Upload component CSS and JavaScript -->
+<link rel="stylesheet" href="{{ url_for('static', filename='admin/uikit/css/components/htmleditor.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='admin/uikit/css/components/upload.css') }}">
+<script type="text/javascript" src="{{ url_for('static', filename='admin/uikit/js/components/htmleditor.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/uikit/js/components/upload.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='admin/cmeditor/markitup.js') }}"></script>
+
+<style>
+#upload-drop{margin-top:30px}
+.uk-htmleditor .CodeMirror{padding:0;}
+.uk-placeholder{border:2px dashed #ccc; padding:20px 0;}
+.uk-dragover{border: 2px dashed #0c0;}
+.uk-form-file{display:inline-block;vertical-align:middle;position:relative;overflow:hidden}
+.uk-form-file input[type=file]{position:absolute;top:0;z-index:1;width:100%;opacity:0;cursor:pointer;left:0;font-size:500px}
 </style>
-<!--<div class="keybuffer">Key buffer: <span id="command-display"></span></div>-->
-<script src="{{ url_for('static', filename='admin/cmeditor/markitup.js') }}"></script>
 {% else %}
 <link rel="stylesheet" type="text/css" href="/static/admin/markitup/skins/markdown/style.css">
 <!--  markItUp! toolbar skin -->
@@ -36,7 +62,6 @@
 <!-- markItUp! toolbar settings -->
 <script type="text/javascript" src="/static/admin/markitup/sets/markdown/ajaxfileupload.js"></script>
 <script type="text/javascript" src="/static/admin/markitup/sets/markdown/set.js"></script>
-
 <script language="javascript">
 $(document).ready(function()	{
     $('.markitup').markItUp(myMarkdownSettings);
