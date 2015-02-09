@@ -17,7 +17,7 @@ class Config:
     BLOG_MODE = True
 
     # html or markdown
-    BODY_FORMAT = 'html'
+    BODY_FORMAT = os.getenv('BODY_FORMAT') or 'html'
 
     # tip: generate `SECRET_KEY` by `os.urandom(24)`
     SECRET_KEY = os.getenv('SECRET_KEY') or 'hard to guess string'
