@@ -1,12 +1,15 @@
 {% extends 'base.html' %}
 
+{% block title %}{{ _('Index') }}{% endblock %}
+
 {% block body %}
 
-{% if not current_user.confirmed %}
-<div class="page-header">
+<div>
+    <p><img src="{{ current_user.gravatar() }}" /></p>
     <h1>
         Hello, {{ current_user.username }}!
     </h1>
+    {% if not current_user.confirmed %}
     <h3>You have not confirmed your account yet.</h3>
     <p>
         Before you can access this site you need to confirm your account.
@@ -16,15 +19,7 @@
         Need another confirmation email?
         <a href="{{ url_for('account.resend_confirmation') }}">Click here</a>
     </p>
+    {% endif %}
 </div>
-{% endif %}
 
-<img src="{{ current_user.gravatar() }}" />
-
-<ul>
-  <li><a href="{{ url_for('account.change_password') }}">Change Password</a></li>
-  <li><a href="{{ url_for('account.change_email_request') }}">Change Email</a></li>
-  <li><a href="{{ url_for('admin.index') }}">Admin</a></li>
-  <li><a href="{{ url_for('account.logout') }}">Logout</a></li>
-</ul>
 {% endblock %}
