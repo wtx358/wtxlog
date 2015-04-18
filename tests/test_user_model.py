@@ -114,7 +114,7 @@ class UserModelTestCase(unittest.TestCase):
         u = User(username='john', email='john@example.com')
         with self.app.test_request_context('/'):
             avatar = u.gravatar(128)
-            expected = 'http://www.gravatar.com/avatar/d4c74594d841139328695756648b6bd6'
+            expected = 'https://secure.gravatar.com/avatar/d4c74594d841139328695756648b6bd6'
             assert avatar[0:len(expected)] == expected
 
     def test_make_unique_nickname(self):
