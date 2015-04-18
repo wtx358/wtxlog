@@ -106,8 +106,7 @@ class TestingConfig(Config):
 
     TESTING = True
 
-    SQLALCHEMY_DATABASE_URI = os.getenv('TEST_DATABASE_URI') or \
-        'sqlite:///%s' % os.path.join(basedir, 'data-test.sqlite')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
 
     WTF_CSRF_ENABLED = False
 
