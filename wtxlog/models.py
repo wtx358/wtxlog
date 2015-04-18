@@ -143,7 +143,7 @@ class User(UserMixin, db.Model):
             return username
         version = 2
         while True:
-            new_username = username + str(version)
+            new_username = '%s%s' % (username, str(version))
             if User.query.filter_by(username=new_username).first() is None:
                 break
             version += 1
@@ -383,8 +383,8 @@ db.event.listen(Category, 'before_update', Category.before_update)
 class TagQuery(BaseQuery):
 
     def search(self, keyword):
-        keyword = '%' + keyword.strip() + '%'
-        return self.filter(Article.title.ilike(keyword))
+        keyword = u'%{0}%'.format(keyword.strip())
+        return self.filter(Tag.name.ilike(keyword))
 
 
 class Tag(db.Model):
@@ -493,7 +493,7 @@ class ArticleQuery(BaseQuery):
         criteria = []
 
         for keyword in keywords_split(keyword):
-            keyword = '%' + keyword + '%'
+            keyword = u'%{0}%'.format(keyword)
             criteria.append(db.or_(Article.title.ilike(keyword),))
 
         q = reduce(db.or_, criteria)

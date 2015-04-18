@@ -202,9 +202,9 @@ class WtxlogCache(FlaskCache):
                     # 添加缓存时间信息
                     _suffix = u"\n<!-- cached at %s -->" % str(datetime.datetime.now())
                     if hasattr(rv, "data"):
-                        rv.data += _suffix
+                        rv.data = '%s%s' % (rv.data, _suffix)
                     if isinstance(rv, text_type):
-                        rv += _suffix
+                        rv = '%s%s' % (rv, _suffix)
 
                     try:
                         self.cache.set(cache_key, rv, decorated_function.cache_timeout)
