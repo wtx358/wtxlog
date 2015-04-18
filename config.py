@@ -17,7 +17,7 @@ class Config:
     BLOG_MODE = True
 
     # html or markdown
-    BODY_FORMAT = 'html'
+    BODY_FORMAT = os.getenv('BODY_FORMAT') or 'html'
 
     # tip: generate `SECRET_KEY` by `os.urandom(24)`
     SECRET_KEY = os.getenv('SECRET_KEY') or 'hard to guess string'
@@ -29,7 +29,7 @@ class Config:
 
     SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 
-    MAIL_SERVER = os.getenv('MAIL_SERVER') or ''
+    MAIL_SERVER = os.getenv('MAIL_SERVER') or 'localhost'
     MAIL_PORT = int(os.getenv('MAIL_PORT') or 25)
     MAIL_USERNAME = os.getenv('MAIL_USERNAME') or ''
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD') or ''
@@ -40,7 +40,7 @@ class Config:
 
     APP_MAIL_SUBJECT_PREFIX = '[%s]' % SITE_NAME
     APP_MAIL_SENDER = '%s Admin <%s>' % (SITE_NAME, MAIL_USERNAME)
-    APP_ADMIN = os.getenv('APP_ADMIN')
+    APP_ADMIN = os.getenv('APP_ADMIN') or 'admin@example.com'
 
     # flask-cache basic configuration values
     CACHE_KEY = 'view/%s'
@@ -71,7 +71,7 @@ class Config:
             mailhost=(Config.MAIL_SERVER, Config.MAIL_PORT),
             fromaddr=Config.APP_MAIL_SENDER,
             toaddrs=[Config.APP_ADMIN],
-            subject=Config.APP_MAIL_SUBJECT_PREFIX + ' Application Error',
+            subject='%s %s' % (Config.APP_MAIL_SUBJECT_PREFIX, 'Application Error'),
             credentials=credentials,
             secure=secure,
             use_ssl=use_ssl
@@ -95,7 +95,7 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_ECHO = True
 
     SQLALCHEMY_DATABASE_URI = os.getenv('DEV_DATABASE_URI') or \
-        'sqlite:///' + os.path.join(basedir, 'data_dev_sqlite.db')
+        'sqlite:///%s' % os.path.join(basedir, 'data_dev_sqlite.db')
 
     @classmethod
     def init_app(cls, app):
@@ -106,8 +106,7 @@ class TestingConfig(Config):
 
     TESTING = True
 
-    SQLALCHEMY_DATABASE_URI = os.getenv('TEST_DATABASE_URI') or \
-        'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
 
     WTF_CSRF_ENABLED = False
 
@@ -219,7 +218,7 @@ class ProductionConfig(Config):
     CACHE_DIR = os.path.join(basedir, datadir, 'cache')
 
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI') or \
-        'sqlite:///' + os.path.join(basedir, 'data_sqlite.db')
+        'sqlite:///%s' % os.path.join(basedir, 'data_sqlite.db')
 
     # mysql configuration
     MYSQL_USER = os.getenv('MYSQL_USER') or ''

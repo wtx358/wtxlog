@@ -1,12 +1,16 @@
 {% extends 'base.html' %}
 
+{% block title %}{{ _('Login') }}{% endblock %}
+
 {% block body %}
         <form method="POST" action="">
+            <legend>{{ _('Login') }}</legend>
             {{ form.hidden_tag() if form.hidden_tag }}
             {% for f in form if f.type != 'CSRFTokenField' %}
-            <div>
-            {{ f.label }}
-            {{ f }}
+            <div class="control-group">
+            {{ f.label(class='control-label') }}
+            <div class="controls">
+			<div>{{ f }}</div>
             {% if f.errors %}
             <ul>
                 {% for e in f.errors %}
@@ -14,9 +18,10 @@
                 {% endfor %}
             </ul>
             {% endif %}
+			</div>
             </div>
             {% endfor %}
         </form>
-        <a href="{{ url_for('account.register') }}">Register</a> &nbsp;&nbsp; <a
-          href="{{ url_for('account.password_reset_request') }}">Forgot password</a>
+        <p><a href="{{ url_for('account.password_reset_request') }}">{{ _('Forgot your password?') }}</a></p>
+        <p><a href="{{ url_for('account.register') }}">{{ _('Need an account? Register free.') }}</a></p>
 {% endblock %}

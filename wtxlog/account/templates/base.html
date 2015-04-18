@@ -1,13 +1,44 @@
 <!DOCTYPE html>
+<html>
 <head>
+<meta charset="UTF-8" />
+<title>{% block title %}{% endblock %}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="{{ url_for('admin.static', filename='bootstrap/css/bootstrap.css') }}" rel="stylesheet">
+<link href="{{ url_for('admin.static', filename='bootstrap/css/bootstrap-responsive.css') }}" rel="stylesheet">
 </head>
+{# 定义导航菜单 #}
+{% set navigation_bar = [
+    (url_for('account.index'), 'index', _('Index'), 0),
+	(url_for('admin.index'), 'admin', _('Admin'), 2),
+	(url_for('account.change_password'), 'change-password', _('Change Password'), 1),
+	(url_for('account.change_email_request'), 'change-email', _('Change Email'), 1),
+	(url_for('account.logout'), 'logout', _('Logout'), 1),
+] -%}
+{% set active_page = active_page|default('index') -%}
+{% set permission = 0 %}
+{% if current_user.is_authenticated() %}{% set permission = 1 %}{% endif %}
+{% if current_user.is_administrator() %}{% set permission = 2 %}{% endif %}
 <body>
-  <ul>
-    {% for message in get_flashed_messages() %}
-    <li>{{ message }}</li>
-    {% endfor %}
-  </ul>
+  <div class="container">
+  <div class="navbar">
+  <div class="navbar-inner">
+    <span class="brand">{{ config['SITE_NAME'] }}</span>
+    <ul class="nav">
+      {% for href, id, caption, p in navigation_bar %}
+      {% if permission >= p %}<li class="{% if id == active_page %} active{% endif %}"><a href="{{ href|e }}">{{ caption|e }}</a></li>{% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% for message in get_flashed_messages() %}
+<div class="alert">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>{{ message }}
+</div>
+{% endfor %}
+
 {% block body %}{% endblock %}
-<p><a href="javascript:window.history.back();">Back</a> | <a href="{{ url_for('main.index') }}">Back Index</a></p>
+</div>
 </body>
 </html>
