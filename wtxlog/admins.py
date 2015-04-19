@@ -52,6 +52,8 @@ class MyAdminIndexView(AdminIndexView):
     def index(self):
         if not current_user.is_authenticated():
             return redirect(url_for('account.login'))
+        if not current_user.is_administrator():
+            return redirect(url_for('account.index'))
         return super(MyAdminIndexView, self).index()
 
 
