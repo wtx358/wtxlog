@@ -31,5 +31,3 @@ Documentation: <http://wtxlog.readthedocs.org/>
 
 - <http://flask123.sinaapp.com> Flask中文学习网 (SAE)
 - <http://m.szhust.org> 深圳远程教育网 (BAE)
-- <http://wtxlog.jd-app.com> Wtxlog (JAE)
-
