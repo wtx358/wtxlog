@@ -7,7 +7,7 @@
 --------
 
 APP的运行环境默认会根据服务器环境变量 ``SERVER_SOFTWARE`` 来确定.
-BAE/JAE/SAE 这3个环境的 ``SERVER_SOFTWARE`` 是固定的;
+BAE/JAE/SAE 这 3 个环境的 ``SERVER_SOFTWARE`` 是固定的;
 其他环境可以通过设置机器的环境变量 ``APP_CONFIG`` 来更改默认的运行环境.
 
 **LINUX设置方法（示例）** ::
@@ -89,8 +89,8 @@ BAE环境
 2. 进入 BAE3 应用管理控制台, 开发者服务 -> 应用引擎
 3. 在 **扩展服务** 中添加 **BAE MySQL数据库**, 记下数据库相关信息, 后面会用到
 4. 在 **扩展服务** 中添加 **Cache 服务** (如果有配额的话), 记下 **资源名称**
-5. 在 **部署列表** 中 **添加部署**, 类型选择 **python-web**, 使用 SVN 或 GIT
-   工具将代码 checkout 到本地
+5. 在 **部署列表** 中 **添加部署**, 类型选择 **python-web**,
+   使用 SVN 或 GIT 工具将代码 checkout 到本地
 
 **更改设置:**
 
@@ -174,8 +174,8 @@ SAE环境
 
    ``SECRET_KEY`` 可使用 ``os.urandom(24)`` 随机生成.
 
-   缓存设置(位于 ``SAEConfig`` 类), SAE 内置 Memcached 缓存服务, 需要
-   在控制面板初始化::
+   缓存设置(位于 ``SAEConfig`` 类), SAE 内置 Memcached 缓存服务,
+   需要在控制面板初始化::
 
     CACHE_TYPE = 'memcached'
 
@@ -215,12 +215,11 @@ SAE 预装有一些模块, 但有些版本比较旧, 且不支持通过 ``requir
 
     PS: ``bundle_local.py`` 可在 https://github.com/sinacloud/sae-python-dev-guide 找到.
 
-(5) 现在当前目录下会有一个 ``virtualenv.bundle`` 目录, 把
-    ``virtualenv.bundle`` 目录下的所有内容复制到 ``mydeps`` 或者 ``deps``
-    目录即可.
+(5) 现在当前目录下会有一个 ``virtualenv.bundle`` 目录,
+    把 ``virtualenv.bundle`` 目录下的所有内容复制到 ``mydeps`` 或者 ``deps`` 目录即可.
 
-    虽然 SAE 支持 ``virtualenv.bundle.zip`` 这种依赖包导入方式, 但经过测
-    试, 会引发一些不可控的问题, 所以不建议使用这种方式.
+    虽然 SAE 支持 ``virtualenv.bundle.zip`` 这种依赖包导入方式, 但经过测试,
+    会引发一些不可控的问题, 所以不建议使用这种方式.
 
 **上传:**
 
