@@ -19,6 +19,9 @@ import os
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath('../mydeps'))
 sys.path.append(os.path.abspath('_themes'))
 
 # -- General configuration ------------------------------------------------
@@ -29,7 +32,7 @@ sys.path.append(os.path.abspath('_themes'))
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = []
+extensions = ['sphinx.ext.autodoc']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -45,7 +48,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'wtxlog'
-copyright = u'2014, digwtx'
+copyright = u'2014-2015, digwtx'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
